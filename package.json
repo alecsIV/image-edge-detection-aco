@@ -1,0 +1,21 @@
+{
+  "name": "image-edge-detection-aco",
+  "version": "1.0.0",
+  "description": "Final year project",
+  "scripts": {
+    "start": "http-server -c-1 -p 8081 -o"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alecsIV/image-edge-detection-aco.git"
+  },
+  "author": "Alexander Ivanov",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/alecsIV/image-edge-detection-aco/issues"
+  },
+  "homepage": "https://github.com/alecsIV/image-edge-detection-aco#readme",
+  "dependencies": {
+    "http-server": "^0.11.1"
+  }
+}
