@@ -1,8 +1,11 @@
-const uploader = document.getElementById('image-upload');
-const image = document.getElementById("image-source");
-const imagePreview = document.getElementById("image-preview");
-const canvas = document.getElementById("canvas");
-const makeMatrixButton = document.getElementById('draw-matrix-button')
+import ACO from './aco-algorithm';
+
+const uploader = document.querySelector('#image-upload');
+const image = document.querySelector('#image-source');
+const imagePreview = document.querySelector('#image-preview');
+const canvas = document.querySelector('#canvas');
+const makeMatrixButton = document.querySelector('#make-matrix-button')
+const matrixContainer = document.querySelector('.matrix-container');
 
 
 
@@ -15,22 +18,30 @@ uploader.addEventListener('change', function() {
             imagePreview.setAttribute('src', this.result);
         })
         reader.readAsDataURL(file)
+        makeMatrixButton.removeAttribute('disabled');
     }
 });
 
 makeMatrixButton.addEventListener('click', function () {
     console.log(image);
     if (image) {
-        getMatrix(image);
+        const imageMatrix = getMatrix(image).data;
+        let algorithm = new ACO(image);
+        console.log(imageMatrix);
+        // imageMatrix.forEach(element => {
+        //     matrixContainer.innerHTML += element;
+        // });
+        // matrixContainer.innerHTML = getMatrix(image);
     }
 });
+
 function getMatrix(img) {
     const ctx = canvas.getContext('2d');
     drawImageProp(ctx, img, 0, 0, canvas.width, canvas.height);
-    // const imgData = ctx.getImageData(0, 0, img.width, img.height);
-    // console.log(imgData);
+    const imgData = ctx.getImageData(0, 0, img.width, img.height);
+    console.log(imgData);
+    return imgData;
 }
-
 
 function drawImageProp(ctx, img, x, y, w, h, offsetX, offsetY) {
 
