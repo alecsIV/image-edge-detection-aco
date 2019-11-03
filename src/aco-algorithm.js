@@ -6,6 +6,6 @@ export default class ACO {
     
     getPheromoneMatrix(imageMatrix) {
         this.pheromoneMatrixClass = new PheromoneMatrix(imageMatrix);
-        this.pheromoneMatrix = this.pheromoneMatrix.currentPheromoneMatrix;
+        this.pheromoneMatrix = this.pheromoneMatrixClass.currentPheromoneMatrix;
     }
 }
