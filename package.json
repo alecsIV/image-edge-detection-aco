@@ -4,8 +4,8 @@
   "description": "Final year project",
   "scripts": {
     "server": "http-server -c-1 -p 8081 -o",
-    "start": "webpack-dev-server --watch --open",
-    "build": "cross-env NODE_ENV=production webpack"
+    "start": "webpack-dev-server --open",
+    "build": "webpack"
   },
   "repository": {
     "type": "git",

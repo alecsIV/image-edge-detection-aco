@@ -25,8 +25,8 @@ uploader.addEventListener('change', function() {
 makeMatrixButton.addEventListener('click', function () {
     console.log(image);
     if (image) {
-        const imageMatrix = getMatrix(image).data;
-        let algorithm = new ACO(image);
+        const imageMatrix = getMatrix(image);
+        let algorithm = new ACO(imageMatrix);
         console.log(imageMatrix);
         // imageMatrix.forEach(element => {
         //     matrixContainer.innerHTML += element;

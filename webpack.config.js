@@ -6,11 +6,17 @@ module.exports = {
     output: {
         filename: 'main.js',
         path: path.resolve(__dirname, 'dist'),
+        sourceMapFilename: "[file].map?[contenthash]"
     },
     devServer: {
-        openPage: ['/dist/index.html']
+        stats: {
+            children: false, 
+            maxModules: 0
+        },
+        contentBase: './dist',
+        port:9901
     },
-    devtool: 'source-map',
+    devtool: '#eval-source-map',
     module: {
         rules: [{
                 test: /\.(js)$/,

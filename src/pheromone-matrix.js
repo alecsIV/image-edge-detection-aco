@@ -1,14 +1,20 @@
 export default class PheromoneMatrix {
-    constructor(imageMatrix) {
-        this.setup(imageMatrix);
+    constructor(image) {
+        this.currentPheromoneMatrix = this.setup(image);
     }
 
-    setup(imageMatrix) {
+    setup(image) {
+        const numberOfPixels =  image.data.length / 4;
+        const imageWidth = image.width;
+        const imageHeight = image.height;
         const initialPheromoneValue = 0.0001;
-        const pheromoneMatrix = [];
-        for(let i = 0; i < imageMatrix.length/4; i++){
-            pheromoneMatrix.push(initialPheromoneValue);
+        const pheromoneMatrix = new Array(2);
+        for (let i = 0; i < imageHeight; i++) {
+            pheromoneMatrix[i] = []
+            for (let j = 0; j < imageWidth; j++) {
+                pheromoneMatrix[i][j] = initialPheromoneValue;
+            }
         }
-        console.log('pheromone init matrix', pheromoneMatrix);
+        return pheromoneMatrix;
     }
 }
