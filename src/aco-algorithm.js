@@ -1,11 +1,16 @@
 import PheromoneMatrix from './pheromone-matrix';
 export default class ACO {
-    constructor(imageMatrix) {
-        this.getPheromoneMatrix(imageMatrix);
+    constructor(image) {
+        this.getPheromoneMatrix(image);
     }
     
-    getPheromoneMatrix(imageMatrix) {
-        this.pheromoneMatrixClass = new PheromoneMatrix(imageMatrix);
+    getPheromoneMatrix(image) {
+        this.pheromoneMatrixClass = new PheromoneMatrix(image);
         this.pheromoneMatrix = this.pheromoneMatrixClass.currentPheromoneMatrix;
     }
+
+    // createImageMatrix(image) {
+    //     const numberOfPixels =  image.data.length / 4;
+
+    // }
 }

@@ -4,7 +4,6 @@ export default class PheromoneMatrix {
     }
 
     setup(image) {
-        const numberOfPixels =  image.data.length / 4;
         const imageWidth = image.width;
         const imageHeight = image.height;
         const initialPheromoneValue = 0.0001;
@@ -15,6 +14,6 @@ export default class PheromoneMatrix {
                 pheromoneMatrix[i][j] = initialPheromoneValue;
             }
         }
-        return pheromoneMatrix;
+        return pheromoneMatrix; 
     }
 }

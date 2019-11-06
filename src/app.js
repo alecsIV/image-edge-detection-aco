@@ -4,7 +4,7 @@ const uploader = document.querySelector('#image-upload');
 const image = document.querySelector('#image-source');
 const imagePreview = document.querySelector('#image-preview');
 const canvas = document.querySelector('#canvas');
-const makeMatrixButton = document.querySelector('#make-matrix-button')
+const drawImageButton = document.querySelector('#draw-image-button')
 const matrixContainer = document.querySelector('.matrix-container');
 
 
@@ -18,16 +18,18 @@ uploader.addEventListener('change', function() {
             imagePreview.setAttribute('src', this.result);
         })
         reader.readAsDataURL(file)
-        makeMatrixButton.removeAttribute('disabled');
+        drawImageButton.removeAttribute('disabled');
     }
 });
 
-makeMatrixButton.addEventListener('click', function () {
+drawImageButton.addEventListener('click', function() {
     console.log(image);
     if (image) {
         const imageMatrix = getMatrix(image);
+        const intensityArray = getIntensityArray(imageMatrix.data);
         let algorithm = new ACO(imageMatrix);
         console.log(imageMatrix);
+        console.log('intensity array', intensityArray);
         // imageMatrix.forEach(element => {
         //     matrixContainer.innerHTML += element;
         // });
@@ -37,10 +39,23 @@ makeMatrixButton.addEventListener('click', function () {
 
 function getMatrix(img) {
     const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawImageProp(ctx, img, 0, 0, canvas.width, canvas.height);
     const imgData = ctx.getImageData(0, 0, img.width, img.height);
     console.log(imgData);
     return imgData;
+}
+
+function getIntensityArray(array) {
+    const intensityArray = [];
+    for (let i = 0; i < array.length - 1; i++) {
+        if (i < array.length - 2) {
+            const sum = array[i] + array[i + 1] + array[i + 2] + array[i + 3] ;
+            i += 3;
+            intensityArray.push(sum);
+        }
+    };
+    return intensityArray;
 }
 
 function drawImageProp(ctx, img, x, y, w, h, offsetX, offsetY) {
@@ -65,13 +80,13 @@ function drawImageProp(ctx, img, x, y, w, h, offsetX, offsetY) {
         ih = img.height,
         r = Math.min(w / iw, h / ih)
 
-    let nw = iw * r,   // new prop. width
-        nh = ih * r,   // new prop. height
+    let nw = iw * r, // new prop. width
+        nh = ih * r, // new prop. height
         cx, cy, cw, ch, ar = 1;
 
     // decide which gap to fill    
-    if (nw < w) ar = w / nw;                             
-    if (Math.abs(ar - 1) < 1e-14 && nh < h) ar = h / nh;  // updated
+    if (nw < w) ar = w / nw;
+    if (Math.abs(ar - 1) < 1e-14 && nh < h) ar = h / nh; // updated
     nw *= ar;
     nh *= ar;
 
@@ -89,5 +104,5 @@ function drawImageProp(ctx, img, x, y, w, h, offsetX, offsetY) {
     if (ch > ih) ch = ih;
 
     // fill image in dest. rectangle
-    ctx.drawImage(img, cx, cy, cw, ch,  x, y, w, h);
+    ctx.drawImage(img, cx, cy, cw, ch, x, y, w, h);
 }
