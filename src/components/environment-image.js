@@ -4,6 +4,7 @@ export default class EnvironmentImage {
         this.pixelArray =  this.getPixelArray(image, canvas);
         this.width = image.width;
         this.height = image.height;
+        this.pixelAmount = Math.abs(this.width * this.height);
     }
 
     getIntensityArray() {
@@ -22,8 +23,17 @@ export default class EnvironmentImage {
         const ctx = canvas.getContext('2d');
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         drawImageProp(ctx, image, 0, 0, canvas.width, canvas.height);
-        const imgData = ctx.getImageData(0, 0, image.width, image.height).data;
+        const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+        fadeImage();
         return imgData;
+
+        function fadeImage() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.save();
+            ctx.globalAlpha = 0.5;
+            drawImageProp(ctx, image, 0, 0, canvas.width, canvas.height);
+            ctx.restore();
+        }
 
         function drawImageProp(ctx, img, x, y, w, h, offsetX, offsetY) {
 

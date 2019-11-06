@@ -1,5 +1,5 @@
-import ACO from './aco-algorithm';
-import EnvironmentImage from './environment-image';
+import ACO from './components/aco/aco-algorithm';
+import EnvironmentImage from './components/environment-image';
 
 const uploader = document.querySelector('#image-upload');
 const image = document.querySelector('#image-source');
@@ -25,6 +25,6 @@ uploader.addEventListener('change', function() {
 drawImageButton.addEventListener('click', function() {
     if (image) {
         const envImage = new EnvironmentImage(image, canvas);
-        let algorithm = new ACO(envImage);
+        let algorithm = new ACO(envImage, canvas);
     }
 });
