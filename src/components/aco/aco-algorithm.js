@@ -15,11 +15,12 @@ export default class ACO {
     }
 
     initializeAgents() {
-        this.agentCount = 50;
+        this.agentCount = 500;
         this.agents = [];
         for(let i = 0; i < this.agentCount - 1; i++){
-            this.agents[i] = new AntAgent(this.image, this.canvas);
+            this.agents[i] = new AntAgent(this.canvas);
         };
+        console.log('Agents', this.agents);
     }
 
     // createImageMatrix(image) {
