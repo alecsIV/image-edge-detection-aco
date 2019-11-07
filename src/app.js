@@ -5,8 +5,11 @@ const uploader = document.querySelector('#image-upload');
 const image = document.querySelector('#image-source');
 const imagePreview = document.querySelector('#image-preview');
 const canvas = document.querySelector('#canvas');
-const drawImageButton = document.querySelector('#draw-image-button')
+const drawImageButton = document.querySelector('#draw-image-button');
+const startSimulationButton = document.querySelector('#start-simulation');
 
+let envImage;
+let algorithm;
 
 // Buttons and HTML events
 uploader.addEventListener('change', function() {
@@ -22,9 +25,14 @@ uploader.addEventListener('change', function() {
     }
 });
 
-drawImageButton.addEventListener('click', function() {
+drawImageButton.addEventListener('click', () => {
     if (image) {
-        const envImage = new EnvironmentImage(image, canvas);
-        let algorithm = new ACO(envImage, canvas);
-    }
+        envImage = new EnvironmentImage(image, canvas);
+        algorithm = new ACO(envImage, canvas);
+        startSimulationButton.removeAttribute('disabled');
+    } 
+});
+
+startSimulationButton.addEventListener('click', () => {
+    algorithm.startSimulation();
 });
