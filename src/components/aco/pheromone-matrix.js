@@ -30,7 +30,7 @@ export default class PheromoneMatrix {
         const negJ = (j > 0 ? 1 : 0);
         const posI = (i < arrLength ? 1 : 0);
         const posJ = (j < arrLength ? 1 : 0);
-        if (i === 0) console.log('imageIntensityArray[i + posI][j + 1]', imageIntensityArray[i - negI][j - negJ] - imageIntensityArray[i + posI][j + 1]);
+        
         a = Math.abs(imageIntensityArray[i - negI][j - negJ] - imageIntensityArray[i + posI][j + posJ]);
         b = Math.abs(imageIntensityArray[i - 0][j - negJ] - imageIntensityArray[i + 0][j + posJ]);
         c = Math.abs(imageIntensityArray[i + posI][j + posJ] - imageIntensityArray[i - negI][j - negJ]);
