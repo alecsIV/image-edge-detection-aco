@@ -1,3 +1,5 @@
+global.imageIntensityArray = new Array();
+
 import ACO from './components/aco/aco-algorithm';
 import EnvironmentImage from './components/environment-image';
 
@@ -30,7 +32,7 @@ drawImageButton.addEventListener('click', () => {
         envImage = new EnvironmentImage(image, canvas);
         algorithm = new ACO(envImage, canvas);
         startSimulationButton.removeAttribute('disabled');
-    } 
+    }
 });
 
 startSimulationButton.addEventListener('click', () => {
