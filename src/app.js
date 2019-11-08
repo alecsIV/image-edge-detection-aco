@@ -1,4 +1,7 @@
+global.imageIntensityArray1d = new Array();
 global.imageIntensityArray = new Array();
+global.pheromoneMatrix = new Array();
+global.heuristicMatrix = new Array();
 
 import ACO from './components/aco/aco-algorithm';
 import EnvironmentImage from './components/environment-image';

@@ -12,7 +12,8 @@ export default class ACO {
     getPheromoneMatrix(image) {
         this.pheromoneMatrixClass = new PheromoneMatrix(image);
         // this.pheromoneMatrix = this.pheromoneMatrixClass.currentPheromoneMatrix;
-        console.log('imax: ', this.pheromoneMatrixClass.iMax);
+        console.log('iMax: ', this.pheromoneMatrixClass.iMax);
+        console.log('heuristic: ', heuristicMatrix);
     }
 
     initializeAgents() {
@@ -33,7 +34,7 @@ export default class ACO {
     }
 
     startSimulation(){
-        console.log(imageIntensityArray[this.agents[0].currentCoordinates.x][this.agents[0].currentCoordinates.y])       
+        // console.log(imageIntensityArray[this.agents[0].currentCoordinates.x][this.agents[0].currentCoordinates.y])       
     }
 
 

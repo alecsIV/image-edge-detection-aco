@@ -4,15 +4,8 @@ export default class EnvironmentImage {
         this.width = image.width;
         this.height = image.height;
         this.pixelAmount = Math.abs(this.width * this.height);
-        imageIntensityArray = this.convertTo2dMatrix(this.getIntensityArray(), image);
-        // let x = 0,
-        //     y = 0;
-        // array2.forEach((element, i) => {
-        //     if (x > canvas.width) x = 0 && y++;
-        //     array1[x][y].push(element);
-        //     x++;
-        // });
-        // console.log('array1: ', array1);
+        imageIntensityArray1d = this.getIntensityArray();
+        imageIntensityArray = this.convertTo2dMatrix(imageIntensityArray1d, image);
     }
 
     convertTo2dMatrix(array, image) {
@@ -22,9 +15,9 @@ export default class EnvironmentImage {
 
         let a = 0;
 
-        for (let i = 0; i < imageHeight; i++) {
+        for (let i = 0; i < imageWidth; i++) {
             array2d[i] = [];
-            for (let j = 0; j < imageWidth; j++) {
+            for (let j = 0; j < imageHeight; j++) {
                 array2d[i][j] = array[a];
                 a++
             }
