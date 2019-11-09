@@ -22,16 +22,18 @@ export default class AntAgent {
             phProducts = [],
             neighbourNodeCoordinates = [],
             x = this.currentCoordinates.x,
-            y = this.currentCoordinates.y;
+            y = this.currentCoordinates.y,
+            matrixSize = pheromoneMatrix.length - 1;
 
         // find the pheromone and heuristic product
         for (let i = -1; i <= 1; i++) {
-            for (let j = -1; j <= 1; i++) {
-                if (i !== 0 && j !== 0) {
+            for (let j = -1; j <= 1; j++) {
+                const outOfBounds = (!((x + i) < matrixSize && (y + j) < matrixSize) || !((x + i) > -1 && (y + j) > -1));
+                if ((i !== 0 || j !== 0) && !outOfBounds) {
                     phProducts.push(pheromoneMatrix[x + i][y + j] * heuristicMatrix[x + i][y + j]);
                     neighbourNodeCoordinates.push({
-                        'x': x + i,
-                        'y': y + i
+                        "x": x + i,
+                        "y": y + i
                     });
                 }
             }
@@ -53,25 +55,8 @@ export default class AntAgent {
         return neighbourNodeCoordinates[maxProbabilityIndex]
     }
 
-    moveUp() {
-        if (this.currentCoordinates.y !== 0) {
-            this.currentCoordinates.y = this.currentCoordinates.y - 1;
-        }
-    }
-    moveDown() {
-        if (this.currentCoordinates.y !== 0) {
-            this.currentCoordinates.y = this.currentCoordinates.y + 1;
-        }
-    }
-    moveLeft() {
-        if (this.currentCoordinates.x !== 0) {
-            this.currentCoordinates.x = this.currentCoordinates.x - 1;
-        }
-    }
-    moveRight() {
-        if (this.currentCoordinates.x !== 0) {
-            this.currentCoordinates.x = this.currentCoordinates.x + 1;
-        }
+    moveTo(coordinates) {
+        this.currentCoordinates = coordinates;
     }
 
     // old way of getting intensity at each pixel
