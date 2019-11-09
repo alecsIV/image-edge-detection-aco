@@ -1,11 +1,10 @@
-export default class PheromoneMatrix {
-    constructor(image) {
+export default class MatrixHelper {
+    constructor() {
         this.iMax = imageIntensityArray1d.reduce((a, b) => a + b) / imageIntensityArray1d.length;
-        // this.currentPheromoneMatrix = this.setup(image);
-        this.setup(image);
+        // this.currentPheromoneMatrix = this.generateInitialMatrices(image);
     }
 
-    setup(image) {
+    generateInitialMatrices(image) {
         const imageWidth = image.width;
         const imageHeight = image.height;
         const initialPheromoneValue = 0.0001;
@@ -30,11 +29,12 @@ export default class PheromoneMatrix {
         const negJ = (j > 0 ? 1 : 0);
         const posI = (i < arrLength ? 1 : 0);
         const posJ = (j < arrLength ? 1 : 0);
-        
+
         a = Math.abs(imageIntensityArray[i - negI][j - negJ] - imageIntensityArray[i + posI][j + posJ]);
         b = Math.abs(imageIntensityArray[i - 0][j - negJ] - imageIntensityArray[i + 0][j + posJ]);
         c = Math.abs(imageIntensityArray[i + posI][j + posJ] - imageIntensityArray[i - negI][j - negJ]);
         d = Math.abs(imageIntensityArray[i - negI][j - 0] - imageIntensityArray[i + posI][j + 0]);
+
         return a > b ? (a > c ? (a > d ? a : d) : c) : b;
     }
 }

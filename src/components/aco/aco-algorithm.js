@@ -1,25 +1,22 @@
-import PheromoneMatrix from './pheromone-matrix';
+import MatrixHelper from '../helpers/matrix-helper';
 import AntAgent from './agent';
 
 export default class ACO {
     constructor(image, canvas) {
-        this.getPheromoneMatrix(image);
         this.image = image;
         this.canvas = canvas;
+        this.matrixHelper = new MatrixHelper();
+
+        // generate initial pheromone and heuristic matrices
+        this.matrixHelper.generateInitialMatrices(image);
+        // create agents and position them randomly on the canvas
         this.initializeAgents();
-    }
-    
-    getPheromoneMatrix(image) {
-        this.pheromoneMatrixClass = new PheromoneMatrix(image);
-        // this.pheromoneMatrix = this.pheromoneMatrixClass.currentPheromoneMatrix;
-        console.log('iMax: ', this.pheromoneMatrixClass.iMax);
-        console.log('heuristic: ', heuristicMatrix);
     }
 
     initializeAgents() {
         this.agentCount = 500;
         this.agents = [];
-        for(let i = 0; i < this.agentCount - 1; i++){
+        for (let i = 0; i < this.agentCount - 1; i++) {
             this.agents[i] = new AntAgent(this.canvas);
             this.drawAgent(this.canvas, this.agents[i].currentCoordinates)
         };
@@ -33,13 +30,13 @@ export default class ACO {
         ctx.fillRect(coordinates.x, coordinates.y, 1, 1);
     }
 
-    startSimulation(){
-        // console.log(imageIntensityArray[this.agents[0].currentCoordinates.x][this.agents[0].currentCoordinates.y])       
+    startSimulation() {
+        const iterations = 5;
+
+        for (let i = 0; i < iterations; i++) {
+            this.agents.forEach(agent => {
+                agent.calculateNextStep();
+            });
+        }
     }
-
-
-    // createImageMatrix(image) {
-    //     const numberOfPixels =  image.data.length / 4;
-
-    // }
 }
