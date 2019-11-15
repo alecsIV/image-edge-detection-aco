@@ -41,9 +41,9 @@ export default class EnvironmentImage {
         const ctx = canvas.getContext('2d');
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         drawImageProp(ctx, image, 0, 0, canvas.width, canvas.height);
-        const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+        global.imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
         fadeImage();
-        return imgData;
+        return imgData.data;
 
         function fadeImage() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
