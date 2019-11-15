@@ -7,7 +7,7 @@ export default class ACO {
         this.canvas = canvas;
         this.ctx = canvas.getContext('2d');
         this.matrixHelper = new MatrixHelper();
-        this.iterations = 25;
+        this.iterations = 200;
         this.currentFrame = 0;
 
 
@@ -75,6 +75,7 @@ export default class ACO {
         });
 
         if (this.currentFrame !== this.iterations) {
+            this.currentFrame++;
             window.requestAnimationFrame(this.startSimulation.bind(this));
         } else console.log('END ANIMATION');
         // this.agents.forEach((agent) => {
