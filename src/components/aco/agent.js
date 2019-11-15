@@ -27,8 +27,6 @@ export default class AntAgent {
             y = this.currentCoordinates.y,
             matrixSize = pheromoneMatrix.length - 1;
 
-        //save current coordinates as previous
-        this.previousCoordinates.push(this.currentCoordinates);
         // find the pheromone and heuristic product
         for (let i = -1; i <= 1; i++) {
             for (let j = -1; j <= 1; j++) {
@@ -42,25 +40,45 @@ export default class AntAgent {
                 }
             }
         }
-
         //find the sum of all products from the neighbourhood
         const sumProducts = phProducts.reduce((a, b) => a + b, 0);
 
         //find the maximum probability
         phProducts.forEach((product, i) => {
             const result = Math.abs(product / sumProducts);
+            //check if not the previous pixel
+            let notPrevious = true;
+            if (this.previousCoordinates.length > 0) {
+                notPrevious = (x + 1 !== this.previousCoordinates[this.previousCoordinates.length - 1].x) && (y + 1 !== this.previousCoordinates[this.previousCoordinates.length - 1].y);
+            }
 
-            if (result > currentMaxProbability) {
+            if (result > currentMaxProbability && notPrevious) {
                 currentMaxProbability = result;
                 maxProbabilityIndex = i;
             }
         });
+
+        //save current coordinates as previous
+        this.previousCoordinates.push(this.currentCoordinates);
 
         return neighbourNodeCoordinates[maxProbabilityIndex]
     }
 
     moveTo(coordinates) {
         this.currentCoordinates = coordinates;
+    }
+
+    updatePheromoneLevel(agent) {
+        const curX = agent.currentCoordinates.x;
+        const curY = agent.currentCoordinates.y;
+        const prevX = agent.previousCoordinates[agent.previousCoordinates.length - 1].x;
+        const prevY = agent.previousCoordinates[agent.previousCoordinates.length - 1].y;
+        let sumHeuristics = 0;
+        agent.previousCoordinates.reduce(prevPosition => {
+            sumHeuristics += heuristicMatrix[prevPosition.x][prevPosition.y];
+        });
+        const newPheromoneLevel = (1 - 0.5) * pheromoneMatrix[curX][curX] + sumHeuristics;
+        pheromoneMatrix[agent.currentCoordinates.x][agent.currentCoordinates.y] = newPheromoneLevel;
     }
 
     // old way of getting intensity at each pixel

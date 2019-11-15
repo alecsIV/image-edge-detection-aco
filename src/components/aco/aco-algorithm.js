@@ -10,7 +10,6 @@ export default class ACO {
         this.iterations = 200;
         this.currentFrame = 0;
 
-
         // generate initial pheromone and heuristic matrices
         this.matrixHelper.generateInitialMatrices(image);
         // create agents and position them randomly on the canvas
@@ -67,11 +66,16 @@ export default class ACO {
 
     startSimulation() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.heigth);
-        this.agents.forEach((agent, i) => {
+        this.agents.forEach((agent) => {
             const newCoordinates = agent.calculateNextStep();
             agent.moveTo(newCoordinates);
             if (agent.currentCoordinates == undefined) console.log('faulty', agent);
             this.ctx.fillRect(agent.currentCoordinates.x, agent.currentCoordinates.y, agent.agentSize, agent.agentSize);
+        });
+
+        //update pheromone values
+        this.agents.forEach(agent => {
+            agent.updatePheromoneLevel(agent);
         });
 
         if (this.currentFrame !== this.iterations) {
