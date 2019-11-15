@@ -20,15 +20,32 @@ export default class ACO {
         console.log('pheromoneMatrix', pheromoneMatrix);
         for (let i = 0; i < this.agentCount - 1; i++) {
             this.agents[i] = new AntAgent(this.canvas);
-            this.drawAgent(this.agents[i].currentCoordinates)
+            this.initialDraw(this.agents[i].currentCoordinates)
         };
         console.log('Agents', this.agents);
     }
 
-
-    drawAgent(coordinates) {
-        // this.ctx.clearRect(coordinates.x, coordinates.y, 1, 1);
+    initialDraw(coordinates){
         this.ctx.fillRect(coordinates.x, coordinates.y, 1, 1);
+    }
+
+
+    drawAgent(agent) {
+        let dx = agent.currentCoordinates.x - agent.previousCoordinates[agent.previousCoordinates.length - 1].x;
+        let dy = agent.currentCoordinates.y - agent.previousCoordinates[agent.previousCoordinates.length - 1].y;
+        let maxD = (Math.max(Math.abs(dx), Math.abs(dy)) == Math.abs(dx)) ? Math.abs(dx) : Math.abs(dy);
+        while (maxD > 0) {
+            console.log('test', maxD);
+            requestAnimationFrame(() => this.animate(agent.currentCoordinates.x + dx, agent.currentCoordinates.y + dy));
+            maxD--;
+            (dx > 0)? dx-- : dx++;
+            (dy > 0)? dy-- : dy++;
+        }
+        // this.ctx.clearRect(coordinates.x, coordinates.y, 1, 1);
+    }
+
+    animate(x,y) {
+        this.ctx.fillRect(x, y, 1, 1);        
     }
 
     // drawNewAgentPosition(coordinates){
@@ -42,8 +59,8 @@ export default class ACO {
             this.agents.forEach((agent, i) => {
                 const nextStep = agent.calculateNextStep();
                 agent.moveTo(nextStep);
-                if(agent.currentCoordinates == undefined) console.log('faulty', agent);
-                this.drawAgent(agent.currentCoordinates);
+                if (agent.currentCoordinates == undefined) console.log('faulty', agent);
+                this.drawAgent(agent);
             });
         }
     }

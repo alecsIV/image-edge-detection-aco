@@ -2,6 +2,7 @@ export default class AntAgent {
     constructor(canvas) {
         this.startPostition = this.getStartingPostion(canvas); // x,y coordinates <- this should be random
         this.currentCoordinates = this.startPostition;
+        this.previousCoordinates = [];
         this.agentSize = 1;
     }
 
@@ -18,6 +19,7 @@ export default class AntAgent {
         let currentMaxProbability = 0,
             maxProbabilityIndex = 0;
 
+
         const neighbourhoodSize = 9,
             phProducts = [],
             neighbourNodeCoordinates = [],
@@ -25,15 +27,17 @@ export default class AntAgent {
             y = this.currentCoordinates.y,
             matrixSize = pheromoneMatrix.length - 1;
 
+        //save current coordinates as previous
+        this.previousCoordinates.push(this.currentCoordinates);
         // find the pheromone and heuristic product
         for (let i = -1; i <= 1; i++) {
             for (let j = -1; j <= 1; j++) {
-                const outOfBounds = (!((x + i) < matrixSize && (y + j) < matrixSize) || !((x + i) > -1 && (y + j) > -1));
-                if ((i !== 0 || j !== 0) && !outOfBounds) {
+                const outOfBounds = (((x + i) > -1 && (x + i) < matrixSize) && ((y + j) > -1) && (y + j) < matrixSize);
+                if ((i !== 0 || j !== 0) && outOfBounds) {
                     phProducts.push(pheromoneMatrix[x + i][y + j] * heuristicMatrix[x + i][y + j]);
                     neighbourNodeCoordinates.push({
                         "x": x + i,
-                        "y": y + i
+                        "y": y + j
                     });
                 }
             }
