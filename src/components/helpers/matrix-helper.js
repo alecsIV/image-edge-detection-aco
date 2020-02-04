@@ -14,7 +14,7 @@ export default class MatrixHelper {
                 heuristicMatrix[i][j] = this.heuristicInformationForPixel(i, j);
             }
         }
-        console.log('heuristicMatrix: ', heuristicMatrix);
+        console.log('%c heuristicMatrix', 'color: #24c95a', heuristicMatrix);
     }
 
     heuristicInformationForPixel(i, j) {
@@ -29,8 +29,6 @@ export default class MatrixHelper {
         const posI = (i < arrLength - 1 ? 1 : 0);
         const posJ = (j < arrLength - 1 ? 1 : 0);
         if (i === 1 && j === 1) {
-            console.log('arrLength', arrLength);
-            console.log('image intensity array: ', imageIntensityArray);
             console.table({
                 'negI': negI,
                 'negJ': negJ,

@@ -8,7 +8,7 @@ export default class ACO {
         this.ctx = canvas.getContext('2d');
         this.matrixHelper = new MatrixHelper();
         this.iterations = 200;
-        this.currentFrame = 0;
+        this.currentFrame = 1;
 
         // generate initial pheromone and heuristic matrices
         this.matrixHelper.generateInitialMatrices();
@@ -19,12 +19,12 @@ export default class ACO {
     initializeAgents() {
         this.agentCount = 5;
         this.agents = [];
-        console.log('pheromoneMatrix', pheromoneMatrix);
+        console.log('%c pheromoneMatrix', 'color: #24c95a', pheromoneMatrix);
         for (let i = 0; i < this.agentCount; i++) {
             this.agents[i] = new AntAgent(this.canvas);
             this.initialDraw(this.agents[i].currentCoordinates)
         };
-        console.log('Agents', this.agents);
+        console.log('%c Agents', 'color: #24c95a', this.agents);
     }
 
     initialDraw(coordinates) {
@@ -76,16 +76,13 @@ export default class ACO {
 
         // update pheromone values
         this.agents.forEach(agent => {
-            console.log('%c AGENT:', 'color: #981b1b', agent);
             agent.updatePheromoneLevel(agent);
         });
-
-        console.log('Current frame: ', this.currentFrame);
 
         if (this.currentFrame !== this.iterations) {
             this.currentFrame++;
             window.requestAnimationFrame(this.startSimulation.bind(this));
-        } else console.log('END ANIMATION');
+        } else console.log('%c END ANIMATION', 'color: #c92424');
         // this.agents.forEach((agent) => {
         //     const foreachLoop = agent.previousCoordinates.forEach((prevPosition, i) => {
         //         if (i < agent.previousCoordinates.length - 1) {

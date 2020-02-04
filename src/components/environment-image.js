@@ -25,7 +25,6 @@ export default class EnvironmentImage {
 
     getIntensityArray() {
         const intensityArray = [];
-        console.log('pixelArray: ', this.pixelArray);
         for (let i = 0; i <= this.pixelArray.length - 1; i++) {
             if (i <= this.pixelArray.length - 2) {
                 const sum = this.pixelArray[i] + this.pixelArray[i + 1] + this.pixelArray[i + 2] + this.pixelArray[i + 3];
