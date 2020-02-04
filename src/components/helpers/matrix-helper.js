@@ -4,18 +4,17 @@ export default class MatrixHelper {
         // this.currentPheromoneMatrix = this.generateInitialMatrices(image);
     }
 
-    generateInitialMatrices(image) {
-        const imageWidth = image.width;
-        const imageHeight = image.height;
+    generateInitialMatrices() {
         const initialPheromoneValue = 0.0001;
-        for (let i = 0; i < imageHeight; i++) {
+        for (let i = 0; i < canvasHeight; i++) {
             pheromoneMatrix[i] = [];
             heuristicMatrix[i] = [];
-            for (let j = 0; j < imageWidth; j++) {
+            for (let j = 0; j < canvasWidth; j++) {
                 pheromoneMatrix[i][j] = initialPheromoneValue;
                 heuristicMatrix[i][j] = this.heuristicInformationForPixel(i, j);
             }
         }
+        console.log('heuristicMatrix: ', heuristicMatrix);
     }
 
     heuristicInformationForPixel(i, j) {
@@ -24,11 +23,21 @@ export default class MatrixHelper {
 
     getMaxIntensityValueForPixel(i, j) {
         let a, b, c, d;
-        const arrLength = imageIntensityArray.length - 1;
+        const arrLength = imageIntensityArray.length;
         const negI = (i > 0 ? 1 : 0);
         const negJ = (j > 0 ? 1 : 0);
-        const posI = (i < arrLength ? 1 : 0);
-        const posJ = (j < arrLength ? 1 : 0);
+        const posI = (i < arrLength - 1 ? 1 : 0);
+        const posJ = (j < arrLength - 1 ? 1 : 0);
+        if (i === 1 && j === 1) {
+            console.log('arrLength', arrLength);
+            console.log('image intensity array: ', imageIntensityArray);
+            console.table({
+                'negI': negI,
+                'negJ': negJ,
+                'posI': posI,
+                'posJ': posJ
+            });
+        }
 
         a = Math.abs(imageIntensityArray[i - negI][j - negJ] - imageIntensityArray[i + posI][j + posJ]);
         b = Math.abs(imageIntensityArray[i - 0][j - negJ] - imageIntensityArray[i + 0][j + posJ]);

@@ -1,7 +1,10 @@
+//set global variables
 global.imageIntensityArray1d = new Array();
 global.imageIntensityArray = new Array();
 global.pheromoneMatrix = new Array();
 global.heuristicMatrix = new Array();
+global.canvasWidth = 0;
+global.canvasHeight = 0;
 
 import ACO from './components/aco/aco-algorithm';
 import EnvironmentImage from './components/environment-image';
@@ -16,6 +19,9 @@ const startSimulationButton = document.querySelector('#start-simulation');
 let envImage;
 let algorithm;
 
+//set canvas dimensions
+canvasWidth = canvas.width;
+canvasHeight = canvas.clientHeight;
 // Buttons and HTML events
 uploader.addEventListener('change', function() {
     const file = this.files[0];

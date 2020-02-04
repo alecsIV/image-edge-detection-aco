@@ -5,19 +5,17 @@ export default class EnvironmentImage {
         this.height = image.height;
         this.pixelAmount = Math.abs(this.width * this.height);
         imageIntensityArray1d = this.getIntensityArray();
-        imageIntensityArray = this.convertTo2dMatrix(imageIntensityArray1d, image);
+        imageIntensityArray = this.convertTo2dMatrix(imageIntensityArray1d);
     }
 
-    convertTo2dMatrix(array, image) {
-        const imageWidth = image.width;
-        const imageHeight = image.height;
+    convertTo2dMatrix(array) {
         const array2d = new Array(2);
 
         let a = 0;
 
-        for (let i = 0; i < imageWidth; i++) {
+        for (let i = 0; i < canvasWidth; i++) {
             array2d[i] = [];
-            for (let j = 0; j < imageHeight; j++) {
+            for (let j = 0; j < canvasHeight; j++) {
                 array2d[i][j] = array[a];
                 a++
             }
@@ -27,8 +25,9 @@ export default class EnvironmentImage {
 
     getIntensityArray() {
         const intensityArray = [];
-        for (let i = 0; i < this.pixelArray.length - 1; i++) {
-            if (i < this.pixelArray.length - 2) {
+        console.log('pixelArray: ', this.pixelArray);
+        for (let i = 0; i <= this.pixelArray.length - 1; i++) {
+            if (i <= this.pixelArray.length - 2) {
                 const sum = this.pixelArray[i] + this.pixelArray[i + 1] + this.pixelArray[i + 2] + this.pixelArray[i + 3];
                 i += 3;
                 intensityArray.push(sum);

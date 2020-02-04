@@ -43,7 +43,7 @@ export default class AntAgent {
         //find the sum of all products from the neighbourhood
         const sumProducts = phProducts.reduce((a, b) => a + b, 0);
 
-        //find the maximum probability
+        //find the maximum probability for next move
         phProducts.forEach((product, i) => {
             const result = Math.abs(product / sumProducts);
             //check if not the previous pixel
@@ -75,7 +75,9 @@ export default class AntAgent {
         const prevY = agent.previousCoordinates[agent.previousCoordinates.length - 1].y;
         let sumHeuristics = 0;
         agent.previousCoordinates.reduce(prevPosition => {
+            if (prevPosition === undefined) console.log(agent);
             sumHeuristics += heuristicMatrix[prevPosition.x][prevPosition.y];
+            console.log('SUM HEURISTICS: ', sumHeuristics);
         });
         const newPheromoneLevel = (1 - 0.5) * pheromoneMatrix[curX][curX] + sumHeuristics;
         pheromoneMatrix[agent.currentCoordinates.x][agent.currentCoordinates.y] = newPheromoneLevel;

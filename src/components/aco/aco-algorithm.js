@@ -11,16 +11,16 @@ export default class ACO {
         this.currentFrame = 0;
 
         // generate initial pheromone and heuristic matrices
-        this.matrixHelper.generateInitialMatrices(image);
+        this.matrixHelper.generateInitialMatrices();
         // create agents and position them randomly on the canvas
         this.initializeAgents();
     }
 
     initializeAgents() {
-        this.agentCount = 500;
+        this.agentCount = 5;
         this.agents = [];
         console.log('pheromoneMatrix', pheromoneMatrix);
-        for (let i = 0; i < this.agentCount - 1; i++) {
+        for (let i = 0; i < this.agentCount; i++) {
             this.agents[i] = new AntAgent(this.canvas);
             this.initialDraw(this.agents[i].currentCoordinates)
         };
@@ -65,6 +65,7 @@ export default class ACO {
     // }
 
     startSimulation() {
+        console.log('%c Starting simulation ...', 'color: #bada55');
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.heigth);
         this.agents.forEach((agent) => {
             const newCoordinates = agent.calculateNextStep();
@@ -73,10 +74,13 @@ export default class ACO {
             this.ctx.fillRect(agent.currentCoordinates.x, agent.currentCoordinates.y, agent.agentSize, agent.agentSize);
         });
 
-        //update pheromone values
+        // update pheromone values
         this.agents.forEach(agent => {
+            console.log('%c AGENT:', 'color: #981b1b', agent);
             agent.updatePheromoneLevel(agent);
         });
+
+        console.log('Current frame: ', this.currentFrame);
 
         if (this.currentFrame !== this.iterations) {
             this.currentFrame++;
