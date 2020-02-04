@@ -71,15 +71,11 @@ export default class AntAgent {
     updatePheromoneLevel(agent) {
         const curX = agent.currentCoordinates.x;
         const curY = agent.currentCoordinates.y;
-        const prevX = agent.previousCoordinates[agent.previousCoordinates.length - 1].x;
-        const prevY = agent.previousCoordinates[agent.previousCoordinates.length - 1].y;
         let sumHeuristics = 0;
-        agent.previousCoordinates.reduce(prevPosition => {
-            if (prevPosition === undefined) console.log(agent);
+        agent.previousCoordinates.forEach(prevPosition => {
             sumHeuristics += heuristicMatrix[prevPosition.x][prevPosition.y];
-            console.log('SUM HEURISTICS: ', sumHeuristics);
-        });
-        const newPheromoneLevel = (1 - 0.5) * pheromoneMatrix[curX][curX] + sumHeuristics;
+        })
+        const newPheromoneLevel = (1 - 0.5) * pheromoneMatrix[curX][curY] + sumHeuristics;
         pheromoneMatrix[agent.currentCoordinates.x][agent.currentCoordinates.y] = newPheromoneLevel;
     }
 
