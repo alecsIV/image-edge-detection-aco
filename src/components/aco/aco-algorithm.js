@@ -8,7 +8,7 @@ export default class ACO {
         this.ctx = canvas.getContext('2d');
         this.matrixHelper = new MatrixHelper();
         this.iterations = 200;
-        this.currentFrame = 1;
+        this.currentFrame = 0;
 
         // generate initial pheromone and heuristic matrices
         this.matrixHelper.generateInitialMatrices();
@@ -78,8 +78,6 @@ export default class ACO {
         this.agents.forEach(agent => {
             agent.updatePheromoneLevel(agent);
         });
-
-        console.log('currentFrame', this.currentFrame);
 
         if (this.currentFrame !== this.iterations) {
             this.currentFrame++;
