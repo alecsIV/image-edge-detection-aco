@@ -1,5 +1,7 @@
 const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+
 
 module.exports = {
     entry: ['./src/app.js', './src/app.scss'],
@@ -10,11 +12,11 @@ module.exports = {
     },
     devServer: {
         stats: {
-            children: false, 
+            children: false,
             maxModules: 0
         },
         contentBase: './dist',
-        port:9901
+        port: 9901
     },
     devtool: '#eval-source-map',
     module: {
@@ -58,7 +60,12 @@ module.exports = {
     plugins: [
         new MiniCssExtractPlugin({
             filename: 'main.css'
+        }),
+        new HtmlWebpackPlugin({
+            filename: 'index.html',
+            template: 'src/index.html'
         })
+
     ],
     node: {
         fs: 'empty'

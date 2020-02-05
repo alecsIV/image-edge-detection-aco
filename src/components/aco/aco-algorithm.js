@@ -79,6 +79,8 @@ export default class ACO {
             agent.updatePheromoneLevel(agent);
         });
 
+        console.log('currentFrame', this.currentFrame);
+
         if (this.currentFrame !== this.iterations) {
             this.currentFrame++;
             window.requestAnimationFrame(this.startSimulation.bind(this));

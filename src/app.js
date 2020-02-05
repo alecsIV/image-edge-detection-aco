@@ -23,7 +23,13 @@ let algorithm;
 canvasWidth = canvas.width;
 canvasHeight = canvas.clientHeight;
 // Buttons and HTML events
+const drawImageButtonDefaultText = 'Draw Image';
+const drawImageButtonActiveText = 'Reset';
 uploader.addEventListener('change', function() {
+    const context = canvas.getContext('2d');
+    context.clearRect(0, 0, canvasWidth, canvasHeight);
+    drawImageButton.setAttribute('disabled', 'disabled');
+    startSimulationButton.setAttribute('disabled', 'disabled');
     const file = this.files[0];
     if (file) {
         const reader = new FileReader();
@@ -33,6 +39,7 @@ uploader.addEventListener('change', function() {
         })
         reader.readAsDataURL(file)
         drawImageButton.removeAttribute('disabled');
+        drawImageButton.innerHTML = drawImageButtonDefaultText;
     }
 });
 
@@ -41,6 +48,7 @@ drawImageButton.addEventListener('click', () => {
         envImage = new EnvironmentImage(image, canvas);
         algorithm = new ACO(envImage, canvas);
         startSimulationButton.removeAttribute('disabled');
+        drawImageButton.innerHTML = (drawImageButtonActiveText);
     }
 });
 
