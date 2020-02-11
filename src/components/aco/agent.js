@@ -29,7 +29,9 @@ export default class AntAgent {
             neighbourNodeCoordinates = [],
             x = this.currentCoordinates.x,
             y = this.currentCoordinates.y,
-            matrixSize = pheromoneMatrix.length - 1;
+            matrixSize = pheromoneMatrix.length - 1,
+            alpha = 10,
+            beta = 10;
 
         // find the pheromone and heuristic product
         for (let i = -1; i <= 1; i++) {
@@ -39,10 +41,11 @@ export default class AntAgent {
                     if (this.previousCoordinates.length > 0 && this.previousCoordinates[this.previousCoordinates.length - 1].x === x + i && this.previousCoordinates[this.previousCoordinates.length - 1].y === y + j) {
                         phProducts.push('visited');
                     } else {
-                        phProducts.push(pheromoneMatrix[x + i][y + j] * heuristicMatrix[x + i][y + j]);
+                        const productValue = Math.pow(pheromoneMatrix[x + i][y + j], alpha) * Math.pow(heuristicMatrix[x + i][y + j], beta);
+                        phProducts.push(productValue);
 
                         //find the sum of all products from the neighbourhood
-                        sumProducts += pheromoneMatrix[x + i][y + j] * heuristicMatrix[x + i][y + j]
+                        sumProducts += productValue;
                     }
                     neighbourNodeCoordinates.push({
                         "x": x + i,
