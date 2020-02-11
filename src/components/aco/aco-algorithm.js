@@ -8,7 +8,9 @@ export default class ACO {
         this.ctx = canvas.getContext('2d');
         this.matrixHelper = new MatrixHelper();
         this.iterations = 200;
-        this.currentFrame = 0;
+        this.currentFrame = 1;
+
+        this.resultDiv = document.querySelector('.binary-canvas-div');
 
         // generate initial pheromone and heuristic matrices
         this.matrixHelper.generateInitialMatrices();
@@ -17,7 +19,7 @@ export default class ACO {
     }
 
     initializeAgents() {
-        this.agentCount = 5;
+        this.agentCount = 500;
         this.agents = [];
         console.log('%c pheromoneMatrix', 'color: #24c95a', pheromoneMatrix);
         for (let i = 0; i < this.agentCount; i++) {
@@ -82,7 +84,10 @@ export default class ACO {
         if (this.currentFrame !== this.iterations) {
             this.currentFrame++;
             window.requestAnimationFrame(this.startSimulation.bind(this));
-        } else console.log('%c END ANIMATION', 'color: #c92424');
+        } else {
+            console.log('%c END ANIMATION', 'color: #c92424');
+            this.createBinaryImage();
+        }
         // this.agents.forEach((agent) => {
         //     const foreachLoop = agent.previousCoordinates.forEach((prevPosition, i) => {
         //         if (i < agent.previousCoordinates.length - 1) {
@@ -95,5 +100,39 @@ export default class ACO {
         //     });
 
         // });
+    }
+
+    createBinaryImage() {
+        const width = 500,
+            height = 500;
+        let buffer = new Uint8ClampedArray(width * height * 4);
+
+        const binaryCanvas = document.createElement('canvas');
+        binaryCanvas.setAttribute('class', 'binary-canvas');
+        binaryCanvas.setAttribute('width', '500');
+        binaryCanvas.setAttribute('height', '500');
+        const binCtx = binaryCanvas.getContext('2d');
+
+        pheromoneMatrix.forEach((arr, x) => {
+            arr.forEach((value, y) => {
+                const pos = (y * width + x) * 4;
+                const valueRGB = (value <= 0.0001) ? 255 : 0;
+                buffer[pos] = valueRGB; // some R value [0, 255]
+                buffer[pos + 1] = valueRGB; // some G value
+                buffer[pos + 2] = valueRGB // some B value
+                buffer[pos + 3] = 255; // set alpha channel
+            })
+        });
+
+        // create imageData object
+        const idata = binCtx.createImageData(width, height);
+
+        // set our buffer as source
+        idata.data.set(buffer);
+
+        // update canvas with new data
+        binCtx.putImageData(idata, 0, 0);
+        this.resultDiv.appendChild(binaryCanvas);
+
     }
 }

@@ -9,6 +9,8 @@ export default class AntAgent {
     getStartingPostion(canvas) {
         const x = Math.floor(Math.random() * canvas.width);
         const y = Math.floor(Math.random() * canvas.height);
+        // const x = 370;
+        // const y = 213;
         return {
             "x": x,
             "y": y
@@ -17,7 +19,9 @@ export default class AntAgent {
 
     calculateNextStep() {
         let currentMaxProbability = 0,
-            maxProbabilityIndex = 0;
+            maxProbabilityIndex = 0,
+            sumProducts = 0;
+
 
 
         const neighbourhoodSize = 9,
@@ -32,36 +36,51 @@ export default class AntAgent {
             for (let j = -1; j <= 1; j++) {
                 const outOfBounds = (((x + i) > -1 && (x + i) < matrixSize) && ((y + j) > -1) && (y + j) < matrixSize);
                 if ((i !== 0 || j !== 0) && outOfBounds) {
-                    phProducts.push(pheromoneMatrix[x + i][y + j] * heuristicMatrix[x + i][y + j]);
+                    if (this.previousCoordinates.length > 0 && this.previousCoordinates[this.previousCoordinates.length - 1].x === x + i && this.previousCoordinates[this.previousCoordinates.length - 1].y === y + j) {
+                        phProducts.push('visited');
+                    } else {
+                        phProducts.push(pheromoneMatrix[x + i][y + j] * heuristicMatrix[x + i][y + j]);
+
+                        //find the sum of all products from the neighbourhood
+                        sumProducts += pheromoneMatrix[x + i][y + j] * heuristicMatrix[x + i][y + j]
+                    }
                     neighbourNodeCoordinates.push({
                         "x": x + i,
                         "y": y + j
                     });
+                    // if (j === -1 && i === -1) console.log('phProd', phProducts);
                 }
             }
         }
-        //find the sum of all products from the neighbourhood
-        const sumProducts = phProducts.reduce((a, b) => a + b, 0);
+        // console.log('SUM PROD: ', sumProducts);
 
         //find the maximum probability for next move
         phProducts.forEach((product, i) => {
-            const result = Math.abs(product / sumProducts);
             //check if not the previous pixel
-            let notPrevious = true;
-            if (this.previousCoordinates.length > 0) {
-                notPrevious = (x + 1 !== this.previousCoordinates[this.previousCoordinates.length - 1].x) && (y + 1 !== this.previousCoordinates[this.previousCoordinates.length - 1].y);
-            }
+            let notPrevious = (product !== 'visited');
+            if (!notPrevious) console.log('index', i);
+            const result = (sumProducts !== 0 && notPrevious) ? Math.abs(product / sumProducts) : 0;
+            // console.log('RESULT:', result);
 
+            // console.log('notPrevious', notPrevious);
+            // console.log('currentMaxProbability', currentMaxProbability);
             if (result > currentMaxProbability && notPrevious) {
+                // console.log('HERERERERERE');
                 currentMaxProbability = result;
                 maxProbabilityIndex = i;
+            } else if (result === 0 && notPrevious) {
+                const randomValue = Math.floor(Math.random() * (neighbourNodeCoordinates.length - 1));
+                maxProbabilityIndex = (phProducts[randomValue] !== 'visited') ? randomValue : ((randomValue > 0) ? randomValue - 1 : randomValue + 1);
             }
+
         });
 
         //save current coordinates as previous
         this.previousCoordinates.push(this.currentCoordinates);
-
-        return neighbourNodeCoordinates[maxProbabilityIndex]
+        console.log('maxProbabilityIndex', maxProbabilityIndex);
+        console.log('neighbourNodeCoordinates[maxProbabilityIndex]', neighbourNodeCoordinates[maxProbabilityIndex]);
+        console.log('neighbourNodeCoordinates', neighbourNodeCoordinates);
+        return neighbourNodeCoordinates[maxProbabilityIndex];
     }
 
     moveTo(coordinates) {
