@@ -6,10 +6,10 @@ export default class MatrixHelper {
 
     generateInitialMatrices() {
         const initialPheromoneValue = 0.0001;
-        for (let i = 0; i < canvasHeight; i++) {
+        for (let i = 0; i < canvasWidth; i++) {
             pheromoneMatrix[i] = [];
             heuristicMatrix[i] = [];
-            for (let j = 0; j < canvasWidth; j++) {
+            for (let j = 0; j < canvasHeight; j++) {
                 pheromoneMatrix[i][j] = initialPheromoneValue;
                 heuristicMatrix[i][j] = this.heuristicInformationForPixel(i, j);
             }
@@ -28,14 +28,6 @@ export default class MatrixHelper {
         const negJ = (j > 0 ? 1 : 0);
         const posI = (i < arrLength - 1 ? 1 : 0);
         const posJ = (j < arrLength - 1 ? 1 : 0);
-        if (i === 1 && j === 1) {
-            console.table({
-                'negI': negI,
-                'negJ': negJ,
-                'posI': posI,
-                'posJ': posJ
-            });
-        }
 
         a = Math.abs(imageIntensityArray[i - negI][j - negJ] - imageIntensityArray[i + posI][j + posJ]);
         b = Math.abs(imageIntensityArray[i - 0][j - negJ] - imageIntensityArray[i + 0][j + posJ]);
