@@ -4,6 +4,7 @@ export default class AntAgent {
         this.currentCoordinates = this.startPostition;
         this.previousCoordinates = [];
         this.agentSize = 1;
+        this.moves = 0;
     }
 
     getStartingPostion(canvas) {
@@ -28,8 +29,8 @@ export default class AntAgent {
             x = this.currentCoordinates.x,
             y = this.currentCoordinates.y,
             matrixSize = pheromoneMatrix.length - 1,
-            alpha = 10,
-            beta = 10;
+            alpha = 2,
+            beta = 2;
 
         // find the pheromone and heuristic product
         for (let i = -1; i <= 1; i++) {
@@ -57,7 +58,6 @@ export default class AntAgent {
         phProducts.forEach((product, i) => {
             //check if not the previous pixel
             let notPrevious = (product !== 'visited');
-            if (!notPrevious) console.log('index', i);
             const result = (sumProducts !== 0 && notPrevious) ? Math.abs(product / sumProducts) : 0;
 
             if (result > currentMaxProbability && notPrevious) {
@@ -72,9 +72,6 @@ export default class AntAgent {
 
         //save current coordinates as previous
         this.previousCoordinates.push(this.currentCoordinates);
-        console.log('maxProbabilityIndex', maxProbabilityIndex);
-        console.log('neighbourNodeCoordinates[maxProbabilityIndex]', neighbourNodeCoordinates[maxProbabilityIndex]);
-        console.log('neighbourNodeCoordinates', neighbourNodeCoordinates);
         return neighbourNodeCoordinates[maxProbabilityIndex];
     }
 
@@ -89,7 +86,7 @@ export default class AntAgent {
         agent.previousCoordinates.forEach(prevPosition => {
             sumHeuristics += heuristicMatrix[prevPosition.x][prevPosition.y];
         })
-        const newPheromoneLevel = (1 - 0.5) * pheromoneMatrix[curX][curY] + sumHeuristics;
+        const newPheromoneLevel = (1 - 0.02) * pheromoneMatrix[curX][curY] + sumHeuristics;
         pheromoneMatrix[agent.currentCoordinates.x][agent.currentCoordinates.y] = newPheromoneLevel;
     }
 }

@@ -7,8 +7,10 @@ export default class ACO {
         this.canvas = canvas;
         this.ctx = canvas.getContext('2d');
         this.matrixHelper = new MatrixHelper();
-        this.iterations = 20;
+        this.iterations = 1;
         this.currentFrame = 1;
+        this.L = 560
+        this.currentMove = 0;
 
         this.resultDiv = document.querySelector('.binary-canvas-div');
 
@@ -19,7 +21,7 @@ export default class ACO {
     }
 
     initializeAgents() {
-        this.agentCount = 5000;
+        this.agentCount = Math.sqrt(560*560);
         this.agents = [];
         console.log('%c pheromoneMatrix', 'color: #24c95a', pheromoneMatrix);
         for (let i = 0; i < this.agentCount; i++) {
@@ -43,26 +45,55 @@ export default class ACO {
     }
 
     startSimulation() {
-        console.log('%c Starting simulation ...', 'color: #bada55');
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.heigth);
-        this.agents.forEach((agent) => {
-            const newCoordinates = agent.calculateNextStep();
-            agent.moveTo(newCoordinates);
-            if (agent.currentCoordinates == undefined) console.log('faulty', agent);
-            this.ctx.fillRect(agent.currentCoordinates.y, agent.currentCoordinates.x, agent.agentSize, agent.agentSize);
-        });
+        for (let i = 0; i < this.iterations; i++) {
+            console.log('%c Starting simulation ...', 'color: #bada55');
+            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.heigth);
+            this.agents.forEach((agent) => {
+                window.requestAnimationFrame(() => {
+                    for (let j = 0; j < this.L; j++) {
+                        const newCoordinates = agent.calculateNextStep();
+                        agent.moveTo(newCoordinates);
+                        if (agent.currentCoordinates == undefined) console.log('faulty', agent);
+                        this.ctx.fillRect(agent.currentCoordinates.y, agent.currentCoordinates.x, agent.agentSize, agent.agentSize)
+                    }
+                });
+                // this.executeAntMovements(agent);
+                // console.log('agent', agent);
+            });
 
-        // update pheromone values
-        this.agents.forEach(agent => {
-            agent.updatePheromoneLevel(agent);
-        });
+            // update pheromone values
+            this.agents.forEach(agent => {
+                agent.updatePheromoneLevel(agent);
+            });
 
-        if (this.currentFrame !== this.iterations) {
-            this.currentFrame++;
-            window.requestAnimationFrame(this.startSimulation.bind(this));
+            if (i === this.iterations - 1) {
+                console.log('%c END OF SIMULATION', 'color: #c92424');
+                this.createBinaryImage();
+            }
+
+            //     this.currentFrame++;
+            //     window.requestAnimationFrame(this.startSimulation.bind(this));
+            // } else {
+            //     console.log('%c END ANIMATION', 'color: #c92424');
+            //     this.createBinaryImage();
+            // }
+        }
+    }
+
+    executeAntMovements(agent) {
+        console.log('agent2', agent);
+        const newCoordinates = agent.calculateNextStep();
+        agent.moveTo(newCoordinates);
+        if (agent.currentCoordinates == undefined) console.log('faulty', agent);
+        this.ctx.fillRect(agent.currentCoordinates.y, agent.currentCoordinates.x, agent.agentSize, agent.agentSize)
+        if (this.currentMove < this.L) {
+            agent.moves++;
+            this.currentMove++;
+            window.requestAnimationFrame(this.executeAntMovements.bind(this, agent));
         } else {
-            console.log('%c END ANIMATION', 'color: #c92424');
-            this.createBinaryImage();
+            window.cancelAnimationFrame(window.requestAnimationFrame(this.executeAntMovements));
+            this.currentMove = 0;
+            return;
         }
     }
 
