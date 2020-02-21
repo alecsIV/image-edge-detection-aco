@@ -1,7 +1,6 @@
 export default class MatrixHelper {
     constructor() {
         this.iMax = imageIntensityArray1d.reduce((a, b) => a + b) / imageIntensityArray1d.length;
-        // this.currentPheromoneMatrix = this.generateInitialMatrices(image);
     }
 
     generateInitialMatrices() {

@@ -9,8 +9,6 @@ export default class AntAgent {
     getStartingPostion(canvas) {
         const x = Math.floor(Math.random() * canvas.width);
         const y = Math.floor(Math.random() * canvas.height);
-        // const x = 370;
-        // const y = 213;
         return {
             "x": x,
             "y": y
@@ -51,11 +49,9 @@ export default class AntAgent {
                         "x": x + i,
                         "y": y + j
                     });
-                    // if (j === -1 && i === -1) console.log('phProd', phProducts);
                 }
             }
         }
-        // console.log('SUM PROD: ', sumProducts);
 
         //find the maximum probability for next move
         phProducts.forEach((product, i) => {
@@ -63,12 +59,8 @@ export default class AntAgent {
             let notPrevious = (product !== 'visited');
             if (!notPrevious) console.log('index', i);
             const result = (sumProducts !== 0 && notPrevious) ? Math.abs(product / sumProducts) : 0;
-            // console.log('RESULT:', result);
 
-            // console.log('notPrevious', notPrevious);
-            // console.log('currentMaxProbability', currentMaxProbability);
             if (result > currentMaxProbability && notPrevious) {
-                // console.log('HERERERERERE');
                 currentMaxProbability = result;
                 maxProbabilityIndex = i;
             } else if (result === 0 && notPrevious) {
@@ -100,20 +92,4 @@ export default class AntAgent {
         const newPheromoneLevel = (1 - 0.5) * pheromoneMatrix[curX][curY] + sumHeuristics;
         pheromoneMatrix[agent.currentCoordinates.x][agent.currentCoordinates.y] = newPheromoneLevel;
     }
-
-    // old way of getting intensity at each pixel
-    // getPixelIntensityAt(coordinates){
-    //     let x = coordinates.x;
-    //     let y = coordinates.y;
-    //     let i;
-
-    //     x = Math.floor(x / this.agentSize);
-    //     y = Math.floor(y / this.agentSize);
-    //     i = (y === 0) ? 0 : this.canvasWidth * y;
-    //     i = i + x; 
-    //     console.log('canvasW: ', this.canvasWidth);
-    //     console.log('i: ', i);
-    //     console.log('intensity at x: ', x, ' y:', y, ' is', imageIntensityArray[i]);
-    //     return imageIntensityArray[i];
-    // }
 }
