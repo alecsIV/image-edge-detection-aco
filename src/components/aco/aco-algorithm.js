@@ -53,7 +53,7 @@ export default class ACO {
                 agent.moveTo(newCoordinates);
                 if (agent.currentCoordinates == undefined) console.log('faulty', agent);
                 this.ctx.fillRect(agent.currentCoordinates.y, agent.currentCoordinates.x, agent.agentSize, agent.agentSize);
-                if (agent.currentCoordinates.x === agent.previousCoordinates[agent.previousCoordinates.length - 1].x && agent.currentCoordinates.y === agent.previousCoordinates[agent.previousCoordinates.length - 1].y) i = this.L;
+                // if (agent.currentCoordinates.x === agent.previousCoordinates[agent.previousCoordinates.length - 1].x && agent.currentCoordinates.y === agent.previousCoordinates[agent.previousCoordinates.length - 1].y) i = this.L;
             }
         });
 

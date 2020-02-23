@@ -16,6 +16,17 @@ export default class AntAgent {
         }
     }
 
+    // depositPheromone(coordinates, prevCoordin params) {
+
+    //     pheromoneMatrix[coordinates.x][coordinates.y] = params.n + ()
+    // }
+
+    calcMedian(arr) {
+        const mid = Math.floor(arr.length / 2),
+            nums = [...arr].sort((a, b) => a - b);
+        return arr.length % 2 !== 0 ? nums[mid] : (nums[mid - 1] + nums[mid]) / 2;
+    }
+
     calculateNextStep(antMemLen) {
         let currentMaxProbability = 0,
             maxProbabilityIndex = 0,
@@ -39,11 +50,11 @@ export default class AntAgent {
             for (let j = -1; j <= 1; j++) {
                 const outOfBounds = (((x + i) > -1 && (x + i) < matrixSize) && ((y + j) > -1) && (y + j) < matrixSize);
                 visited = false;
-                if (outOfBounds) {
+                if ((i !== 0 && j !== 0) && outOfBounds) {
                     for (let k = 1; k < ((antMemLen > pCLen) ? pCLen : antMemLen); k++) {
                         if (this.previousCoordinates[pCLen - k].x === x + i && this.previousCoordinates[pCLen - k].y === y + j) {
                             visited = true;
-                            k = ((antMemLen > pCLen) ? pCLen : antMemLen);
+                            // k = ((antMemLen > pCLen) ? pCLen : antMemLen);
                         }
                     }
                     if (!visited) {
@@ -97,6 +108,7 @@ export default class AntAgent {
         // console.log('neighbourNodeCoordinates[maxProbabilityIndex]', neighbourNodeCoordinates[maxProbabilityIndex]);
         // console.log('neighbourNodeCoordinates', neighbourNodeCoordinates);
         if (maxProbabilityIndex === 99) {
+            this.previousCoordinates = [];
             const newPositions = this.getStartingPostion();
             return newPositions;
         } else return neighbourNodeCoordinates[maxProbabilityIndex];
