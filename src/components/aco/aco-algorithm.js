@@ -7,7 +7,7 @@ export default class ACO {
         this.canvas = canvas;
         this.ctx = canvas.getContext('2d');
         this.matrixHelper = new MatrixHelper();
-        this.iterations = 3;
+        this.iterations = 4;
         this.L = 1700;
         this.l = 47;
         this.currentFrame = 1;
@@ -51,8 +51,9 @@ export default class ACO {
             for (let i = 0; i < this.L; i++) {
                 const newCoordinates = agent.calculateNextStep(this.l);
                 agent.moveTo(newCoordinates);
-                if (agent.currentCoordinates == undefined)console.log('faulty', agent);
+                if (agent.currentCoordinates == undefined) console.log('faulty', agent);
                 this.ctx.fillRect(agent.currentCoordinates.y, agent.currentCoordinates.x, agent.agentSize, agent.agentSize);
+                if (agent.currentCoordinates.x === agent.previousCoordinates[agent.previousCoordinates.length - 1].x && agent.currentCoordinates.y === agent.previousCoordinates[agent.previousCoordinates.length - 1].y) i = this.L;
             }
         });
 
@@ -85,7 +86,7 @@ export default class ACO {
         });
         pheromoneAvg /= (pheromoneMatrix.length - 1);
         console.log('average', pheromoneAvg);
-        console.log('average2', pheromoneAvg/((this.L/this.agentCount)/3));
+        console.log('average2', pheromoneAvg / 2);
         console.log('number of >=1', temp.length);
 
         const binaryCanvas = document.createElement('canvas');
@@ -97,7 +98,7 @@ export default class ACO {
         pheromoneMatrix.forEach((arr, x) => {
             arr.forEach((value, y) => {
                 const pos = (x * width + y) * 4;
-                const valueRGB = (value <= 1) ? 255 : 0;
+                const valueRGB = (value <= 0.002) ? 255 : 0;
                 buffer[pos] = valueRGB; // some R value [0, 255]
                 buffer[pos + 1] = valueRGB; // some G value
                 buffer[pos + 2] = valueRGB // some B value
