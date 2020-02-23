@@ -4,7 +4,7 @@ export default class MatrixHelper {
     }
 
     generateInitialMatrices() {
-        const initialPheromoneValue = 0.0001;
+        global.initialPheromoneValue = 0.0001;
         for (let i = 0; i < canvasWidth; i++) {
             pheromoneMatrix[i] = [];
             heuristicMatrix[i] = [];

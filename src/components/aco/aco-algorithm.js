@@ -7,7 +7,9 @@ export default class ACO {
         this.canvas = canvas;
         this.ctx = canvas.getContext('2d');
         this.matrixHelper = new MatrixHelper();
-        this.iterations = 20;
+        this.iterations = 3;
+        this.L = 1700;
+        this.l = 47;
         this.currentFrame = 1;
 
         this.resultDiv = document.querySelector('.binary-canvas-div');
@@ -19,7 +21,7 @@ export default class ACO {
     }
 
     initializeAgents() {
-        this.agentCount = 5000;
+        this.agentCount = 560;
         this.agents = [];
         console.log('%c pheromoneMatrix', 'color: #24c95a', pheromoneMatrix);
         for (let i = 0; i < this.agentCount; i++) {
@@ -46,10 +48,12 @@ export default class ACO {
         console.log('%c Starting simulation ...', 'color: #bada55');
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.heigth);
         this.agents.forEach((agent) => {
-            const newCoordinates = agent.calculateNextStep();
-            agent.moveTo(newCoordinates);
-            if (agent.currentCoordinates == undefined) console.log('faulty', agent);
-            this.ctx.fillRect(agent.currentCoordinates.y, agent.currentCoordinates.x, agent.agentSize, agent.agentSize);
+            for (let i = 0; i < this.L; i++) {
+                const newCoordinates = agent.calculateNextStep(this.l);
+                agent.moveTo(newCoordinates);
+                if (agent.currentCoordinates == undefined)console.log('faulty', agent);
+                this.ctx.fillRect(agent.currentCoordinates.y, agent.currentCoordinates.x, agent.agentSize, agent.agentSize);
+            }
         });
 
         // update pheromone values
@@ -70,6 +74,19 @@ export default class ACO {
         const width = 500,
             height = 500;
         let buffer = new Uint8ClampedArray(width * height * 4);
+        let pheromoneAvg = 0;
+        const temp = [];
+        pheromoneMatrix.forEach((arr, x) => {
+            // arr.reduce((a,b)=> a+b);
+            arr.forEach((value, y) => {
+                pheromoneAvg += value;
+                if (value >= 1) temp.push(value);
+            });
+        });
+        pheromoneAvg /= (pheromoneMatrix.length - 1);
+        console.log('average', pheromoneAvg);
+        console.log('average2', pheromoneAvg/((this.L/this.agentCount)/3));
+        console.log('number of >=1', temp.length);
 
         const binaryCanvas = document.createElement('canvas');
         binaryCanvas.setAttribute('class', 'binary-canvas');
@@ -80,7 +97,7 @@ export default class ACO {
         pheromoneMatrix.forEach((arr, x) => {
             arr.forEach((value, y) => {
                 const pos = (x * width + y) * 4;
-                const valueRGB = (value <= 0.0002) ? 255 : 0;
+                const valueRGB = (value <= 1) ? 255 : 0;
                 buffer[pos] = valueRGB; // some R value [0, 255]
                 buffer[pos + 1] = valueRGB; // some G value
                 buffer[pos + 2] = valueRGB // some B value
