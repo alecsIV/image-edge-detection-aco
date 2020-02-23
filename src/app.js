@@ -12,22 +12,24 @@ import EnvironmentImage from './components/environment-image';
 const uploader = document.querySelector('#image-upload');
 const image = document.querySelector('#image-source');
 const imagePreview = document.querySelector('#image-preview');
-const canvas = document.querySelector('#canvas');
+const canvasBG = document.querySelector('.canvas-bg');
+const canvasFG = document.querySelector('.canvas-fg');
+const canvasRes = document.querySelector('.canvas-result');
 const drawImageButton = document.querySelector('#draw-image-button');
 const startSimulationButton = document.querySelector('#start-simulation');
 
 let envImage;
 let algorithm;
 
+
 //set canvas dimensions
-canvasWidth = canvas.width;
-canvasHeight = canvas.clientHeight;
+canvasWidth = canvasBG.width;
+canvasHeight = canvasBG.clientHeight;
 // Buttons and HTML events
 const drawImageButtonDefaultText = 'Draw Image';
 const drawImageButtonActiveText = 'Reset';
 uploader.addEventListener('change', function() {
-    const context = canvas.getContext('2d');
-    context.clearRect(0, 0, canvasWidth, canvasHeight);
+    clearCanvas('all');
     drawImageButton.setAttribute('disabled', 'disabled');
     startSimulationButton.setAttribute('disabled', 'disabled');
     const file = this.files[0];
@@ -44,9 +46,13 @@ uploader.addEventListener('change', function() {
 });
 
 drawImageButton.addEventListener('click', () => {
+    if (drawImageButton.innerHTML === drawImageButtonActiveText) {
+        clearCanvas(canvasFG);
+        clearCanvas(canvasRes);
+    }
     if (image) {
-        envImage = new EnvironmentImage(image, canvas);
-        algorithm = new ACO(envImage, canvas);
+        envImage = new EnvironmentImage(image, canvasBG);
+        algorithm = new ACO(envImage, canvasFG);
         startSimulationButton.removeAttribute('disabled');
         drawImageButton.innerHTML = (drawImageButtonActiveText);
     }
@@ -55,3 +61,11 @@ drawImageButton.addEventListener('click', () => {
 startSimulationButton.addEventListener('click', () => {
     algorithm.startSimulation();
 });
+
+function clearCanvas(canvas) {
+    if (canvas === 'all') {
+        document.querySelectorAll('canvas').forEach((canvasElement)=> {
+            canvasElement.getContext('2d').clearRect(0, 0, canvasWidth, canvasHeight);
+        });
+    } else canvas.getContext('2d').clearRect(0, 0, canvasWidth, canvasHeight);
+}

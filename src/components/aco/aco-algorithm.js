@@ -7,12 +7,13 @@ export default class ACO {
         this.canvas = canvas;
         this.ctx = canvas.getContext('2d');
         this.matrixHelper = new MatrixHelper();
-        this.iterations = 1;
+        this.iterations = 2;
         this.currentFrame = 1;
-        this.L = 560
+        this.L = 560;
         this.currentMove = 0;
 
-        this.resultDiv = document.querySelector('.binary-canvas-div');
+        this.resultDiv = document.querySelector('.canvas-result-container');
+        this.resultCanvas = document.querySelector('.canvas-result');
 
         // generate initial pheromone and heuristic matrices
         this.matrixHelper.generateInitialMatrices();
@@ -21,7 +22,7 @@ export default class ACO {
     }
 
     initializeAgents() {
-        this.agentCount = Math.sqrt(560*560);
+        this.agentCount = 560;
         this.agents = [];
         console.log('%c pheromoneMatrix', 'color: #24c95a', pheromoneMatrix);
         for (let i = 0; i < this.agentCount; i++) {
@@ -45,73 +46,92 @@ export default class ACO {
     }
 
     startSimulation() {
-        for (let i = 0; i < this.iterations; i++) {
-            console.log('%c Starting simulation ...', 'color: #bada55');
-            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.heigth);
-            this.agents.forEach((agent) => {
-                window.requestAnimationFrame(() => {
-                    for (let j = 0; j < this.L; j++) {
-                        const newCoordinates = agent.calculateNextStep();
-                        agent.moveTo(newCoordinates);
-                        if (agent.currentCoordinates == undefined) console.log('faulty', agent);
-                        this.ctx.fillRect(agent.currentCoordinates.y, agent.currentCoordinates.x, agent.agentSize, agent.agentSize)
-                    }
-                });
-                // this.executeAntMovements(agent);
-                // console.log('agent', agent);
-            });
+        // for (let i = 0; i < this.iterations; i++) {
+        console.log('%c Starting simulation ...', 'color: #bada55');
+        // // Store the current transformation matrix
+        // this.ctx.save();
 
-            // update pheromone values
-            this.agents.forEach(agent => {
-                agent.updatePheromoneLevel(agent);
-            });
+        // // Use the identity matrix while clearing the canvas
+        // this.ctx.setTransform(1, 0, 0, 1, 0, 0);
+        // this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-            if (i === this.iterations - 1) {
-                console.log('%c END OF SIMULATION', 'color: #c92424');
-                this.createBinaryImage();
-            }
+        // // Restore the transform
+        // this.ctx.restore();
+        // this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.heigth);
+        this.agents.forEach((agent) => {
+            // window.requestAnimationFrame(() => {
+                for (let j = 0; j < this.L; j++) {
+                    const newCoordinates = agent.calculateNextStep();
+                    agent.moveTo(newCoordinates);
+                    if (agent.currentCoordinates == undefined) console.log('faulty', agent);
+                    this.ctx.fillRect(agent.currentCoordinates.y, agent.currentCoordinates.x, agent.agentSize, agent.agentSize)
+                }
+            // });
+            // this.executeAntMovements(agent);
+            // console.log('agent', agent);
+        });
 
-            //     this.currentFrame++;
-            //     window.requestAnimationFrame(this.startSimulation.bind(this));
-            // } else {
-            //     console.log('%c END ANIMATION', 'color: #c92424');
+        // update pheromone values
+        this.agents.forEach(agent => {
+            agent.updatePheromoneLevel(agent);
+        });
+
+        if (this.currentFrame < this.iterations) {
+            //     console.log('%c END OF SIMULATION', 'color: #c92424');
             //     this.createBinaryImage();
+            // }
+            this.currentFrame++;
+            window.requestAnimationFrame(this.startSimulation.bind(this));
+        } else {
+            console.log('%c END ANIMATION', 'color: #c92424');
+            this.createBinaryImage();
+        }
+        // }
+    }
+
+    executeAntMovements(agent) {
+        // console.log('agent2', agent);
+        for (let i = 0; i < this.L; i++) {
+                    // Store the current transformation matrix
+        this.ctx.save();
+
+        // Use the identity matrix while clearing the canvas
+        this.ctx.setTransform(1, 0, 0, 1, 0, 0);
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+        // Restore the transform
+        this.ctx.restore();
+            const newCoordinates = agent.calculateNextStep();
+            agent.moveTo(newCoordinates);
+            if (agent.currentCoordinates == undefined) console.log('faulty', agent);
+            this.ctx.fillRect(agent.currentCoordinates.y, agent.currentCoordinates.x, agent.agentSize, agent.agentSize);
+            agent.moves++;
+            // if (this.currentMove < this.L) {
+            //     agent.moves++;
+            //     this.currentMove++;
+            //     // window.requestAnimationFrame(this.executeAntMovements.bind(this, agent));
+            // } else {
+            //     console.log('FINISHED ANIMATING');
+            //     // window.cancelAnimationFrame(window.requestAnimationFrame(this.executeAntMovements));
+            //     this.currentMove = 0;
+            //     return;
             // }
         }
     }
 
-    executeAntMovements(agent) {
-        console.log('agent2', agent);
-        const newCoordinates = agent.calculateNextStep();
-        agent.moveTo(newCoordinates);
-        if (agent.currentCoordinates == undefined) console.log('faulty', agent);
-        this.ctx.fillRect(agent.currentCoordinates.y, agent.currentCoordinates.x, agent.agentSize, agent.agentSize)
-        if (this.currentMove < this.L) {
-            agent.moves++;
-            this.currentMove++;
-            window.requestAnimationFrame(this.executeAntMovements.bind(this, agent));
-        } else {
-            window.cancelAnimationFrame(window.requestAnimationFrame(this.executeAntMovements));
-            this.currentMove = 0;
-            return;
-        }
-    }
-
     createBinaryImage() {
+        console.log('HERE');
         const width = 500,
             height = 500;
         let buffer = new Uint8ClampedArray(width * height * 4);
 
-        const binaryCanvas = document.createElement('canvas');
-        binaryCanvas.setAttribute('class', 'binary-canvas');
-        binaryCanvas.setAttribute('width', '500');
-        binaryCanvas.setAttribute('height', '500');
-        const binCtx = binaryCanvas.getContext('2d');
+        const resultCtx = this.resultCanvas.getContext('2d');
+        resultCtx.clearRect(0, 0, this.canvas.width, this.canvas.height)
 
         pheromoneMatrix.forEach((arr, x) => {
             arr.forEach((value, y) => {
                 const pos = (x * width + y) * 4;
-                const valueRGB = (value <= 0.0002) ? 255 : 0;
+                const valueRGB = (value <= 0.002) ? 255 : 0;
                 buffer[pos] = valueRGB; // some R value [0, 255]
                 buffer[pos + 1] = valueRGB; // some G value
                 buffer[pos + 2] = valueRGB // some B value
@@ -120,14 +140,12 @@ export default class ACO {
         });
 
         // create imageData object
-        const idata = binCtx.createImageData(width, height);
+        const idata = resultCtx.createImageData(width, height);
 
         // set our buffer as source
         idata.data.set(buffer);
 
         // update canvas with new data
-        binCtx.putImageData(idata, 0, 0);
-        this.resultDiv.appendChild(binaryCanvas);
-
+        resultCtx.putImageData(idata, 0, 0);
     }
 }

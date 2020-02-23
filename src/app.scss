@@ -1,9 +1,9 @@
-#canvas {
-    border:1px solid #000000;
-    display: block;
-    background-position: center;
-    background-size: cover;
-}
+// #canvas {
+//     border: 1px solid #000000;
+//     display: block;
+//     background-position: center;
+//     background-size: cover;
+// }
 
 #image-source {
     display: none;
@@ -12,6 +12,37 @@
 #image-preview {
     max-height: 50px;
     max-width: 50px;
+}
+
+.canvas-interface-wrapper{
+ display: flex;
+flex-wrap: wrap;
+}
+
+.canvas-container {
+    position: relative;
+    border: 1px solid #000000;
+    display: block;
+    width: 500px;
+    height: 500px;
+
+    .canvas {
+
+        &-bg {
+            z-index: 0;
+        }
+
+        &-fg {
+            z-index: 1;
+        }
+
+        &-bg,
+        &-fg {
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+    }
 }
 
 /* #make-matrix-button {
