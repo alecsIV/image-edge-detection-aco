@@ -21,7 +21,7 @@ export default class AntAgent {
     //     pheromoneMatrix[coordinates.x][coordinates.y] = params.n + ()
     // }
 
-    depositPheromone(n, p, coordinates) {
+    depositPheromone(n, p, t, coordinates) {
         const medians = [];
         coordinates.forEach(pixel => {
             const matrixSize = pheromoneMatrix.length - 1,
@@ -45,8 +45,7 @@ export default class AntAgent {
         });
         const medDiff = medians[0] - medians[1];
         // coordinates.forEach((pixel) => {
-        pheromoneMatrix[coordinates[0].x][coordinates[0].y] +=
-            n + (p * medDiff) / 255;
+        pheromoneMatrix[coordinates[0].x][coordinates[0].y] += (medians[0] >= t) ? n + (p * medDiff) / 255 : 0;
         // });
     }
 
@@ -146,15 +145,15 @@ export default class AntAgent {
             return [newPositions, true];
         } else return [neighbourNodeCoordinates[maxProbabilityIndex], false];
     }
-    moveTo(n, p, coordinates, newAnt) {
+    moveTo(n, p, t, coordinates, newAnt) {
         if (!newAnt) {
-            this.depositPheromone(n, p, [this.currentCoordinates, coordinates]);
+            this.depositPheromone(n, p, t, [this.currentCoordinates, coordinates]);
             this.previousCoordinates.push(this.currentCoordinates);
         } else this.previousCoordinates = [];
         this.currentCoordinates = coordinates;
     }
 
-    // updatePheromoneLevel(agents, t, x, y) {
+    // updatePheromoneLevel(agents, t, x, y) { 
     //     // const curX = agent.currentCoordinates.x;
     //     // const curY = agent.currentCoordinates.y;
     //     let sumHeuristics = 0;

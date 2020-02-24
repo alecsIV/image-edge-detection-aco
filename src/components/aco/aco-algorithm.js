@@ -8,8 +8,8 @@ export default class ACO {
         this.ctx = canvas.getContext("2d");
         this.matrixHelper = new MatrixHelper();
         this.iterations = 3;
-        this.L = 1700;
-        this.l = 47;
+        this.L = Math.round(3*Math.sqrt(this.image.width*this.image.height));
+        this.l = Math.sqrt(2*(this.image.width + this.image.height));
         this.n = 2;
         this.p = 10;
         this.t = 0.1;
@@ -25,7 +25,10 @@ export default class ACO {
     }
 
     initializeAgents() {
-        this.agentCount = 560;
+        this.agentCount = Math.sqrt(this.image.width*this.image.height);
+        console.log('agentsCount', this.agentCount);
+        console.log('this.L', this.L);
+        console.log('this.l', this.l);
         this.agents = [];
         console.log("%c pheromoneMatrix", "color: #24c95a", pheromoneMatrix);
         for (let i = 0; i < this.agentCount; i++) {
@@ -53,7 +56,7 @@ export default class ACO {
         this.agents.forEach(agent => {
             for (let i = 0; i < this.L; i++) {
                 const newCoordinates = [...agent.calculateNextStep(this.l)];
-                agent.moveTo(this.n, this.p, newCoordinates[0], newCoordinates[1]);
+                agent.moveTo(this.n, this.p, this.t, newCoordinates[0], newCoordinates[1]);
                 if (agent.currentCoordinates == undefined) console.log("faulty", agent);
                 this.ctx.fillRect(
                     agent.currentCoordinates.y,
@@ -61,6 +64,7 @@ export default class ACO {
                     agent.agentSize,
                     agent.agentSize
                 );
+                if (newCoordinates[1]) i = this.L;
                 // if (agent.currentCoordinates.x === agent.previousCoordinates[agent.previousCoordinates.length - 1].x && agent.currentCoordinates.y === agent.previousCoordinates[agent.previousCoordinates.length - 1].y) i = this.L;
             }
         });
