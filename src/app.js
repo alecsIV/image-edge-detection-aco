@@ -1,3 +1,7 @@
+const {
+    GPU
+} = require('gpu.js');
+
 //set global variables
 global.imageIntensityArray1d = new Array();
 global.imageIntensityArray = new Array();
@@ -13,11 +17,26 @@ const uploader = document.querySelector('#image-upload');
 const image = document.querySelector('#image-source');
 const imagePreview = document.querySelector('#image-preview');
 const canvas = document.querySelector('#canvas');
+const context = canvas.getContext('webgl');
+// const canvasGLCont = document.querySelector('.regl');
 const drawImageButton = document.querySelector('#draw-image-button');
 const startSimulationButton = document.querySelector('#start-simulation');
 
 let envImage;
 let algorithm;
+
+const gpu = new GPU({
+    canvas,
+    context: context
+});
+const render = gpu.createKernel(function(x) {
+        this.color(this.thread.x / 500, this.thread.y / 500, x[0], 1);
+    })
+    .setOutput([500, 500])
+    .setGraphical(true);
+// const canvas = render.getCanvas();
+console.log('canvas', canvas);
+// document.querySelector('.canvas-container').appendChild(canvas);
 
 //set canvas dimensions
 canvasWidth = canvas.width;
@@ -26,8 +45,8 @@ canvasHeight = canvas.clientHeight;
 const drawImageButtonDefaultText = 'Draw Image';
 const drawImageButtonActiveText = 'Reset';
 uploader.addEventListener('change', function() {
-    const context = canvas.getContext('2d');
-    context.clearRect(0, 0, canvasWidth, canvasHeight);
+    // const context = canvas.getContext('2d');
+    context.clear(context.DEPTH_BUFFER_BIT)
     drawImageButton.setAttribute('disabled', 'disabled');
     startSimulationButton.setAttribute('disabled', 'disabled');
     const file = this.files[0];

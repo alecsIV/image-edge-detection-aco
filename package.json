@@ -34,5 +34,9 @@
     "webpack": "^4.41.2",
     "webpack-cli": "^3.3.10",
     "webpack-dev-server": "3.9.0"
+  },
+  "dependencies": {
+    "gpu.js": "^2.6.9",
+    "regl": "^1.3.13"
   }
 }
