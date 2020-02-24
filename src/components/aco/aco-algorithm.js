@@ -10,6 +10,8 @@ export default class ACO {
         this.iterations = 4;
         this.L = 1700;
         this.l = 47;
+        this.n = 2;
+        this.p = 10;
         this.currentFrame = 1;
 
         this.resultDiv = document.querySelector('.binary-canvas-div');
@@ -50,7 +52,7 @@ export default class ACO {
         this.agents.forEach((agent) => {
             for (let i = 0; i < this.L; i++) {
                 const newCoordinates = agent.calculateNextStep(this.l);
-                agent.moveTo(newCoordinates);
+                agent.moveTo(this.n, this.p, newCoordinates);
                 if (agent.currentCoordinates == undefined) console.log('faulty', agent);
                 this.ctx.fillRect(agent.currentCoordinates.y, agent.currentCoordinates.x, agent.agentSize, agent.agentSize);
                 // if (agent.currentCoordinates.x === agent.previousCoordinates[agent.previousCoordinates.length - 1].x && agent.currentCoordinates.y === agent.previousCoordinates[agent.previousCoordinates.length - 1].y) i = this.L;
