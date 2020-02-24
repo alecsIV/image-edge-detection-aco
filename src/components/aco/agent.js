@@ -40,9 +40,9 @@ export default class AntAgent {
             medians.push(this.calcMedian(neighbourIntensities));
         });
         const medDiff = medians[0] - medians[1];
-        coordinates.forEach((pixel) => {
-            pheromoneMatrix[pixel.x][pixel.y] += (n + ((p * medDiff) / 255));
-        });
+        // coordinates.forEach((pixel) => {
+            pheromoneMatrix[coordinates[0].x][coordinates[0].y] += (n + ((p * medDiff) / 255));
+        // });
     }
 
     calcMedian(arr) {
@@ -138,7 +138,7 @@ export default class AntAgent {
         } else return neighbourNodeCoordinates[maxProbabilityIndex];
     }
     moveTo(n, p, coordinates) {
-        this.depositPheromone(n, p, [this.currentCoordinates, coordinates])
+        this.depositPheromone(n, p, [this.currentCoordinates, coordinates]);
         this.previousCoordinates.push(this.currentCoordinates);
         this.currentCoordinates = coordinates;
     }

@@ -7,7 +7,7 @@ export default class ACO {
         this.canvas = canvas;
         this.ctx = canvas.getContext('2d');
         this.matrixHelper = new MatrixHelper();
-        this.iterations = 4;
+        this.iterations = 3;
         this.L = 1700;
         this.l = 47;
         this.n = 2;
@@ -78,18 +78,15 @@ export default class ACO {
             height = 500;
         let buffer = new Uint8ClampedArray(width * height * 4);
         let pheromoneAvg = 0;
-        const temp = [];
         pheromoneMatrix.forEach((arr, x) => {
             // arr.reduce((a,b)=> a+b);
             arr.forEach((value, y) => {
                 pheromoneAvg += value;
-                if (value >= 1) temp.push(value);
             });
         });
-        pheromoneAvg /= (pheromoneMatrix.length - 1);
+        pheromoneAvg = pheromoneAvg/(pheromoneMatrix.length - 1);
         console.log('average', pheromoneAvg);
         console.log('average2', pheromoneAvg / 2);
-        console.log('number of >=1', temp.length);
 
         const binaryCanvas = document.createElement('canvas');
         binaryCanvas.setAttribute('class', 'binary-canvas');
@@ -100,7 +97,7 @@ export default class ACO {
         pheromoneMatrix.forEach((arr, x) => {
             arr.forEach((value, y) => {
                 const pos = (x * width + y) * 4;
-                const valueRGB = (value <= 0.002) ? 255 : 0;
+                const valueRGB = (value <= pheromoneAvg/2) ? 255 : 0;
                 buffer[pos] = valueRGB; // some R value [0, 255]
                 buffer[pos + 1] = valueRGB; // some G value
                 buffer[pos + 2] = valueRGB // some B value
