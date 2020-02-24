@@ -12,7 +12,8 @@ export default class ACO {
         this.l = 47;
         this.n = 2;
         this.p = 10;
-        this.t = 0.15;
+        this.t = 0.1;
+        this.ro = 0.02;
         this.currentFrame = 1;
 
         this.resultDiv = document.querySelector(".binary-canvas-div");
@@ -96,7 +97,7 @@ export default class ACO {
         //       : 0;
         // });
         // agent.previousCoordinates.forEach(prevPosition => {
-        const newPheromoneLevel = (1 - 0.02) * pheromoneMatrix[x][y] + sumHeuristics;
+        const newPheromoneLevel = (1 - this.ro) * pheromoneMatrix[x][y] + sumHeuristics;
         pheromoneMatrix[x][y] = newPheromoneLevel;
         // });
     }

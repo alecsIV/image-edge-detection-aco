@@ -154,24 +154,24 @@ export default class AntAgent {
         this.currentCoordinates = coordinates;
     }
 
-    updatePheromoneLevel(agents, t, x, y) {
-        // const curX = agent.currentCoordinates.x;
-        // const curY = agent.currentCoordinates.y;
-        let sumHeuristics = 0;
-        agents.forEach(agent => {
-            if (agent.previousCoordinates[x] && agent.previousCoordinates[y]) {
-                sumHeuristics += heuristicMatrix[x][y] >= t ? heuristicMatrix[x][y] : 0;
-            }
-        });
-        // agent.previousCoordinates.forEach(prevPosition => {
-        //   sumHeuristics +=
-        //     heuristicMatrix[prevPosition.x][prevPosition.y] >= t
-        //       ? heuristicMatrix[prevPosition.x][prevPosition.y]
-        //       : 0;
-        // });
-        // agent.previousCoordinates.forEach(prevPosition => {
-        const newPheromoneLevel = (1 - 0.02) * pheromoneMatrix[x][y] + sumHeuristics;
-        pheromoneMatrix[x][y] = newPheromoneLevel;
-        // });
-    }
+    // updatePheromoneLevel(agents, t, x, y) {
+    //     // const curX = agent.currentCoordinates.x;
+    //     // const curY = agent.currentCoordinates.y;
+    //     let sumHeuristics = 0;
+    //     agents.forEach(agent => {
+    //         if (agent.previousCoordinates[x] && agent.previousCoordinates[y]) {
+    //             sumHeuristics += heuristicMatrix[x][y] >= t ? heuristicMatrix[x][y] : 0;
+    //         }
+    //     });
+    //     // agent.previousCoordinates.forEach(prevPosition => {
+    //     //   sumHeuristics +=
+    //     //     heuristicMatrix[prevPosition.x][prevPosition.y] >= t
+    //     //       ? heuristicMatrix[prevPosition.x][prevPosition.y]
+    //     //       : 0;
+    //     // });
+    //     // agent.previousCoordinates.forEach(prevPosition => {
+    //     const newPheromoneLevel = (1 - 0.02) * pheromoneMatrix[x][y] + sumHeuristics;
+    //     pheromoneMatrix[x][y] = newPheromoneLevel;
+    //     // });
+    // }
 }
