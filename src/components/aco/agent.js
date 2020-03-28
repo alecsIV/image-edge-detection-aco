@@ -55,7 +55,7 @@ export default class AntAgent {
         return arr.length % 2 !== 0 ? nums[mid] : (nums[mid - 1] + nums[mid]) / 2;
     }
 
-    calculateNextStep(antMemLen) {
+    calculateNextStep() {
         let currentMaxProbability = 0,
             maxProbabilityIndex = 0,
             sumProducts = 0,

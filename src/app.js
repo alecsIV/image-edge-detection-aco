@@ -7,15 +7,8 @@ global.canvasWidth = 0;
 global.canvasHeight = 0;
 
 // Parameter fields
-global.iterationsField = document.querySelector('#iterations');
-global.numAntMovField = document.querySelector('#numAntMov');
-global.antMemLenField = document.querySelector('#antMemLen');
-global.nConstPDField = document.querySelector('#nConstPD');
-global.pConstPDField = document.querySelector('#pConstPD');
-global.tNoiseFiltField = document.querySelector('#tNoiseFilt');
-global.roPEvRateField = document.querySelector('#roPEvRate');
-global.alphaField = document.querySelector('#alpha');
-global.betaField = document.querySelector('#beta');
+global.allUI = document.getElementsByClassName('ui-element'); //get all user input fields
+global.autoFields = true; //check if user input values are changed by the user
 
 import ACO from './components/aco/aco-algorithm';
 import EnvironmentImage from './components/environment-image';
@@ -23,21 +16,23 @@ import EnvironmentImage from './components/environment-image';
 const uploader = document.querySelector('#image-upload');
 const image = document.querySelector('#image-source');
 const imagePreview = document.querySelector('#image-preview');
-const canvas = document.querySelector('#canvas');
+const canvasBg = document.querySelector('#canvasBg');
+// const canvasFg = document.querySelector('#canvasFg');
 const drawImageButton = document.querySelector('#draw-image-button');
 const startSimulationButton = document.querySelector('#start-simulation');
+const setDefaultsButton = document.querySelector('#defaults-button');
 
 let envImage;
 let algorithm;
 
-//set canvas dimensions
-canvasWidth = canvas.width;
-canvasHeight = canvas.clientHeight;
+//set canvasBg dimensions
+canvasWidth = canvasBg.width;
+canvasHeight = canvasBg.clientHeight;
 // Buttons and HTML events
 const drawImageButtonDefaultText = 'Draw Image';
 const drawImageButtonActiveText = 'Reset';
+const context = canvasBg.getContext('2d');
 uploader.addEventListener('change', function() {
-    const context = canvas.getContext('2d');
     context.clearRect(0, 0, canvasWidth, canvasHeight);
     drawImageButton.setAttribute('disabled', 'disabled');
     startSimulationButton.setAttribute('disabled', 'disabled');
@@ -56,13 +51,35 @@ uploader.addEventListener('change', function() {
 
 drawImageButton.addEventListener('click', () => {
     if (image) {
-        envImage = new EnvironmentImage(image, canvas);
-        algorithm = new ACO(envImage, canvas);
+        // context.globalCompositeOperation = 'source-over';
+        envImage = new EnvironmentImage(image, canvasBg);
+        // context.globalCompositeOperation = 'destination-over';
+        algorithm = new ACO(envImage);
+        algorithm.initializeAgents();
         startSimulationButton.removeAttribute('disabled');
         drawImageButton.innerHTML = (drawImageButtonActiveText);
     }
 });
 
+Object.values(allUI).forEach((element) => {
+    // element.addEventListener('change', setDefaultsButton.removeAttribute('disabled'));
+    element.onchange = () => {
+        setDefaultsButton.removeAttribute('disabled');
+        startSimulationButton.removeAttribute('disabled');
+        // context.clearRect(0, 0, canvasWidth, canvasHeight);
+        algorithm.reset();
+    };
+});
+
 startSimulationButton.addEventListener('click', () => {
+    startSimulationButton.setAttribute('disabled', 'disabled');
+    // resetSimulationButton.style.display = 'block';
+    algorithm.updateGlobalParams(); // set global parameters based on user input
     algorithm.startSimulation();
+});
+
+setDefaultsButton.addEventListener('click', () => {
+    algorithm.setDefaultValues();
+    algorithm.reset();
+    setDefaultsButton.setAttribute('disabled', 'disabled')
 });

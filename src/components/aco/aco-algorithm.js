@@ -2,26 +2,34 @@ import MatrixHelper from "../helpers/matrix-helper";
 import AntAgent from "./agent";
 
 export default class ACO {
-    constructor(image, canvas) {
+    constructor(image) {
         this.image = image;
-        this.canvas = canvas;
-        this.ctx = canvas.getContext("2d");
+        this.canvas = document.querySelector('#canvasFg');
+        this.canvasW = this.canvas.getBoundingClientRect().width;
+        this.canvasH = this.canvas.getBoundingClientRect().height;
+        this.ctx = this.canvas.getContext("2d");
         this.matrixHelper = new MatrixHelper();
         this.currentFrame = 1;
-        this.setDefaultValues() 
-        this.setGlobalParams(); // set global parameters based on user input
+        this.setDefaultValues() // set default values for the parameters
 
         this.resultDiv = document.querySelector(".binary-canvas-div");
 
         // generate initial pheromone and heuristic matrices
         this.matrixHelper.generateInitialMatrices();
-        // create agents and position them randomly on the canvas
+    }
+
+    reset() {
+        this.ctx.clearRect(0, 0, this.canvasW, this.canvasH);
+        this.updateGlobalParams();
         this.initializeAgents();
+        this.currentFrame = 1;
+        console.log(window);
     }
 
     setDefaultValues(){
         this.defaultParams = {
             'iterations': 3,
+            'antCount': Math.sqrt(this.image.width*this.image.height),
             'numAntMov': Math.round(3*Math.sqrt(this.image.width*this.image.height)),
             'antMemLen': Math.sqrt(2*(this.image.width + this.image.height)),
             'nConstPD': 2,
@@ -31,24 +39,28 @@ export default class ACO {
             'alpha': 2,
             'beta': 2
         }
-    }
 
-    setGlobalParams(){
         Object.keys(this.defaultParams).forEach(key => {
-            // console.log(key);
-            window[key] = this.defaultParams[key];
-            window[`${key}Field`].value = window[key];
+            window[key] = Number(this.defaultParams[key]);
+            window.allUI[key].value = window[key];
         });
     }
 
+    updateGlobalParams(){
+        Object.keys(this.defaultParams).forEach(key => {
+            window[key] = Number(window.allUI[key].value);
+        });
+        console.log('Updated iterations:', iterations);
+    }
+
     initializeAgents() {
-        this.agentCount = Math.sqrt(this.image.width*this.image.height);
-        console.log('agentsCount', this.agentCount);
+        // this.ctx.globa
+        console.log('agentsCount', antCount);
         console.log('Num Ant Movements:', numAntMov);
         console.log('Ant memory length:', antMemLen);
         this.agents = [];
         console.log("%c pheromoneMatrix", "color: #24c95a", pheromoneMatrix);
-        for (let i = 0; i < this.agentCount; i++) {
+        for (let i = 0; i < antCount; i++) {
             this.agents[i] = new AntAgent(this.canvas);
             this.initialDraw(this.agents[i].currentCoordinates);
         }
@@ -68,16 +80,17 @@ export default class ACO {
     }
 
     startSimulation() {
-        console.log("%c Starting simulation ...", "color: #bada55");
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.heigth);
+        console.log("%c Iteration: ", "color: #bada55",this.currentFrame);
+        console.log('numant', numAntMov);
         this.agents.forEach(agent => {
             for (let i = 0; i < numAntMov; i++) {
-                const newCoordinates = [...agent.calculateNextStep(antMemLen)];
+                this.ctx.clearRect(agent.currentCoordinates.x, agent.currentCoordinates.y, agent.agentSize, agent.agentSize);
+                const newCoordinates = [...agent.calculateNextStep()];
                 agent.moveTo(newCoordinates[0], newCoordinates[1]);
                 if (agent.currentCoordinates == undefined) console.log("faulty", agent);
                 this.ctx.fillRect(
-                    agent.currentCoordinates.y,
                     agent.currentCoordinates.x,
+                    agent.currentCoordinates.y,
                     agent.agentSize,
                     agent.agentSize
                 );
@@ -92,9 +105,12 @@ export default class ACO {
                 this.updatePheromoneLevel(this.agents, x, y);
             });
         });
-
-        if (this.currentFrame !== this.iterations) {
+        if (this.currentFrame !== iterations) {
+            console.log('currentFrame', this.currentFrame);
+            console.log('iterations', typeof iterations);
+            console.log('bool',this.currentFrame !== iterations );
             this.currentFrame++;
+            this.tempViewPM();
             window.requestAnimationFrame(this.startSimulation.bind(this));
         } else {
             console.log("%c END ANIMATION", "color: #c92424");
@@ -123,9 +139,32 @@ export default class ACO {
         // });
     }
 
+    tempViewPM(){
+        let buffer = new Uint8ClampedArray(this.canvasW * this.canvasH * 4);
+
+        pheromoneMatrix.forEach((arr, x) => {
+            arr.forEach((value, y) => {
+                const pos = (x * this.canvasW + y) * 4;
+                const valueRGB = value <= initialPheromoneValue ? 255 : 0;
+                buffer[pos] = valueRGB; // some R value [0, 255]
+                buffer[pos + 1] = valueRGB; // some G value
+                buffer[pos + 2] = valueRGB; // some B value
+                buffer[pos + 3] = 100; // set alpha channel
+            });
+        });
+
+        const idata = this.ctx.createImageData(this.canvasW, this.canvasH);
+
+        // set our buffer as source
+        idata.data.set(buffer);
+
+        // update canvas with new data
+        this.ctx.putImageData(idata, 0, 0);
+    }
+
     createBinaryImage() {
-        const width = 500,
-            height = 500;
+        const width = this.canvasW,
+            height = this.canvasH;
         let buffer = new Uint8ClampedArray(width * height * 4);
         let pheromoneAvg = 0;
         pheromoneMatrix.forEach((arr, x) => {
@@ -140,8 +179,8 @@ export default class ACO {
 
         const binaryCanvas = document.createElement("canvas");
         binaryCanvas.setAttribute("class", "binary-canvas");
-        binaryCanvas.setAttribute("width", "500");
-        binaryCanvas.setAttribute("height", "500");
+        binaryCanvas.setAttribute("width", this.canvasW);
+        binaryCanvas.setAttribute("height", this.canvasH);
         const binCtx = binaryCanvas.getContext("2d");
 
         pheromoneMatrix.forEach((arr, x) => {

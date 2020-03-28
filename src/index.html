@@ -12,6 +12,9 @@
             <label for="iterations">Iterations:</label>
             <input type="number" id="iterations" class="ui-element">
 
+            <label for="iterations">Ant count:</label>
+            <input type="number" id="antCount" class="ui-element">
+
             <label for="iterations">Ant steps:</label>
             <input type="number" id="numAntMov" class="ui-element">
 
@@ -32,18 +35,27 @@
 
             <label for="iterations">Alpha:</label>
             <input type="number" id="alpha" class="ui-element">
-            
+
             <label for="iterations">Beta:</label>
             <input type="number" id="beta" class="ui-element">
+
+            <button id="defaults-button" disabled>Automatic parameters</button>
         </div>
         <label for="image-upload">Upload image:</label>
         <input type="file" accept="image/*" id="image-upload" name="image-upload">
         <img src="" id="image-source">
         <img alt="Image preview" src="" id="image-preview">
         <button id="draw-image-button" disabled>Draw image</button>
-        <canvas id="canvas" width="500" height="500"></canvas>
         <button id="start-simulation" disabled>Start</button>
-        <div class="binary-canvas-div"></div>
+        <div class="canvas-wrapper">
+            <div class='input-canvas-wrapper'>
+                <canvas id="canvasBg" width="500" height="500"
+                    style="position: absolute; left: 0; top: 0; z-index: 0;"></canvas>
+                <canvas id="canvasFg" width="500" height="500"
+                    style="position: absolute; left: 0; top: 0; z-index: 1;"></canvas>
+            </div>
+            <div class="binary-canvas-div"></div>
+        </div>
     </main>
 </body>
 
