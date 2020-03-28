@@ -6,6 +6,17 @@ global.heuristicMatrix = new Array();
 global.canvasWidth = 0;
 global.canvasHeight = 0;
 
+// Parameter fields
+global.iterationsField = document.querySelector('#iterations');
+global.numAntMovField = document.querySelector('#numAntMov');
+global.antMemLenField = document.querySelector('#antMemLen');
+global.nConstPDField = document.querySelector('#nConstPD');
+global.pConstPDField = document.querySelector('#pConstPD');
+global.tNoiseFiltField = document.querySelector('#tNoiseFilt');
+global.roPEvRateField = document.querySelector('#roPEvRate');
+global.alphaField = document.querySelector('#alpha');
+global.betaField = document.querySelector('#beta');
+
 import ACO from './components/aco/aco-algorithm';
 import EnvironmentImage from './components/environment-image';
 

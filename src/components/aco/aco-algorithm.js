@@ -7,17 +7,9 @@ export default class ACO {
         this.canvas = canvas;
         this.ctx = canvas.getContext("2d");
         this.matrixHelper = new MatrixHelper();
-        // Parameters
-        this.iterations = 3;
-        global.numAntMov = Math.round(3*Math.sqrt(this.image.width*this.image.height)); // Number of ant  movement steps of ant moving
-        global.antMemLen = Math.sqrt(2*(this.image.width + this.image.height)); // Memory length of an ant
-        global.nConstPD = 2; // Sum constant for the pheromone deposit in each pixel
-        global.pConstPD = 10; // Multiplication constant for the pheromone deposit in each pixel
-        global.tNoiseFilt = 0.1; // Noise sensitivity filter
-        global.roPEvRate = 0.02; // Pheromone evaporation (Higher - faster evaporation)
-        global.alpha = 2;
-        global.beta = 2;
-        this.currentFrame = 1; 
+        this.currentFrame = 1;
+        this.setDefaultValues() 
+        this.setGlobalParams(); // set global parameters based on user input
 
         this.resultDiv = document.querySelector(".binary-canvas-div");
 
@@ -25,6 +17,28 @@ export default class ACO {
         this.matrixHelper.generateInitialMatrices();
         // create agents and position them randomly on the canvas
         this.initializeAgents();
+    }
+
+    setDefaultValues(){
+        this.defaultParams = {
+            'iterations': 3,
+            'numAntMov': Math.round(3*Math.sqrt(this.image.width*this.image.height)),
+            'antMemLen': Math.sqrt(2*(this.image.width + this.image.height)),
+            'nConstPD': 2,
+            'pConstPD': 10,
+            'tNoiseFilt': 0.1,
+            'roPEvRate': 0.02,
+            'alpha': 2,
+            'beta': 2
+        }
+    }
+
+    setGlobalParams(){
+        Object.keys(this.defaultParams).forEach(key => {
+            // console.log(key);
+            window[key] = this.defaultParams[key];
+            window[`${key}Field`].value = window[key];
+        });
     }
 
     initializeAgents() {
