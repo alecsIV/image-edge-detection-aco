@@ -7,14 +7,15 @@ export default class ACO {
         this.canvas = canvas;
         this.ctx = canvas.getContext("2d");
         this.matrixHelper = new MatrixHelper();
+        // Parameters
         this.iterations = 3;
-        this.L = Math.round(3*Math.sqrt(this.image.width*this.image.height));
-        this.l = Math.sqrt(2*(this.image.width + this.image.height));
-        this.n = 2;
-        this.p = 10;
-        this.t = 0.1;
-        this.ro = 0.02;
-        this.currentFrame = 1;
+        this.L = Math.round(3*Math.sqrt(this.image.width*this.image.height)); // Number of ant  movement steps of ant moving
+        this.l = Math.sqrt(2*(this.image.width + this.image.height)); // Memory length of an ant
+        this.n = 2; // Sum constant for the pheromone deposit in each pixel
+        this.p = 10; // Multiplication constant for the pheromone deposit in each pixel
+        this.t = 0.1; // Filter noise sensitivity
+        this.ro = 0.02; // Pheromone evaporation (Higher - faster evaporation)
+        this.currentFrame = 1; 
 
         this.resultDiv = document.querySelector(".binary-canvas-div");
 
