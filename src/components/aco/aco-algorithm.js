@@ -9,12 +9,14 @@ export default class ACO {
         this.matrixHelper = new MatrixHelper();
         // Parameters
         this.iterations = 3;
-        this.L = Math.round(3*Math.sqrt(this.image.width*this.image.height)); // Number of ant  movement steps of ant moving
-        this.l = Math.sqrt(2*(this.image.width + this.image.height)); // Memory length of an ant
-        this.n = 2; // Sum constant for the pheromone deposit in each pixel
-        this.p = 10; // Multiplication constant for the pheromone deposit in each pixel
-        this.t = 0.1; // Filter noise sensitivity
-        this.ro = 0.02; // Pheromone evaporation (Higher - faster evaporation)
+        global.numAntMov = Math.round(3*Math.sqrt(this.image.width*this.image.height)); // Number of ant  movement steps of ant moving
+        global.antMemLen = Math.sqrt(2*(this.image.width + this.image.height)); // Memory length of an ant
+        global.nConstPD = 2; // Sum constant for the pheromone deposit in each pixel
+        global.pConstPD = 10; // Multiplication constant for the pheromone deposit in each pixel
+        global.tNoiseFilt = 0.1; // Noise sensitivity filter
+        global.roPEvRate = 0.02; // Pheromone evaporation (Higher - faster evaporation)
+        global.alpha = 2;
+        global.beta = 2;
         this.currentFrame = 1; 
 
         this.resultDiv = document.querySelector(".binary-canvas-div");
@@ -28,8 +30,8 @@ export default class ACO {
     initializeAgents() {
         this.agentCount = Math.sqrt(this.image.width*this.image.height);
         console.log('agentsCount', this.agentCount);
-        console.log('this.L', this.L);
-        console.log('this.l', this.l);
+        console.log('Num Ant Movements:', numAntMov);
+        console.log('Ant memory length:', antMemLen);
         this.agents = [];
         console.log("%c pheromoneMatrix", "color: #24c95a", pheromoneMatrix);
         for (let i = 0; i < this.agentCount; i++) {
@@ -55,9 +57,9 @@ export default class ACO {
         console.log("%c Starting simulation ...", "color: #bada55");
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.heigth);
         this.agents.forEach(agent => {
-            for (let i = 0; i < this.L; i++) {
-                const newCoordinates = [...agent.calculateNextStep(this.l)];
-                agent.moveTo(this.n, this.p, this.t, newCoordinates[0], newCoordinates[1]);
+            for (let i = 0; i < numAntMov; i++) {
+                const newCoordinates = [...agent.calculateNextStep(antMemLen)];
+                agent.moveTo(newCoordinates[0], newCoordinates[1]);
                 if (agent.currentCoordinates == undefined) console.log("faulty", agent);
                 this.ctx.fillRect(
                     agent.currentCoordinates.y,
@@ -65,15 +67,15 @@ export default class ACO {
                     agent.agentSize,
                     agent.agentSize
                 );
-                if (newCoordinates[1]) i = this.L;
-                // if (agent.currentCoordinates.x === agent.previousCoordinates[agent.previousCoordinates.length - 1].x && agent.currentCoordinates.y === agent.previousCoordinates[agent.previousCoordinates.length - 1].y) i = this.L;
+                if (newCoordinates[1]) i = numAntMov;
+                // if (agent.currentCoordinates.x === agent.previousCoordinates[agent.previousCoordinates.length - 1].x && agent.currentCoordinates.y === agent.previousCoordinates[agent.previousCoordinates.length - 1].y) i = numAntMov;
             }
         });
 
         // update pheromone values
         pheromoneMatrix.forEach((val, x) => {
             val.forEach((arr, y) => {
-                this.updatePheromoneLevel(this.agents, this.t, x, y);
+                this.updatePheromoneLevel(this.agents, x, y);
             });
         });
 
@@ -86,23 +88,23 @@ export default class ACO {
         }
     }
 
-    updatePheromoneLevel(agents, t, x, y) {
+    updatePheromoneLevel(agents, x, y) {
         // const curX = agent.currentCoordinates.x;
         // const curY = agent.currentCoordinates.y;
         let sumHeuristics = 0;
         agents.forEach(agent => {
             if (agent.previousCoordinates[x] && agent.previousCoordinates[y]) {
-                sumHeuristics += heuristicMatrix[x][y] >= t ? heuristicMatrix[x][y] : 0;
+                sumHeuristics += heuristicMatrix[x][y] >= tNoiseFilt ? heuristicMatrix[x][y] : 0;
             }
         });
         // agent.previousCoordinates.forEach(prevPosition => {
         //   sumHeuristics +=
-        //     heuristicMatrix[prevPosition.x][prevPosition.y] >= t
+        //     heuristicMatrix[prevPosition.x][prevPosition.y] >= tNoiseFilt
         //       ? heuristicMatrix[prevPosition.x][prevPosition.y]
         //       : 0;
         // });
         // agent.previousCoordinates.forEach(prevPosition => {
-        const newPheromoneLevel = (1 - this.ro) * pheromoneMatrix[x][y] + sumHeuristics;
+        const newPheromoneLevel = (1 - roPEvRate) * pheromoneMatrix[x][y] + sumHeuristics;
         pheromoneMatrix[x][y] = newPheromoneLevel;
         // });
     }
