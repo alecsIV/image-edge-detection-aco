@@ -16,6 +16,15 @@ export default class MatrixHelper {
         console.log('%c heuristicMatrix', 'color: #24c95a', heuristicMatrix);
     }
 
+    resetPheromoneMatrix(){
+        for (let i = 0; i < canvasWidth; i++) {
+            pheromoneMatrix[i] = [];
+            for (let j = 0; j < canvasHeight; j++) {
+                pheromoneMatrix[i][j] = initialPheromoneValue;
+            }
+        }
+    }
+
     heuristicInformationForPixel(i, j) {
         return 1 / this.iMax * (this.getMaxIntensityValueForPixel(i, j));
     }

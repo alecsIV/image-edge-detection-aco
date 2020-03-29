@@ -55,7 +55,7 @@ drawImageButton.addEventListener('click', () => {
         envImage = new EnvironmentImage(image, canvasBg);
         // context.globalCompositeOperation = 'destination-over';
         algorithm = new ACO(envImage);
-        algorithm.initializeAgents();
+        algorithm.reset();
         startSimulationButton.removeAttribute('disabled');
         drawImageButton.innerHTML = (drawImageButtonActiveText);
     }
