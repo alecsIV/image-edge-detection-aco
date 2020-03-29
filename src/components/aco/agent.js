@@ -46,6 +46,7 @@ export default class AntAgent {
         const medDiff = medians[0] - medians[1];
         // coordinates.forEach((pixel) => {
         pheromoneMatrix[coordinates[0].x][coordinates[0].y] += (medians[0] >= tNoiseFilt) ? nConstPD + (pConstPD * medDiff) / 255 : 0;
+        
         // });
     }
 
@@ -82,6 +83,7 @@ export default class AntAgent {
                             this.previousCoordinates[pCLen - k].y === y + j
                         ) {
                             visited = true;
+                            k=antMemLen+1; // exit the loop to prevent agent looping
                             // k = ((antMemLen > pCLen) ? pCLen : antMemLen);
                         }
                     }
