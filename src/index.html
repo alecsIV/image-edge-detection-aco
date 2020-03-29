@@ -47,10 +47,13 @@
         <img alt="Image preview" src="" id="image-preview">
         <button id="draw-image-button" disabled>Draw image</button>
         <button id="start-simulation" disabled>Start</button>
+        <input id="curr-text" type='text'>
+        <input id="new-text" type='text'>
         <div class="canvas-wrapper">
             <div class='input-canvas-wrapper'>
                 <canvas id="canvasBg" width="500" height="500"
                     style="position: absolute; left: 0; top: 0; z-index: 0;"></canvas>
+                <div class="d3-container"></div>
                 <canvas id="canvasFg" width="500" height="500"
                     style="position: absolute; left: 0; top: 0; z-index: 1;"></canvas>
             </div>
