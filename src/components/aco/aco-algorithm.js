@@ -1,5 +1,9 @@
 import MatrixHelper from "../helpers/matrix-helper";
 import AntAgent from "./agent";
+import {
+    loadingBar,
+    elapsedTime
+} from './../extras/extras';
 
 export default class ACO {
     constructor(image, svg) {
@@ -24,6 +28,7 @@ export default class ACO {
         this.agentCount = 0;
 
         //for debug
+        this.textIter = document.querySelector('#iter-text');
         this.textCurr = document.querySelector('#curr-text');
         this.textNew = document.querySelector('#new-text');
         this.textX = document.querySelector('#x-text');
@@ -110,7 +115,7 @@ export default class ACO {
         // });
         this.createBinaryImage();
 
-        this.interval = setInterval(this.animateMoves.bind(this), 1);
+        this.interval = setInterval(this.animateMoves.bind(this), (animation) ? 5.8 : 0);
 
         // if (this.currentFrame !== iterations) {
         //     console.log('currentFrame', this.currentFrame);
@@ -130,9 +135,10 @@ export default class ACO {
     animateMoves() {
         const agent = this.agents[this.agentCount];
         this.animationCount++;
-        const i = this.animationCount;
+        const start = new Date.getTime();
 
         if (this.animationCount >= numAntMov) {
+            loadingBar(this.agentCount + ((this.agents.length - 1) * (this.currentFrame - 1)), (this.agents.length - 1) * iterations);
             this.animationCount = 0;
             this.agentCount++;
         }
@@ -152,6 +158,7 @@ export default class ACO {
             });
             if (this.currentFrame >= iterations) {
                 console.log("%c END ANIMATION", "color: #c92424");
+                elapsedTime();
                 this.createBinaryImage();
                 clearInterval(this.interval);
             } else {
@@ -205,6 +212,7 @@ export default class ACO {
             }
         }
         if (agent !== undefined) {
+            this.textIter.value = this.currentFrame;
             this.textCurr.value = this.agentCount;
             this.textNew.value = this.animationCount;
             this.textX.value = agent.currentCoordinates.x;

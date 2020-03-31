@@ -50,12 +50,23 @@
         <label for="animation-toggle">Animation toggle</label>
         <input type="checkbox" id="animation-toggle" checked>
         <div>
-        <input id="curr-text" type='text'>
-        <input id="new-text" type='text'>
-        <br>
-        <input id="x-text" type='text'>
-        <input id="y-text" type='text'>
-    </div>
+            <label for="iter-text">Iteration:</label>
+            <input id="iter-text" type='text'>
+            <label for="curr-text">Ant:</label>
+            <input id="curr-text" type='text'>
+            <label for="new-text">Step:</label>
+            <input id="new-text" type='text'>
+            <br>
+            <label for="x-text">X coordinates:</label>
+            <input id="x-text" type='text'>
+            <label for="x-text">Y coordinates:</label>
+            <input id="y-text" type='text'>
+        </div>
+        <div id="myProgress">
+            <div id="myBar"></div>
+            <label for="elapsed-time">Elapsed time:</label>
+            <input type="text" id="elapsed-time">
+        </div>
         <div class="canvas-wrapper">
             <div class='input-canvas-wrapper'>
                 <canvas id="canvasBg" width="500" height="500"
