@@ -135,7 +135,7 @@ export default class ACO {
     animateMoves() {
         const agent = this.agents[this.agentCount];
         this.animationCount++;
-        const start = new Date.getTime();
+        const start = Date.now();
 
         if (this.animationCount >= numAntMov) {
             loadingBar(this.agentCount + ((this.agents.length - 1) * (this.currentFrame - 1)), (this.agents.length - 1) * iterations);
@@ -158,7 +158,7 @@ export default class ACO {
             });
             if (this.currentFrame >= iterations) {
                 console.log("%c END ANIMATION", "color: #c92424");
-                elapsedTime();
+                elapsedTime(start, Date.now());
                 this.createBinaryImage();
                 clearInterval(this.interval);
             } else {

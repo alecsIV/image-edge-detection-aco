@@ -13,7 +13,7 @@ function loadingBar(completed, total) {
 function elapsedTime(start, end) {
     const elem = document.getElementById("elapsed-time");
     const time = end - start;
-    elem.value = `Execution time: ${time}`);
+    elem.value = `Execution time: ${time}`;
 }
 
 module.exports = {
