@@ -6,6 +6,12 @@ global.heuristicMatrix = new Array();
 global.canvasWidth = 0;
 global.canvasHeight = 0;
 
+// get animation toggle status
+global.animation = document.getElementById('animation-toggle').checked;
+document.getElementById('animation-toggle').addEventListener('click', (e)=>{
+    animation = e.toElement.checked;
+});
+
 // Parameter fields
 global.allUI = document.getElementsByClassName('ui-element'); //get all user input fields
 global.autoFields = true; //check if user input values are changed by the user

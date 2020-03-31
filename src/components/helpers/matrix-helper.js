@@ -5,22 +5,22 @@ export default class MatrixHelper {
 
     generateInitialMatrices() {
         global.initialPheromoneValue = 0.0001;
-        for (let i = 0; i < canvasWidth; i++) {
-            pheromoneMatrix[i] = [];
-            heuristicMatrix[i] = [];
-            for (let j = 0; j < canvasHeight; j++) {
-                pheromoneMatrix[i][j] = initialPheromoneValue;
-                heuristicMatrix[i][j] = this.heuristicInformationForPixel(i, j);
+        for (let x = 0; x < canvasWidth; x++) {
+            pheromoneMatrix[x] = [];
+            heuristicMatrix[x] = [];
+            for (let y = 0; y < canvasHeight; y++) {
+                pheromoneMatrix[x][y] = initialPheromoneValue;
+                heuristicMatrix[x][y] = this.heuristicInformationForPixel(x, y);
             }
         }
         console.log('%c heuristicMatrix', 'color: #24c95a', heuristicMatrix);
     }
 
     resetPheromoneMatrix(){
-        for (let i = 0; i < canvasWidth; i++) {
-            pheromoneMatrix[i] = [];
-            for (let j = 0; j < canvasHeight; j++) {
-                pheromoneMatrix[i][j] = initialPheromoneValue;
+        for (let x = 0; x < canvasWidth; x++) {
+            pheromoneMatrix[x] = [];
+            for (let y = 0; y < canvasHeight; y++) {
+                pheromoneMatrix[x][y] = initialPheromoneValue;
             }
         }
     }

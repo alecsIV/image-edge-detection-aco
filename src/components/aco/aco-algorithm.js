@@ -141,10 +141,18 @@ export default class ACO {
             pheromoneMatrix.forEach((val, x) => {
                 val.forEach((arr, y) => {
                     this.updatePheromoneLevel(this.agents, x, y);
+                    this.ctx.fillStyle = `rgba(66, 33, 123, ${pheromoneMatrix[x][y]})`;
+                    this.ctx.fillRect(
+                        y,
+                        x,
+                        1,
+                        1
+                    );
                 });
             });
             if (this.currentFrame >= iterations) {
                 console.log("%c END ANIMATION", "color: #c92424");
+                this.createBinaryImage();
                 clearInterval(this.interval);
             } else {
                 this.currentFrame++;
@@ -164,32 +172,44 @@ export default class ACO {
             if (agent.currentCoordinates == undefined) console.log("faulty", agent);
             // circle.transition().attr("transform", `translate(${agent.currentCoordinates.x}, ${agent.currentCoordinates.y})`).duration(1000);
             // this.textNew.value = `new coordins: ${agent.currentCoordinates}`
-            this.ctx.fillRect(
-                agent.currentCoordinates.y,
-                agent.currentCoordinates.x,
-                1,
-                1
-            );
-            this.ctx.fillStyle = 'rgba(66, 33, 123, 0.2)';
-            for (let i = -1; i <= 1; i++) {
-                for (let j = -1; j <= 1; j++) {
-                    this.ctx.fillRect(
-                        agent.currentCoordinates.y+i,
-                        agent.currentCoordinates.x+j,
-                        1,
-                        1
-                    );        
+            if (animation) {
+                this.ctx.fillRect(
+                    agent.currentCoordinates.y,
+                    agent.currentCoordinates.x,
+                    1,
+                    1
+                );
+                for (let i = -1; i <= 1; i++) {
+                    for (let j = -1; j <= 1; j++) {
+                        const matrixSize = pheromoneMatrix.length - 1;
+                        const notOutOfBounds =
+                            agent.currentCoordinates.y + i > -1 &&
+                            agent.currentCoordinates.y + i < matrixSize &&
+                            agent.currentCoordinates.x + j > -1 &&
+                            agent.currentCoordinates.x + j < matrixSize;
+                        if (notOutOfBounds) {
+                            this.ctx.fillStyle = `rgba(66, 33, 123, ${pheromoneMatrix[agent.currentCoordinates.x + j][agent.currentCoordinates.y + i]})`;
+                            this.ctx.fillRect(
+                                agent.currentCoordinates.y + i,
+                                agent.currentCoordinates.x + j,
+                                1,
+                                1
+                            );
+                        }
+                    }
                 }
-            }    
+            }
             if (newCoordinates[1]) {
                 this.agentCount++;
                 this.animationCount = numAntMov; // checks if a new ant is generated and exits loop
             }
         }
-        this.textCurr.value = this.agentCount;
-        this.textNew.value = this.animationCount;
-        this.textX.value = agent.currentCoordinates.x;
-        this.textY.value = agent.currentCoordinates.y;
+        if (agent !== undefined) {
+            this.textCurr.value = this.agentCount;
+            this.textNew.value = this.animationCount;
+            this.textX.value = agent.currentCoordinates.x;
+            this.textY.value = agent.currentCoordinates.y;
+        }
     }
 
     // animateMoves(agent) {

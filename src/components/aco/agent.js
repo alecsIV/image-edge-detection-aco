@@ -31,12 +31,12 @@ export default class AntAgent {
 
             for (let i = -1; i <= 1; i++) {
                 for (let j = -1; j <= 1; j++) {
-                    const outOfBounds =
+                    const notOutOfBounds =
                         x + i > -1 &&
                         x + i < matrixSize &&
                         y + j > -1 &&
                         y + j < matrixSize;
-                    if (outOfBounds) {
+                    if (notOutOfBounds) {
                         neighbourIntensities.push(heuristicMatrix[x + i][y + j]);
                     }
                 }
