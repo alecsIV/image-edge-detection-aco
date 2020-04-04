@@ -25,22 +25,22 @@ export default class MatrixHelper {
         }
     }
 
-    heuristicInformationForPixel(i, j) {
-        return 1 / this.iMax * (this.getMaxIntensityValueForPixel(i, j));
+    heuristicInformationForPixel(x, y) {
+        return 1 / this.iMax * (this.getMaxIntensityValueForPixel(x, y));
     }
 
-    getMaxIntensityValueForPixel(i, j) {
+    getMaxIntensityValueForPixel(x, y) {
         let a, b, c, d;
         const arrLength = imageIntensityArray.length;
-        const negI = (i > 0 ? 1 : 0);
-        const negJ = (j > 0 ? 1 : 0);
-        const posI = (i < arrLength - 1 ? 1 : 0);
-        const posJ = (j < arrLength - 1 ? 1 : 0);
+        const negI = (x > 0 ? 1 : 0);
+        const negJ = (y > 0 ? 1 : 0);
+        const posI = (x < arrLength - 1 ? 1 : 0);
+        const posJ = (y < arrLength - 1 ? 1 : 0);
 
-        a = Math.abs(imageIntensityArray[i - negI][j - negJ] - imageIntensityArray[i + posI][j + posJ]);
-        b = Math.abs(imageIntensityArray[i - 0][j - negJ] - imageIntensityArray[i + 0][j + posJ]);
-        c = Math.abs(imageIntensityArray[i + posI][j + posJ] - imageIntensityArray[i - negI][j - negJ]);
-        d = Math.abs(imageIntensityArray[i - negI][j - 0] - imageIntensityArray[i + posI][j + 0]);
+        a = Math.abs(imageIntensityArray[x - negI][y - negJ] - imageIntensityArray[x + posI][y + posJ]);
+        b = Math.abs(imageIntensityArray[x - 0][y - negJ] - imageIntensityArray[x + 0][y + posJ]);
+        c = Math.abs(imageIntensityArray[x + posI][y + posJ] - imageIntensityArray[x - negI][y - negJ]);
+        d = Math.abs(imageIntensityArray[x - negI][y - 0] - imageIntensityArray[x + posI][y + 0]);
 
         return a > b ? (a > c ? (a > d ? a : d) : c) : b;
     }

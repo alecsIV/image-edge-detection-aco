@@ -62,8 +62,7 @@ export default class AntAgent {
             sumProducts = 0,
             visited = false;
 
-        const neighbourhoodSize = 9,
-            phProducts = [],
+        const phProducts = [],
             neighbourNodeCoordinates = [],
             x = this.currentCoordinates.x,
             y = this.currentCoordinates.y,
@@ -142,8 +141,8 @@ export default class AntAgent {
         if (maxProbabilityIndex === 99) {
             this.previousCoordinates = [];
             const newPositions = this.getStartingPostion();
-            return [newPositions, true];
-        } else return [neighbourNodeCoordinates[maxProbabilityIndex], false];
+            return {newCoordinates: newPositions, newAnt: true};
+        } else return {newCoordinates: neighbourNodeCoordinates[maxProbabilityIndex], newAnt:false};
     }
     moveTo(coordinates, newAnt) {
         if (!newAnt) {

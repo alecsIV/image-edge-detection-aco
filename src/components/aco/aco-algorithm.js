@@ -49,7 +49,7 @@ export default class ACO {
             'iterations': 3,
             'antCount': Math.sqrt(this.image.width * this.image.height),
             'numAntMov': Math.round(Math.round(3 * Math.sqrt(this.image.width * this.image.height))),
-            'antMemLen': Math.round(Math.sqrt(2 * (this.image.width + this.image.height)) / 500 * this.iMax),
+            'antMemLen': Math.round(Math.sqrt(2 * (this.image.width + this.image.height)) / 500 * this.iMax) * 3,
             'nConstPD': 2,
             'pConstPD': 10,
             'tNoiseFilt': 0.1,
@@ -80,10 +80,8 @@ export default class ACO {
         console.log("%c pheromoneMatrix", "color: #24c95a", pheromoneMatrix);
         for (let i = 0; i < antCount; i++) {
             this.agents[i] = new AntAgent(this.canvas);
-            this.initialDraw(this.agents[i].currentCoordinates);
         }
         this.circles = this.svg.selectAll('cirlce');
-        // console.log(this.circles.forEach);
         console.log("%c Agents", "color: #24c95a", this.agents);
     }
 
@@ -113,9 +111,9 @@ export default class ACO {
         // this.animationCount = 0;
         // this.requestId = window.requestAnimationFrame(this.animateMoves.bind(this, agent));
         // });
-        this.createBinaryImage();
+        // this.createBinaryImage();
 
-        this.interval = setInterval(this.animateMoves.bind(this), (animation) ? 5.8 : 0);
+        this.interval = setInterval(this.animateMoves.bind(this), (animation) ? 1 : 0);
 
         // if (this.currentFrame !== iterations) {
         //     console.log('currentFrame', this.currentFrame);
@@ -140,6 +138,7 @@ export default class ACO {
         if (this.animationCount >= numAntMov) {
             loadingBar(this.agentCount + ((this.agents.length - 1) * (this.currentFrame - 1)), (this.agents.length - 1) * iterations);
             this.animationCount = 0;
+            debugger;
             this.agentCount++;
         }
         if (this.agentCount >= this.agents.length) {
@@ -147,13 +146,13 @@ export default class ACO {
             pheromoneMatrix.forEach((val, x) => {
                 val.forEach((arr, y) => {
                     this.updatePheromoneLevel(this.agents, x, y);
-                    this.ctx.fillStyle = `rgba(66, 33, 123, ${pheromoneMatrix[x][y]})`;
-                    this.ctx.fillRect(
-                        y,
-                        x,
-                        1,
-                        1
-                    );
+                    // this.ctx.fillStyle = `rgba(66, 33, 123, ${pheromoneMatrix[x][y]})`;
+                    // this.ctx.fillRect(
+                    //     y,
+                    //     x,
+                    //     1,
+                    //     1
+                    // );
                 });
             });
             if (this.currentFrame >= iterations) {
@@ -174,8 +173,11 @@ export default class ACO {
             // this.ctx.clearRect(agent.currentCoordinates.x, agent.currentCoordinates.y, agent.agentSize, agent.agentSize);
             // this.textCurr.value = `current coordins: ${agent.currentCoordinates}`
             // const circle = this.svg.select(`circle[cx="${agent.currentCoordinates.x}"][cy="${agent.currentCoordinates.y}"]`);
-            const newCoordinates = [...agent.calculateNextStep()];
-            agent.moveTo(newCoordinates[0], newCoordinates[1]);
+            const {
+                newCoordinates,
+                newAnt
+            } = agent.calculateNextStep();
+            agent.moveTo(newCoordinates, newAnt);
             if (agent.currentCoordinates == undefined) console.log("faulty", agent);
             // circle.transition().attr("transform", `translate(${agent.currentCoordinates.x}, ${agent.currentCoordinates.y})`).duration(1000);
             // this.textNew.value = `new coordins: ${agent.currentCoordinates}`
@@ -206,8 +208,9 @@ export default class ACO {
                     }
                 }
             }
-            if (newCoordinates[1]) {
-                this.agentCount++;
+            if (newAnt) {
+                debugger;
+                // this.agentCount++;
                 this.animationCount = numAntMov; // checks if a new ant is generated and exits loop
             }
         }
@@ -245,47 +248,14 @@ export default class ACO {
     // }
 
     updatePheromoneLevel(agents, x, y) {
-        // const curX = agent.currentCoordinates.x;
-        // const curY = agent.currentCoordinates.y;
-        let sumHeuristics = 0;
+        let sumPheromone = 0;
         agents.forEach(agent => {
             if (agent.previousCoordinates[x] && agent.previousCoordinates[y]) {
-                sumHeuristics += heuristicMatrix[x][y] >= tNoiseFilt ? heuristicMatrix[x][y] : 0;
+                sumPheromone += pheromoneMatrix[x][y] >= tNoiseFilt ? pheromoneMatrix[x][y] : 0;
             }
         });
-        // agent.previousCoordinates.forEach(prevPosition => {
-        //   sumHeuristics +=
-        //     heuristicMatrix[prevPosition.x][prevPosition.y] >= tNoiseFilt
-        //       ? heuristicMatrix[prevPosition.x][prevPosition.y]
-        //       : 0;
-        // });
-        // agent.previousCoordinates.forEach(prevPosition => {
-        const newPheromoneLevel = (1 - roPEvRate) * pheromoneMatrix[x][y] + sumHeuristics;
+        const newPheromoneLevel = (1 - roPEvRate) * pheromoneMatrix[x][y] + sumPheromone;
         pheromoneMatrix[x][y] = newPheromoneLevel;
-        // });
-    }
-
-    tempViewPM() {
-        let buffer = new Uint8ClampedArray(this.canvasW * this.canvasH * 4);
-
-        pheromoneMatrix.forEach((arr, x) => {
-            arr.forEach((value, y) => {
-                const pos = (x * this.canvasW + y) * 4;
-                const valueRGB = value <= initialPheromoneValue ? 255 : 66;
-                buffer[pos] = valueRGB; // some R value [0, 255]
-                buffer[pos + 1] = valueRGB; // some G value
-                buffer[pos + 2] = valueRGB; // some B value
-                buffer[pos + 3] = 50; // set alpha channel
-            });
-        });
-
-        const idata = this.ctx.createImageData(this.canvasW, this.canvasH);
-
-        // set our buffer as source
-        idata.data.set(buffer);
-
-        // update canvas with new data
-        this.ctx.putImageData(idata, 0, 0);
     }
 
     createBinaryImage() {
@@ -311,7 +281,7 @@ export default class ACO {
 
         pheromoneMatrix.forEach((arr, x) => {
             arr.forEach((value, y) => {
-                const pos = (x * width + y) * 4;
+                const pos = (x * height + y) * 4;
                 const valueRGB = value <= initialPheromoneValue ? 255 : 0;
                 buffer[pos] = valueRGB; // some R value [0, 255]
                 buffer[pos + 1] = valueRGB; // some G value
