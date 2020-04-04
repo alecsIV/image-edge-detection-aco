@@ -1,25 +1,10 @@
-//set global variables
-global.imageIntensityArray1d = new Array();
-global.imageIntensityArray = new Array();
-global.pheromoneMatrix = new Array();
-global.heuristicMatrix = new Array();
-global.canvasWidth = 0;
-global.canvasHeight = 0;
+import initGlobals from './helpers/globals';
 
-// get animation toggle status
-global.animation = document.getElementById('animation-toggle').checked;
-document.getElementById('animation-toggle').addEventListener('click', (e)=>{
-    animation = e.toElement.checked;
-});
-
-// Parameter fields
-global.allUI = document.getElementsByClassName('ui-element'); //get all user input fields
-global.autoFields = true; //check if user input values are changed by the user
+initGlobals();
 
 import ACO from './components/aco/aco-algorithm';
 import EnvironmentImage from './components/environment-image';
 
-const d3 = require('d3');
 const uploader = document.querySelector('#image-upload');
 const image = document.querySelector('#image-source');
 const imagePreview = document.querySelector('#image-preview');
@@ -31,10 +16,6 @@ const setDefaultsButton = document.querySelector('#defaults-button');
 
 let envImage;
 let algorithm;
-
-const svgW = 500
-const svgH = 500
-const svg = d3.select('.d3-container').append('svg').attr('width', svgW).attr('height', svgH);
 
 //set canvasBg dimensions
 canvasWidth = canvasBg.width;
@@ -65,7 +46,7 @@ drawImageButton.addEventListener('click', () => {
         // context.globalCompositeOperation = 'source-over';
         envImage = new EnvironmentImage(image, canvasBg);
         // context.globalCompositeOperation = 'destination-over';
-        algorithm = new ACO(envImage, svg);
+        algorithm = new ACO(envImage);
         algorithm.reset();
         startSimulationButton.removeAttribute('disabled');
         drawImageButton.innerHTML = (drawImageButtonActiveText);
