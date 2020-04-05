@@ -28,7 +28,6 @@ export default class ACO {
 
         this.setDefaultValues() // set default values for the parameters
 
-
         //for debug
         this.textIter = document.querySelector('#iter-text');
         this.textCurr = document.querySelector('#curr-text');
@@ -37,13 +36,23 @@ export default class ACO {
         this.textY = document.querySelector('#y-text');
     }
 
-    reset() {
-        this.matrixHelper.resetPheromoneMatrix();
+    init(){
         this.ctx.clearRect(0, 0, this.canvasW, this.canvasH);
         this.updateGlobalParams();
         this.initializeAgents();
         this.currentFrame = 1;
-        clearInterval(this.interval);
+        this.animationIntervalId = null;
+    }
+
+    reset() {
+        clearInterval(this.animationIntervalId);
+        stopTimer();
+        this.matrixHelper.resetPheromoneMatrix();
+        this.init();
+        // this.ctx.clearRect(0, 0, this.canvasW, this.canvasH);
+        // this.updateGlobalParams();
+        // this.initializeAgents();
+        // this.currentFrame = 1;
     }
 
     setDefaultValues() {
@@ -80,16 +89,17 @@ export default class ACO {
         console.log('Ant memory length:', antMemLen);
         const density = Math.round(this.canvasArea / antCount);
         console.log('density', density);
+        console.log('cvw', this.canvasW);
         this.agents = [];
         console.log("%c pheromoneMatrix", "color: #24c95a", pheromoneMatrix);
         for (let i = 0; i < antCount; i++) {
-            const y = Math.floor(i * density / this.canvasW);
-            const x = (i * density) - (y * this.canvasW);
+            const x = Math.floor(i * density / this.canvasW);
+            const y = (i * density) - (x * this.canvasW);
             this.agents[i] = new AntAgent(this.canvas, {
                 x: x,
                 y: y
             });
-            this.ctx.fillRect(this.agents[i].currentCoordinates.y, this.agents[i].currentCoordinates.x, 1, 1);
+            this.ctx.fillRect(this.agents[i].currentCoordinates.y, this.agents[i].currentCoordinates.x, 2, 1);
         }
         console.log("%c Agents", "color: #24c95a", this.agents);
     }
@@ -97,9 +107,10 @@ export default class ACO {
     startSimulation() {
         console.log("%c Simulation start: ", "color: #bada55");
         console.log('numant', numAntMov);
+        this.ctx.clearRect(0, 0, this.canvasW, this.canvasH);
         if (animation) {
             timer();
-            this.interval = setInterval(this.animateMoves.bind(this), 1);
+            this.animationIntervalId = setInterval(this.animateMoves.bind(this), 1);
         } else this.noAnimationMoves();
     }
 
@@ -161,7 +172,7 @@ export default class ACO {
                 stopTimer();
                 // elapsedTime(start, Date.now());
                 this.createBinaryImage();
-                clearInterval(this.interval);
+                clearInterval(this.animationIntervalId);
             } else {
                 console.log("%c Iteration: ", "color: #bada55", this.currentFrame);
                 this.currentFrame++;

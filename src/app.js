@@ -71,7 +71,6 @@ startSimulationButton.addEventListener('click', () => {
 });
 
 setDefaultsButton.addEventListener('click', () => {
-    algorithm.setDefaultValues();
     algorithm.reset();
     setDefaultsButton.setAttribute('disabled', 'disabled')
 });
