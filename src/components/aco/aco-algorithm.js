@@ -1,140 +1,261 @@
-import MatrixHelper from "../helpers/matrix-helper";
+import MatrixHelper from "../../helpers/matrix-helper";
 import AntAgent from "./agent";
+import {
+    loadingBar,
+    elapsedTime,
+    timer,
+    stopTimer
+} from '../../extras/extras';
 
 export default class ACO {
-    constructor(image, canvas) {
+    constructor(image) {
         this.image = image;
-        this.canvas = canvas;
-        this.ctx = canvas.getContext("2d");
+        this.canvas = document.querySelector('#canvasFg');
+        this.canvasW = this.canvas.getBoundingClientRect().width;
+        this.canvasH = this.canvas.getBoundingClientRect().height;
+        this.canvasArea = this.canvasW * this.canvasH;
+        this.ctx = this.canvas.getContext("2d");
         this.matrixHelper = new MatrixHelper();
-        this.iterations = 3;
-        this.L = Math.round(3*Math.sqrt(this.image.width*this.image.height));
-        this.l = Math.sqrt(2*(this.image.width + this.image.height));
-        this.n = 2;
-        this.p = 10;
-        this.t = 0.1;
-        this.ro = 0.02;
         this.currentFrame = 1;
+        this.animationCount = 0;
+        this.agentCount = 0;
 
         this.resultDiv = document.querySelector(".binary-canvas-div");
 
         // generate initial pheromone and heuristic matrices
         this.matrixHelper.generateInitialMatrices();
-        // create agents and position them randomly on the canvas
+        this.iMax = this.matrixHelper.iMax;
+
+        this.setDefaultValues() // set default values for the parameters
+
+        //for debug
+        this.textIter = document.querySelector('#iter-text');
+        this.textCurr = document.querySelector('#curr-text');
+        this.textNew = document.querySelector('#new-text');
+        this.textX = document.querySelector('#x-text');
+        this.textY = document.querySelector('#y-text');
+    }
+
+    init(){
+        this.ctx.clearRect(0, 0, this.canvasW, this.canvasH);
+        this.updateGlobalParams();
         this.initializeAgents();
+        this.currentFrame = 1;
+        this.animationIntervalId = null;
+    }
+
+    reset() {
+        clearInterval(this.animationIntervalId);
+        stopTimer();
+        this.matrixHelper.resetPheromoneMatrix();
+        this.init();
+        // this.ctx.clearRect(0, 0, this.canvasW, this.canvasH);
+        // this.updateGlobalParams();
+        // this.initializeAgents();
+        // this.currentFrame = 1;
+    }
+
+    setDefaultValues() {
+        this.defaultParams = {
+            'iterations': 3,
+            'antCount': Math.round(Math.sqrt(this.image.width * this.image.height)),
+            'numAntMov': Math.round(Math.round(3 * Math.sqrt(this.image.width * this.image.height))),
+            // 'antMemLen': Math.round(Math.sqrt(2 * (this.image.width + this.image.height)) / 500 * this.iMax),
+            'antMemLen': Math.round(Math.sqrt(2 * (this.image.width + this.image.height))),
+            'nConstPD': 2,
+            'pConstPD': 10,
+            'tNoiseFilt': 0.1,
+            'roPEvRate': 0.02,
+            'alpha': 2,
+            'beta': 2
+        }
+
+        Object.keys(this.defaultParams).forEach(key => {
+            window[key] = Number(this.defaultParams[key]);
+            window.allUI[key].value = window[key];
+        });
+    }
+
+    updateGlobalParams() {
+        Object.keys(this.defaultParams).forEach(key => {
+            window[key] = Number(window.allUI[key].value);
+        });
+        console.log('Updated iterations:', iterations);
     }
 
     initializeAgents() {
-        this.agentCount = Math.sqrt(this.image.width*this.image.height);
-        console.log('agentsCount', this.agentCount);
-        console.log('this.L', this.L);
-        console.log('this.l', this.l);
+        console.log('agentsCount', antCount);
+        console.log('Num Ant Movements:', numAntMov);
+        console.log('Ant memory length:', antMemLen);
+        const density = Math.round(this.canvasArea / antCount);
+        console.log('density', density);
+        console.log('cvw', this.canvasW);
         this.agents = [];
         console.log("%c pheromoneMatrix", "color: #24c95a", pheromoneMatrix);
-        for (let i = 0; i < this.agentCount; i++) {
-            this.agents[i] = new AntAgent(this.canvas);
-            this.initialDraw(this.agents[i].currentCoordinates);
+        for (let i = 0; i < antCount; i++) {
+            const x = Math.floor(i * density / this.canvasW);
+            const y = (i * density) - (x * this.canvasW);
+            this.agents[i] = new AntAgent(this.canvas, {
+                x: x,
+                y: y
+            });
+            this.ctx.fillRect(this.agents[i].currentCoordinates.y, this.agents[i].currentCoordinates.x, 2, 1);
         }
         console.log("%c Agents", "color: #24c95a", this.agents);
     }
 
-    initialDraw(coordinates) {
-        this.ctx.fillRect(coordinates.x, coordinates.y, 1, 1);
-    }
-
-    drawAgent(agent) {
-        this.ctx.fillRect(agent.currentCoordinates.x, agent.currentCoordinates.y);
-    }
-
-    animate(x, y) {
-        this.ctx.fillRect(x, y, 1, 1);
-    }
-
     startSimulation() {
-        console.log("%c Starting simulation ...", "color: #bada55");
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.heigth);
-        this.agents.forEach(agent => {
-            for (let i = 0; i < this.L; i++) {
-                const newCoordinates = [...agent.calculateNextStep(this.l)];
-                agent.moveTo(this.n, this.p, this.t, newCoordinates[0], newCoordinates[1]);
-                if (agent.currentCoordinates == undefined) console.log("faulty", agent);
+        console.log("%c Simulation start: ", "color: #bada55");
+        console.log('numant', numAntMov);
+        this.ctx.clearRect(0, 0, this.canvasW, this.canvasH);
+        if (animation) {
+            timer();
+            this.animationIntervalId = setInterval(this.animateMoves.bind(this), 1);
+        } else this.noAnimationMoves();
+    }
+
+    noAnimationMoves() {
+        const start = Date.now();
+        for (this.currentFrame; this.currentFrame < iterations; this.currentFrame++) {
+            console.log("%c Iteration: ", "color: #bada55", this.currentFrame);
+            this.agents.forEach(agent => {
+                for (let i = 0; i < numAntMov; i++) {
+                    const {
+                        newCoordinates,
+                        newAnt
+                    } = agent.calculateNextStep();
+                    agent.moveTo(newCoordinates, newAnt);
+                    if (agent.currentCoordinates == undefined) console.log("faulty", agent);
+                    if (newAnt) i = numAntMov;
+                }
+            });
+
+            // update pheromone values
+            pheromoneMatrix.forEach((val, x) => {
+                val.forEach((arr, y) => {
+                    this.updatePheromoneLevel(this.agents, x, y);
+                });
+            });
+            loadingBar(this.currentFrame, iterations);
+        }
+        console.log("%c END ANIMATION", "color: #c92424");
+        this.createBinaryImage();
+        elapsedTime(start, Date.now());
+    }
+
+    animateMoves() {
+        const agent = this.agents[this.agentCount];
+        this.animationCount++;
+
+        if (this.animationCount >= numAntMov) {
+            loadingBar(this.agentCount + ((this.agents.length - 1) * (this.currentFrame - 1)), (this.agents.length - 1) * iterations);
+            this.animationCount = 0;
+            this.agentCount++;
+            // elapsedTime(start, Date.now());
+        }
+        if (this.agentCount >= this.agents.length) {
+            // update pheromone values
+            pheromoneMatrix.forEach((val, x) => {
+                val.forEach((arr, y) => {
+                    this.updatePheromoneLevel(this.agents, x, y);
+                    this.ctx.fillStyle = `rgba(0, 255, 0, ${pheromoneMatrix[x][y]})`;
+                    this.ctx.fillRect(
+                        y,
+                        x,
+                        1,
+                        1
+                    );
+                });
+            });
+            if (this.currentFrame >= iterations) {
+                console.log("%c END ANIMATION", "color: #c92424");
+                stopTimer();
+                // elapsedTime(start, Date.now());
+                this.createBinaryImage();
+                clearInterval(this.animationIntervalId);
+            } else {
+                console.log("%c Iteration: ", "color: #bada55", this.currentFrame);
+                this.currentFrame++;
+                this.agentCount = 0;
+                this.animationCount = 0;
+                this.createBinaryImage();
+            }
+        } else {
+            const {
+                newCoordinates,
+                newAnt
+            } = agent.calculateNextStep();
+            agent.moveTo(newCoordinates, newAnt);
+            if (agent.currentCoordinates == undefined) console.log("faulty", agent);
+            if (this.animationCount % 10 === 0) {
+                if (pheromoneMatrix[agent.currentCoordinates.x][agent.currentCoordinates.y] <= initialPheromoneValue) {
+                    this.ctx.fillStyle = `rgba(66, 33, 123, 255)`;
+                } else {
+                    this.ctx.fillStyle = `rgba(237, 0, 1, 255)`;
+                }
+                if (agent.previousCoordinates.length > 10) {
+                    for (let k = 1; k < 10; k++) {
+                        this.ctx.fillRect(
+                            agent.previousCoordinates[agent.previousCoordinates.length - k].y,
+                            agent.previousCoordinates[agent.previousCoordinates.length - k].x,
+                            1,
+                            1
+                        );
+                    }
+                }
                 this.ctx.fillRect(
                     agent.currentCoordinates.y,
                     agent.currentCoordinates.x,
-                    agent.agentSize,
-                    agent.agentSize
+                    1,
+                    1
                 );
-                if (newCoordinates[1]) i = this.L;
-                // if (agent.currentCoordinates.x === agent.previousCoordinates[agent.previousCoordinates.length - 1].x && agent.currentCoordinates.y === agent.previousCoordinates[agent.previousCoordinates.length - 1].y) i = this.L;
             }
-        });
-
-        // update pheromone values
-        pheromoneMatrix.forEach((val, x) => {
-            val.forEach((arr, y) => {
-                this.updatePheromoneLevel(this.agents, this.t, x, y);
-            });
-        });
-
-        if (this.currentFrame !== this.iterations) {
-            this.currentFrame++;
-            window.requestAnimationFrame(this.startSimulation.bind(this));
-        } else {
-            console.log("%c END ANIMATION", "color: #c92424");
-            this.createBinaryImage();
+            if (newAnt) {
+                this.animationCount = numAntMov; // checks if a new ant is generated and exits loop
+            }
         }
+        if (agent !== undefined) {
+            this.textIter.value = this.currentFrame;
+            this.textCurr.value = this.agentCount;
+            this.textNew.value = this.animationCount;
+            this.textX.value = agent.currentCoordinates.x;
+            this.textY.value = agent.currentCoordinates.y;
+        }
+        // elapsedTime(start, Date.now());
     }
 
-    updatePheromoneLevel(agents, t, x, y) {
-        // const curX = agent.currentCoordinates.x;
-        // const curY = agent.currentCoordinates.y;
-        let sumHeuristics = 0;
+    updatePheromoneLevel(agents, x, y) {
+        let sumPheromone = 0;
         agents.forEach(agent => {
             if (agent.previousCoordinates[x] && agent.previousCoordinates[y]) {
-                sumHeuristics += heuristicMatrix[x][y] >= t ? heuristicMatrix[x][y] : 0;
+                sumPheromone += pheromoneMatrix[x][y] >= tNoiseFilt ? pheromoneMatrix[x][y] : 0;
             }
         });
-        // agent.previousCoordinates.forEach(prevPosition => {
-        //   sumHeuristics +=
-        //     heuristicMatrix[prevPosition.x][prevPosition.y] >= t
-        //       ? heuristicMatrix[prevPosition.x][prevPosition.y]
-        //       : 0;
-        // });
-        // agent.previousCoordinates.forEach(prevPosition => {
-        const newPheromoneLevel = (1 - this.ro) * pheromoneMatrix[x][y] + sumHeuristics;
+        const newPheromoneLevel = (1 - roPEvRate) * pheromoneMatrix[x][y] + sumPheromone;
         pheromoneMatrix[x][y] = newPheromoneLevel;
-        // });
     }
 
     createBinaryImage() {
-        const width = 500,
-            height = 500;
+        const width = this.canvasW,
+            height = this.canvasH;
         let buffer = new Uint8ClampedArray(width * height * 4);
-        let pheromoneAvg = 0;
-        pheromoneMatrix.forEach((arr, x) => {
-            // arr.reduce((a,b)=> a+b);
-            arr.forEach((value, y) => {
-                pheromoneAvg += value;
-            });
-        });
-        pheromoneAvg = pheromoneAvg / pheromoneMatrix.length;
-        console.log("average", pheromoneAvg);
-        console.log("average2", pheromoneAvg / 2);
 
         const binaryCanvas = document.createElement("canvas");
         binaryCanvas.setAttribute("class", "binary-canvas");
-        binaryCanvas.setAttribute("width", "500");
-        binaryCanvas.setAttribute("height", "500");
+        binaryCanvas.setAttribute("width", width);
+        binaryCanvas.setAttribute("height", height);
         const binCtx = binaryCanvas.getContext("2d");
 
         pheromoneMatrix.forEach((arr, x) => {
             arr.forEach((value, y) => {
-                const pos = (x * width + y) * 4;
-                const valueRGB = value <= initialPheromoneValue ? 255 : 0;
-                buffer[pos] = valueRGB; // some R value [0, 255]
-                buffer[pos + 1] = valueRGB; // some G value
-                buffer[pos + 2] = valueRGB; // some B value
-                buffer[pos + 3] = 255; // set alpha channel
+                if (value > initialPheromoneValue) {
+                    const pos = (x * height + y) * 4;
+                    const valueRGB = 0;
+                    buffer[pos] = valueRGB; // some R value [0, 255]
+                    buffer[pos + 1] = valueRGB; // some G value
+                    buffer[pos + 2] = valueRGB; // some B value
+                    buffer[pos + 3] = 255; // set alpha channel
+                }
             });
         });
 
