@@ -15,21 +15,35 @@ function elapsedTime(start, end) {
     let timeDiff = end - start;
     timeDiff /= 1000;
 
-    // get seconds 
-    const seconds = Math.round(timeDiff);
 
-    elem.value = `${seconds}s`;
+    // get seconds 
+    let seconds = Math.round(timeDiff);
+    
+    // get minutes
+    let minutes = 0;
+    minutes = Math.floor(seconds/60);
+    if(seconds === 60) {
+        seconds = 0;
+    }
+
+    elem.value = `${minutes}m ${seconds}s`;
 }
 
 let intervalId = null;
 
 function timer() {
     const elem = document.getElementById("elapsed-time");
-    const start = Date.now();
+    let start = Date.now();
+    let minutes = 0;
     intervalId = setInterval(function() {
-        let delta = Date.now() - start; // milliseconds elapsed since start
-        delta = Math.floor(delta / 1000); // in seconds
-        elem.value = `${delta}s`;
+        let seconds = Date.now() - start; // milliseconds elapsed since start
+        seconds = Math.floor(seconds / 1000); // in seconds
+        minutes += Math.floor(seconds/60);
+        if(seconds === 60) {
+            start = Date.now();
+            seconds = 0;
+        }
+        elem.value = `${minutes}m ${seconds}s`;
     }, 1000);
 }
 
