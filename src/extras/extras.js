@@ -18,10 +18,28 @@ function elapsedTime(start, end) {
     // get seconds 
     const seconds = Math.round(timeDiff);
 
-    elem.value = `Execution time: ${seconds}s`;
+    elem.value = `${seconds}s`;
+}
+
+let intervalId = null;
+
+function timer() {
+    const elem = document.getElementById("elapsed-time");
+    const start = Date.now();
+    intervalId = setInterval(function() {
+        let delta = Date.now() - start; // milliseconds elapsed since start
+        delta = Math.floor(delta / 1000); // in seconds
+        elem.value = `${delta}s`;
+    }, 1000);
+}
+
+function stopTimer() {
+    clearInterval(intervalId);
 }
 
 module.exports = {
     loadingBar,
-    elapsedTime
+    elapsedTime,
+    timer,
+    stopTimer
 }

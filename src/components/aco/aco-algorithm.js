@@ -2,7 +2,9 @@ import MatrixHelper from "../../helpers/matrix-helper";
 import AntAgent from "./agent";
 import {
     loadingBar,
-    elapsedTime
+    elapsedTime,
+    timer,
+    stopTimer
 } from '../../extras/extras';
 
 export default class ACO {
@@ -94,8 +96,10 @@ export default class ACO {
     startSimulation() {
         console.log("%c Simulation start: ", "color: #bada55");
         console.log('numant', numAntMov);
-        if(animation) this.interval = setInterval(this.animateMoves.bind(this), 1);
-        else this.noAnimationMoves();
+        if (animation) {
+            timer();
+            this.interval = setInterval(this.animateMoves.bind(this), 1);
+        } else this.noAnimationMoves();
     }
 
     noAnimationMoves() {
@@ -120,7 +124,7 @@ export default class ACO {
                     this.updatePheromoneLevel(this.agents, x, y);
                 });
             });
-            loadingBar(this.currentFrame ,iterations);
+            loadingBar(this.currentFrame, iterations);
         }
         console.log("%c END ANIMATION", "color: #c92424");
         this.createBinaryImage();
@@ -129,14 +133,13 @@ export default class ACO {
 
     animateMoves() {
         const agent = this.agents[this.agentCount];
-        const start = Date.now();
         this.animationCount++;
 
         if (this.animationCount >= numAntMov) {
             loadingBar(this.agentCount + ((this.agents.length - 1) * (this.currentFrame - 1)), (this.agents.length - 1) * iterations);
             this.animationCount = 0;
-            debugger;
             this.agentCount++;
+            // elapsedTime(start, Date.now());
         }
         if (this.agentCount >= this.agents.length) {
             // update pheromone values
@@ -154,7 +157,8 @@ export default class ACO {
             });
             if (this.currentFrame >= iterations) {
                 console.log("%c END ANIMATION", "color: #c92424");
-                elapsedTime(start, Date.now());
+                stopTimer();
+                // elapsedTime(start, Date.now());
                 this.createBinaryImage();
                 clearInterval(this.interval);
             } else {
@@ -171,33 +175,30 @@ export default class ACO {
             } = agent.calculateNextStep();
             agent.moveTo(newCoordinates, newAnt);
             if (agent.currentCoordinates == undefined) console.log("faulty", agent);
-            if (animation) {
-                if (this.animationCount % 5 === 0) {
-                    if (pheromoneMatrix[agent.currentCoordinates.x][agent.currentCoordinates.y] <= initialPheromoneValue) {
-                        this.ctx.fillStyle = `rgba(66, 33, 123, 255)`;
-                    } else {
-                        this.ctx.fillStyle = `rgba(237, 0, 1, 255)`;
-                    }
-                    if (agent.previousCoordinates.length > 5) {
-                        for (let k = 1; k < 5; k++) {
-                            this.ctx.fillRect(
-                                agent.previousCoordinates[agent.previousCoordinates.length - k].y,
-                                agent.previousCoordinates[agent.previousCoordinates.length - k].x,
-                                1,
-                                1
-                            );
-                        }
-                    }
-                    this.ctx.fillRect(
-                        agent.currentCoordinates.y,
-                        agent.currentCoordinates.x,
-                        1,
-                        1
-                    );
+            if (this.animationCount % 10 === 0) {
+                if (pheromoneMatrix[agent.currentCoordinates.x][agent.currentCoordinates.y] <= initialPheromoneValue) {
+                    this.ctx.fillStyle = `rgba(66, 33, 123, 255)`;
+                } else {
+                    this.ctx.fillStyle = `rgba(237, 0, 1, 255)`;
                 }
+                if (agent.previousCoordinates.length > 10) {
+                    for (let k = 1; k < 10; k++) {
+                        this.ctx.fillRect(
+                            agent.previousCoordinates[agent.previousCoordinates.length - k].y,
+                            agent.previousCoordinates[agent.previousCoordinates.length - k].x,
+                            1,
+                            1
+                        );
+                    }
+                }
+                this.ctx.fillRect(
+                    agent.currentCoordinates.y,
+                    agent.currentCoordinates.x,
+                    1,
+                    1
+                );
             }
             if (newAnt) {
-                debugger;
                 this.animationCount = numAntMov; // checks if a new ant is generated and exits loop
             }
         }
@@ -208,6 +209,7 @@ export default class ACO {
             this.textX.value = agent.currentCoordinates.x;
             this.textY.value = agent.currentCoordinates.y;
         }
+        // elapsedTime(start, Date.now());
     }
 
     updatePheromoneLevel(agents, x, y) {
