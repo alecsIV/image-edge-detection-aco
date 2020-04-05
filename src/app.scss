@@ -9,8 +9,9 @@
     height: 500px;
 }
 
-#canvasBg {
-    border:1px solid #000000;
+#canvasBg,
+.binary-canvas {
+    border: 1px solid #000000;
     display: block;
     background-position: center;
     background-size: cover;
@@ -25,6 +26,13 @@
     max-width: 50px;
 }
 
-/* #make-matrix-button {
-    
-} */
+#myProgress {
+    width: 100%;
+    background-color: #ddd;
+}
+
+#myBar {
+    width: 1%;
+    height: 30px;
+    background-color: #4CAF50;
+}

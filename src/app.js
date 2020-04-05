@@ -1,14 +1,6 @@
-//set global variables
-global.imageIntensityArray1d = new Array();
-global.imageIntensityArray = new Array();
-global.pheromoneMatrix = new Array();
-global.heuristicMatrix = new Array();
-global.canvasWidth = 0;
-global.canvasHeight = 0;
+import initGlobals from './helpers/globals';
 
-// Parameter fields
-global.allUI = document.getElementsByClassName('ui-element'); //get all user input fields
-global.autoFields = true; //check if user input values are changed by the user
+initGlobals();
 
 import ACO from './components/aco/aco-algorithm';
 import EnvironmentImage from './components/environment-image';
@@ -79,7 +71,6 @@ startSimulationButton.addEventListener('click', () => {
 });
 
 setDefaultsButton.addEventListener('click', () => {
-    algorithm.setDefaultValues();
     algorithm.reset();
     setDefaultsButton.setAttribute('disabled', 'disabled')
 });
