@@ -1,13 +1,13 @@
 export default class AntAgent {
-    constructor(canvas) {
+    constructor(canvas, coordinates) {
         this.canvas = canvas;
-        this.startPostition = this.getStartingPostion(); // x,y coordinates <- this should be random
+        this.startPostition = coordinates; // x,y coordinates <- this should be random
         this.currentCoordinates = this.startPostition;
         this.previousCoordinates = [];
         this.agentSize = 1;
     }
 
-    getStartingPostion() {
+    getRandomPosition() {
         const x = Math.floor(Math.random() * this.canvas.width);
         const y = Math.floor(Math.random() * this.canvas.height);
         return {
@@ -62,8 +62,7 @@ export default class AntAgent {
             sumProducts = 0,
             visited = false;
 
-        const neighbourhoodSize = 9,
-            phProducts = [],
+        const phProducts = [],
             neighbourNodeCoordinates = [],
             x = this.currentCoordinates.x,
             y = this.currentCoordinates.y,
@@ -141,9 +140,9 @@ export default class AntAgent {
         // console.log('neighbourNodeCoordinates', neighbourNodeCoordinates);
         if (maxProbabilityIndex === 99) {
             this.previousCoordinates = [];
-            const newPositions = this.getStartingPostion();
-            return [newPositions, true];
-        } else return [neighbourNodeCoordinates[maxProbabilityIndex], false];
+            const newPositions = this.getRandomPosition();
+            return {newCoordinates: newPositions, newAnt: true};
+        } else return {newCoordinates: neighbourNodeCoordinates[maxProbabilityIndex], newAnt:false};
     }
     moveTo(coordinates, newAnt) {
         if (!newAnt) {

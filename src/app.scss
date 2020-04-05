@@ -9,7 +9,8 @@
     height: 500px;
 }
 
-#canvasBg {
+#canvasBg,
+.binary-canvas {
     border: 1px solid #000000;
     display: block;
     background-position: center;
@@ -35,7 +36,3 @@
     height: 30px;
     background-color: #4CAF50;
 }
-
-/* #make-matrix-button {
-    
-} */
