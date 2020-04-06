@@ -1,7 +1,54 @@
+// Imports //
 @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;700&display=swap');
+// Element definition //
+%normal-button {
+    // button positioning //
+    display: block;
+    margin: 0 auto;
+    // button styling //
+    height: 2.625rem;
+    padding: 0 8px;
+    color: #7f58dc;
+    background-color: white;
+    border: 1px solid #7f58dc;
+    border-radius: 2px;
+    font-size: 0.6875rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-align: center;
+    transition: all 0.2s;
+    min-width: 6.25rem;
+
+
+    &:hover {
+        background-color: #d7d1f3;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    &:disabled {
+        opacity: 0.3;
+        background-color: white;
+        cursor: not-allowed;
+    }
+
+    &:active, &:focus {
+        background-color: #bba6f3;
+        color: white;
+        cursor: pointer;
+        font-size: 0.875rem;
+        transition: all 0.2s;
+    }
+}
+
 
 body {
-    font-family: 'Source Sans Pro', 'Helvetica Neue', sans-serif;
+    font-family: 'Source Sans Pro', 'HelveticaNeue', 'Helvetica', sans-serif;
+}
+
+main {
+    max-width: 985px;
+    margin: 0 auto;
 }
 
 .canvas-wrapper {
@@ -20,15 +67,14 @@ body {
 .process-params,
 .progress-indicators,
 .binary-canvas-div {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
     border: 1px solid #222;
 }
 
 // User Inputs //
 .ui__wrapper {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-evenly;
-
     .input-element {
         position: relative;
         max-width: fit-content;
@@ -45,43 +91,39 @@ body {
         padding: 0.9375rem;
 
         #defaults-button {
-            // button positioning //
-            display: block;
-            margin: 0 auto;
-            // button styling //
-            height: 2.625rem;
-            padding: auto 8px;
-            color: #7f58dc;
-            background-color: white;
-            border: 1px solid #7f58dc;
-            border-radius: 2px;
-            font-weight: bold;
-            text-transform: uppercase;
-            transition: all 0.2s;
+            @extend %normal-button;
+        }
+    }
+}
 
+// Upload controls
+.upload-controls {
+    .image-upload__container {
+        max-width: 200px;
+        width: fit-content;
+        // Image upload button
+        #image-upload {
+            width: 0.1px;
+            height: 0.1px;
+            opacity: 0;
+            overflow: hidden;
+            position: absolute;
+            z-index: -1;
 
-            &:hover {
-                background-color: #d7d1f3;
-                cursor: pointer;
-                transition: all 0.2s;
-            }
-
-            &:disabled {
-                opacity: 0.3;
-                background-color: white;
-                cursor: not-allowed;
-            }
-
-            &:active {
-                background-color: #bba6f3;
-                color: white;
-                cursor: pointer;
-                font-size: 0.875rem;
-                transition: all 0.2s;
+            &+label {
+                @extend %normal-button;
+                width: fit-content;
+                // Centering text //
+                align-content: center;
+                display: flex;
+                justify-content: center;
+                flex-direction: column;
+                font-size: 0.75rem;
             }
         }
     }
 }
+
 
 #canvasBg,
 .binary-canvas {

@@ -9,7 +9,6 @@ const uploader = document.querySelector('#image-upload');
 const image = document.querySelector('#image-source');
 const imagePreview = document.querySelector('#image-preview');
 const canvasBg = document.querySelector('#canvasBg');
-// const canvasFg = document.querySelector('#canvasFg');
 const drawImageButton = document.querySelector('#draw-image-button');
 const startSimulationButton = document.querySelector('#start-simulation');
 const setDefaultsButton = document.querySelector('#defaults-button');
@@ -20,6 +19,7 @@ let algorithm;
 //set canvasBg dimensions
 canvasWidth = canvasBg.width;
 canvasHeight = canvasBg.clientHeight;
+
 // Buttons and HTML events
 const drawImageButtonDefaultText = 'Draw Image';
 const drawImageButtonActiveText = 'Reset';
@@ -29,7 +29,7 @@ uploader.addEventListener('change', function() {
     drawImageButton.setAttribute('disabled', 'disabled');
     startSimulationButton.setAttribute('disabled', 'disabled');
     const file = this.files[0];
-    if (file) {
+    if (this.files && this.files.length > 0) {
         const reader = new FileReader();
         reader.addEventListener('load', function() {
             image.setAttribute('src', this.result);
@@ -39,13 +39,15 @@ uploader.addEventListener('change', function() {
         drawImageButton.removeAttribute('disabled');
         drawImageButton.innerHTML = drawImageButtonDefaultText;
     }
+    else {
+        image.setAttribute('src', '');
+        imagePreview.setAttribute('src', './assets/NoImg.png');
+    }
 });
 
 drawImageButton.addEventListener('click', () => {
     if (image) {
-        // context.globalCompositeOperation = 'source-over';
         envImage = new EnvironmentImage(image, canvasBg);
-        // context.globalCompositeOperation = 'destination-over';
         algorithm = new ACO(envImage);
         algorithm.reset();
         startSimulationButton.removeAttribute('disabled');
@@ -54,23 +56,20 @@ drawImageButton.addEventListener('click', () => {
 });
 
 Object.values(allUI).forEach((element) => {
-    // element.addEventListener('change', setDefaultsButton.removeAttribute('disabled'));
     element.onchange = () => {
         setDefaultsButton.removeAttribute('disabled');
         startSimulationButton.removeAttribute('disabled');
-        // context.clearRect(0, 0, canvasWidth, canvasHeight);
         algorithm.reset();
     };
 });
 
 startSimulationButton.addEventListener('click', () => {
     startSimulationButton.setAttribute('disabled', 'disabled');
-    // resetSimulationButton.style.display = 'block';
     algorithm.updateGlobalParams(); // set global parameters based on user input
     algorithm.startSimulation();
 });
 
 setDefaultsButton.addEventListener('click', () => {
-    algorithm.reset();
+    algorithm.reset('full');
     setDefaultsButton.setAttribute('disabled', 'disabled')
 });

@@ -44,10 +44,11 @@ export default class ACO {
         this.animationIntervalId = null;
     }
 
-    reset() {
+    reset(full) {
         clearInterval(this.animationIntervalId);
         stopTimer();
         this.matrixHelper.resetPheromoneMatrix();
+        if(full === 'full') this.setDefaultValues();
         this.init();
         // this.ctx.clearRect(0, 0, this.canvasW, this.canvasH);
         // this.updateGlobalParams();

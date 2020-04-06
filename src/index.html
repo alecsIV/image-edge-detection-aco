@@ -50,18 +50,22 @@
                 <input type="number" id="beta" class="ui-element">
             </div>
             <div class="defaults-button__container">
-            <button id="defaults-button" disabled>Automatic parameters</button>
-        </div>
+                <button id="defaults-button" disabled>Automatic parameters</button>
+            </div>
         </div>
         <div class="upload-controls">
-            <label for="image-upload">Upload image:</label>
-            <input type="file" accept="image/*" id="image-upload" name="image-upload">
             <img src="" id="image-source">
-            <img alt="Image preview" src="" id="image-preview">
+            <img alt="Image preview" src="./assets/NoImg.png" id="image-preview">
+            <div class="image-upload__container">
+                <input type="file" accept="image/*" id="image-upload" name="image-upload">
+                <label for="image-upload">Upload image</label>
+            </div>
             <button id="draw-image-button" disabled>Draw image</button>
             <button id="start-simulation" disabled>Start</button>
-            <label for="animation-toggle">Animation toggle</label>
-            <input type="checkbox" id="animation-toggle" checked>
+            <div class="animation-toggle_container">
+                <label for="animation-toggle">Animation toggle</label>
+                <input type="checkbox" id="animation-toggle" checked>
+            </div>
         </div>
         <div class="process-params">
             <label for="iter-text">Iteration:</label>
