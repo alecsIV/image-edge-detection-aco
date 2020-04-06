@@ -1,4 +1,7 @@
 export default function initGlobals() {
+    const EventEmitter = require('events');
+    const events = new EventEmitter();
+
     //set global variables
     global.imageIntensityArray1d = new Array();
     global.imageIntensityArray = new Array();
@@ -16,4 +19,5 @@ export default function initGlobals() {
     // Parameter fields
     global.allUI = document.getElementsByClassName('ui-element'); //get all user input fields
     global.autoFields = true; //check if user input values are changed by the user
+    global.events = events;
 }

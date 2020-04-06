@@ -43,15 +43,69 @@
     }
 }
 
-
+// Main settings //
 body {
     font-family: 'Source Sans Pro', 'HelveticaNeue', 'Helvetica', sans-serif;
     max-width: 985px;
     margin: 0 auto;
+    background-color: #fafafa;
 }
 
 button {
     @extend %normal-button;
+}
+
+i.info {
+    background-image: url('/assets/info.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 15px;
+    height: 15px;
+    display: block;
+    margin-left: auto;
+    cursor: help;
+
+    /* Tooltip text */
+    .tooltiptext {
+        width: 120px;
+        background-color: rgba(0, 0, 0, 0.7);
+        color: #fff;
+        text-align: center;
+        padding: 5px;
+        border-radius: 6px;
+        opacity: 0;
+
+        /* Position the tooltip text */
+        position: absolute;
+        z-index: 1;
+        top: 0;
+        left: 0;
+        transition: all 0.2s;
+    }
+
+    &:hover {
+        span {
+            opacity: 1;
+            transition: all 0.2s;
+        }
+    }
+
+}
+
+details {
+    flex-basis: 100%;
+    cursor: pointer;
+    margin: 10px 0;
+
+    h2 {
+        display: inline;
+        vertical-align: middle;
+    }
+
+    .input-element {
+        display: inline-block;
+    }
 }
 
 .canvas-wrapper {
@@ -73,7 +127,23 @@ button {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    border: 1px solid #222;
+    // border: 1px solid #222;
+    padding: 8px;
+    border-radius: 5px;
+    background-color: #fff;
+    box-shadow: 0px 10px 20px 0px rgba(0, 0, 0, .1);
+    margin: 15px auto;
+
+    &>* {
+        margin: auto;
+    }
+
+    // &.disabled{
+    //     border-radius: 5px;
+    //     background-color: #fafafa;
+    //     box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, .1);
+    //     transition: all 0.3s;
+    // }
 }
 
 // User Inputs //
@@ -144,7 +214,7 @@ button {
         .slider {
             position: absolute;
             cursor: pointer;
-            border-radius: 2px;
+            border-radius: 34px;
             top: 0;
             left: 0;
             right: 0;
@@ -161,7 +231,7 @@ button {
             width: 16px;
             left: 4px;
             bottom: 4px;
-            border-radius: 2px;
+            border-radius: 50%;
             background-color: white;
             -webkit-transition: .4s;
             transition: .4s;
@@ -180,7 +250,24 @@ button {
             -ms-transform: translateX(26px);
             transform: translateX(26px);
         }
+
+        .animation-toggle_label {
+            margin-left: 5px;
+        }
     }
+}
+
+.elapsed-time-wrapper {
+    margin: 5px auto;
+}
+
+.process-params>input,
+#elapsed-time {
+    border: 0;
+    font-size: 12p;
+    font-weight: bold;
+    font-size: 12px;
+    max-width: 100px;
 }
 
 
@@ -204,10 +291,59 @@ button {
 #myProgress {
     width: 100%;
     background-color: #ddd;
+    border-radius: 15px;
+    position: relative;
+
+    span.bar-percentage {
+        position: absolute;
+        top: 5px;
+        left: 50%;
+        color: #fafafa;
+        font-weight: bold;
+    }
 }
 
 #myBar {
     width: 1%;
     height: 30px;
-    background-color: #4CAF50;
+    text-align: center;
+    background-color: #7f58dc;
+    border-radius: 34px 0 0 34px;
+}
+
+.pulse {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #7f58dc;
+    box-shadow: 0 0 0 rgba(204, 169, 44, 0.4);
+    animation: pulse 2s infinite;
+    display: none;
+    cursor: pointer;
+
+    &::before {
+        content: "II";
+        color: #fafafa;
+        text-align: center;
+        display: block;
+        font-weight: bold;
+        margin-top: 9px;
+    }
+}
+
+@keyframes pulse {
+    0% {
+        -moz-box-shadow: 0 0 0 0 rgba(185, 150, 243, 0.4);
+        box-shadow: 0 0 0 0 rgba(185, 150, 243, 0.4);
+    }
+
+    70% {
+        -moz-box-shadow: 0 0 0 10px rgba(185, 150, 243, 0);
+        box-shadow: 0 0 0 10px rgba(185, 150, 243, 0);
+    }
+
+    100% {
+        -moz-box-shadow: 0 0 0 0 rgba(185, 150, 243, 0);
+        box-shadow: 0 0 0 0 rgba(185, 150, 243, 0);
+    }
 }

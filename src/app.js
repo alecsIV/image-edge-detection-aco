@@ -12,6 +12,10 @@ const canvasBg = document.querySelector('#canvasBg');
 const drawImageButton = document.querySelector('#draw-image-button');
 const startSimulationButton = document.querySelector('#start-simulation');
 const setDefaultsButton = document.querySelector('#defaults-button');
+const loadingPulse = document.querySelector('.pulse');
+const sysInfoPanel = document.querySelector('.sys-info-panel');
+const simSettingsPanel = document.querySelector('.sim-settings-panel');
+// const settingsContainers = document.querySelectorAll('.settings-pannels_container > details > div');
 
 let envImage;
 let algorithm;
@@ -24,6 +28,11 @@ canvasHeight = canvasBg.clientHeight;
 const drawImageButtonDefaultText = 'Draw Image';
 const drawImageButtonActiveText = 'Reset';
 const context = canvasBg.getContext('2d');
+
+// settingsContainers.forEach((container)=>{
+//     container.classList.add('disabled');
+// });
+
 uploader.addEventListener('change', function() {
     context.clearRect(0, 0, canvasWidth, canvasHeight);
     drawImageButton.setAttribute('disabled', 'disabled');
@@ -38,20 +47,22 @@ uploader.addEventListener('change', function() {
         reader.readAsDataURL(file)
         drawImageButton.removeAttribute('disabled');
         drawImageButton.innerHTML = drawImageButtonDefaultText;
-    }
-    else {
+    } else {
         image.setAttribute('src', '');
         imagePreview.setAttribute('src', './assets/NoImg.png');
     }
 });
 
 drawImageButton.addEventListener('click', () => {
-    if (image) {
+    if (drawImageButton.innerHTML === drawImageButtonActiveText) {
+        events.emit('reset');
+    } else if (image) {
         envImage = new EnvironmentImage(image, canvasBg);
         algorithm = new ACO(envImage);
         algorithm.reset();
         startSimulationButton.removeAttribute('disabled');
         drawImageButton.innerHTML = (drawImageButtonActiveText);
+        events.emit('drawn-image');
     }
 });
 
@@ -72,4 +83,35 @@ startSimulationButton.addEventListener('click', () => {
 setDefaultsButton.addEventListener('click', () => {
     algorithm.reset('full');
     setDefaultsButton.setAttribute('disabled', 'disabled')
+});
+
+loadingPulse.addEventListener('click', ()=>{
+    events.emit('stop-simulation');
+    algorithm.stop();
+});
+
+events.on('start-simulation', () => {
+    startSimulationButton.style.display = 'none';
+    loadingPulse.style.display = 'block';
+    document.body.style.cursor = 'wait';
+    sysInfoPanel.setAttribute('open', 'open');
+});
+events.on('stop-simulation', () => {
+    startSimulationButton.style.display = 'block';
+    startSimulationButton.removeAttribute('disabled');
+    loadingPulse.style.display = 'none';
+    document.body.style.cursor = 'auto';
+});
+
+events.on('drawn-image', () => {
+    simSettingsPanel.setAttribute('open', 'open');
+});
+
+events.on('reset', () => {
+    drawImageButton.setAttribute('disabled', 'disabled');
+    startSimulationButton.setAttribute('disabled', 'disabled');
+    drawImageButton.innerHTML = drawImageButtonDefaultText;
+    algorithm.reset('full');
+    context.clearRect(0, 0, canvasWidth, canvasHeight);
+    events.emit('stop-simulation');
 });

@@ -16,9 +16,11 @@ export default class ACO {
         this.canvasArea = this.canvasW * this.canvasH;
         this.ctx = this.canvas.getContext("2d");
         this.matrixHelper = new MatrixHelper();
+
         this.currentFrame = 1;
         this.animationCount = 0;
         this.agentCount = 0;
+        this.paused = false;
 
         this.resultDiv = document.querySelector(".binary-canvas-div");
 
@@ -36,24 +38,34 @@ export default class ACO {
         this.textY = document.querySelector('#y-text');
     }
 
-    init(){
-        this.ctx.clearRect(0, 0, this.canvasW, this.canvasH);
-        this.updateGlobalParams();
-        this.initializeAgents();
-        this.currentFrame = 1;
-        this.animationIntervalId = null;
+    init() {
+            this.ctx.clearRect(0, 0, this.canvasW, this.canvasH);
+            this.updateGlobalParams();
+            this.initializeAgents();
+            this.currentFrame = 1;
+            this.animationIntervalId = null;
     }
 
     reset(full) {
         clearInterval(this.animationIntervalId);
         stopTimer();
         this.matrixHelper.resetPheromoneMatrix();
-        if(full === 'full') this.setDefaultValues();
-        this.init();
+        if (full === 'full') this.setDefaultValues();
+        else this.init();
+        // this.ctx.clearRect(0, 0, this.canvasW, this.canvasH);
+        // this.updateGlobalParams();
+        // this.currentFrame = 1;
+        // this.animationIntervalId = null;
         // this.ctx.clearRect(0, 0, this.canvasW, this.canvasH);
         // this.updateGlobalParams();
         // this.initializeAgents();
         // this.currentFrame = 1;
+    }
+
+    stop() {
+        this.paused = true;
+        clearInterval(this.animationIntervalId);
+        stopTimer();
     }
 
     setDefaultValues() {
@@ -108,11 +120,12 @@ export default class ACO {
     startSimulation() {
         console.log("%c Simulation start: ", "color: #bada55");
         console.log('numant', numAntMov);
-        this.ctx.clearRect(0, 0, this.canvasW, this.canvasH);
+        events.emit('start-simulation');
+        if(!this.paused) this.ctx.clearRect(0, 0, this.canvasW, this.canvasH);
         if (animation) {
             timer();
             this.animationIntervalId = setInterval(this.animateMoves.bind(this), 1);
-        } else this.noAnimationMoves();
+        } else setTimeout(() => this.noAnimationMoves(), 200);
     }
 
     noAnimationMoves() {
@@ -137,11 +150,12 @@ export default class ACO {
                     this.updatePheromoneLevel(this.agents, x, y);
                 });
             });
-            loadingBar(this.currentFrame, iterations);
         }
         console.log("%c END ANIMATION", "color: #c92424");
+        loadingBar(iterations, iterations);
         this.createBinaryImage();
         elapsedTime(start, Date.now());
+        events.emit('stop-simulation');
     }
 
     animateMoves() {
@@ -174,12 +188,12 @@ export default class ACO {
                 // elapsedTime(start, Date.now());
                 this.createBinaryImage();
                 clearInterval(this.animationIntervalId);
+                events.emit('stop-simulation');
             } else {
                 console.log("%c Iteration: ", "color: #bada55", this.currentFrame);
                 this.currentFrame++;
                 this.agentCount = 0;
                 this.animationCount = 0;
-                this.createBinaryImage();
             }
         } else {
             const {
