@@ -39,11 +39,11 @@ export default class ACO {
     }
 
     init() {
-            this.ctx.clearRect(0, 0, this.canvasW, this.canvasH);
-            this.updateGlobalParams();
-            this.initializeAgents();
-            this.currentFrame = 1;
-            this.animationIntervalId = null;
+        this.ctx.clearRect(0, 0, this.canvasW, this.canvasH);
+        this.updateGlobalParams();
+        this.initializeAgents();
+        this.currentFrame = 1;
+        this.animationIntervalId = null;
     }
 
     reset(full) {
@@ -69,10 +69,11 @@ export default class ACO {
     }
 
     setDefaultValues() {
+        const smallImage = Math.round(Math.sqrt(this.image.width * this.image.height));
         this.defaultParams = {
             'iterations': 3,
-            'antCount': Math.round(Math.sqrt(this.image.width * this.image.height)),
-            'numAntMov': Math.round(Math.round(3 * Math.sqrt(this.image.width * this.image.height))),
+            'antCount': (smallImage < 256) ? smallImage * 3 : Math.round(Math.sqrt(this.image.width * this.image.height)),
+            'numAntMov': (smallImage < 256) ? 256 * 9 : Math.round(Math.round(3 * Math.sqrt(this.image.width * this.image.height))),
             // 'antMemLen': Math.round(Math.sqrt(2 * (this.image.width + this.image.height)) / 500 * this.iMax),
             'antMemLen': Math.round(Math.sqrt(2 * (this.image.width + this.image.height))),
             'nConstPD': 2,
@@ -121,7 +122,7 @@ export default class ACO {
         console.log("%c Simulation start: ", "color: #bada55");
         console.log('numant', numAntMov);
         events.emit('start-simulation');
-        if(!this.paused) this.ctx.clearRect(0, 0, this.canvasW, this.canvasH);
+        if (!this.paused) this.ctx.clearRect(0, 0, this.canvasW, this.canvasH);
         if (animation) {
             timer();
             this.animationIntervalId = setInterval(this.animateMoves.bind(this), 1);
