@@ -44,11 +44,12 @@
 
 body {
     font-family: 'Source Sans Pro', 'HelveticaNeue', 'Helvetica', sans-serif;
-}
-
-main {
     max-width: 985px;
     margin: 0 auto;
+}
+
+button {
+    @extend %normal-button;
 }
 
 .canvas-wrapper {
