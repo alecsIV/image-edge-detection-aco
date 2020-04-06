@@ -1,3 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;700&display=swap');
+
+body {
+    font-family: 'Source Sans Pro', 'Helvetica Neue', sans-serif;
+}
+
 .canvas-wrapper {
     display: flex;
     flex-wrap: wrap;
@@ -7,6 +13,74 @@
     position: relative;
     width: 500px;
     height: 500px;
+}
+
+.ui__wrapper,
+.upload-controls,
+.process-params,
+.progress-indicators,
+.binary-canvas-div {
+    border: 1px solid #222;
+}
+
+// User Inputs //
+.ui__wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+
+    .input-element {
+        position: relative;
+        max-width: fit-content;
+        text-align: center;
+        padding: 0.625rem;
+
+        &>label {
+            display: block;
+        }
+    }
+
+    .defaults-button__container {
+        width: 100%;
+        padding: 0.9375rem;
+
+        #defaults-button {
+            // button positioning //
+            display: block;
+            margin: 0 auto;
+            // button styling //
+            height: 2.625rem;
+            padding: auto 8px;
+            color: #7f58dc;
+            background-color: white;
+            border: 1px solid #7f58dc;
+            border-radius: 2px;
+            font-weight: bold;
+            text-transform: uppercase;
+            transition: all 0.2s;
+
+
+            &:hover {
+                background-color: #d7d1f3;
+                cursor: pointer;
+                transition: all 0.2s;
+            }
+
+            &:disabled {
+                opacity: 0.3;
+                background-color: white;
+                cursor: not-allowed;
+            }
+
+            &:active {
+                background-color: #bba6f3;
+                color: white;
+                cursor: pointer;
+                font-size: 0.875rem;
+                transition: all 0.2s;
+            }
+        }
+    }
 }
 
 #canvasBg,
