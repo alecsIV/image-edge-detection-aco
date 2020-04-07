@@ -30,7 +30,7 @@ export default class ACO {
 
         this.setDefaultValues() // set default values for the parameters
 
-        //for debug
+        // Simulation stats
         this.textIter = document.querySelector('#iter-text');
         this.textCurr = document.querySelector('#curr-text');
         this.textNew = document.querySelector('#new-text');
@@ -48,27 +48,19 @@ export default class ACO {
 
     reset(full) {
         clearInterval(this.animationIntervalId);
-        stopTimer();
+        this.lastTime = stopTimer(false);
         this.matrixHelper.resetPheromoneMatrix();
         if (full === 'full') {
             this.ctx.clearRect(0, 0, this.canvasW, this.canvasH);
             this.currentFrame = 1;
             this.animationIntervalId = null;
         } else this.init();
-        // this.ctx.clearRect(0, 0, this.canvasW, this.canvasH);
-        // this.updateGlobalParams();
-        // this.currentFrame = 1;
-        // this.animationIntervalId = null;
-        // this.ctx.clearRect(0, 0, this.canvasW, this.canvasH);
-        // this.updateGlobalParams();
-        // this.initializeAgents();
-        // this.currentFrame = 1;
     }
 
     stop() {
         this.paused = true;
         clearInterval(this.animationIntervalId);
-        stopTimer();
+        this.lastTime = stopTimer(true);
     }
 
     setDefaultValues() {
@@ -122,11 +114,10 @@ export default class ACO {
 
     startSimulation() {
         console.log("%c Simulation start: ", "color: #bada55");
-        console.log('numant', numAntMov);
         events.emit('start-simulation');
         if (!this.paused) this.ctx.clearRect(0, 0, this.canvasW, this.canvasH);
         if (animation) {
-            timer();
+            timer((this.lastTime) ? this.lastTime : null); // check if timer has been stopped
             this.animationIntervalId = setInterval(this.animateMoves.bind(this), 1);
         } else setTimeout(() => this.noAnimationMoves(), 200);
     }
@@ -158,7 +149,7 @@ export default class ACO {
         loadingBar(iterations, iterations);
         this.createBinaryImage();
         elapsedTime(start, Date.now());
-        events.emit('stop-simulation');
+        events.emit('simulation-complete');
     }
 
     animateMoves() {
@@ -169,7 +160,6 @@ export default class ACO {
             loadingBar(this.agentCount + ((this.agents.length - 1) * (this.currentFrame - 1)), (this.agents.length - 1) * iterations);
             this.animationCount = 0;
             this.agentCount++;
-            // elapsedTime(start, Date.now());
         }
         if (this.agentCount >= this.agents.length) {
             // update pheromone values
@@ -191,7 +181,7 @@ export default class ACO {
                 // elapsedTime(start, Date.now());
                 this.createBinaryImage();
                 clearInterval(this.animationIntervalId);
-                events.emit('stop-simulation');
+                events.emit('simulation-complete');
             } else {
                 console.log("%c Iteration: ", "color: #bada55", this.currentFrame);
                 this.currentFrame++;
@@ -239,7 +229,6 @@ export default class ACO {
             this.textX.value = agent.currentCoordinates.x;
             this.textY.value = agent.currentCoordinates.y;
         }
-        // elapsedTime(start, Date.now());
     }
 
     updatePheromoneLevel(agents, x, y) {
@@ -285,6 +274,13 @@ export default class ACO {
 
         // update canvas with new data
         binCtx.putImageData(idata, 0, 0);
+
+        // hide previous canvas
+        if (this.resultDiv.lastChild) {
+            this.resultDiv.lastChild.style.zIndex = -1;
+            this.resultDiv.lastChild.style.opacity = 0;
+        }
+
         this.resultDiv.appendChild(binaryCanvas);
     }
 }

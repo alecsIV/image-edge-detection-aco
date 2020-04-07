@@ -335,8 +335,6 @@ details {
     justify-content: space-between;
 }
 
-.input-canvas-wrapper {}
-
 .input-canvas-wrapper,
 .binary-canvas-div {
     position: relative;
@@ -348,6 +346,10 @@ details {
     background-position: center;
     background-size: cover;
     padding: 0;
+}
+
+.binary-canvas{
+    position: absolute;
 }
 
 #canvasBg {
@@ -386,7 +388,6 @@ details {
     height: 30px;
     text-align: center;
     background-color: $main-accent;
-    border-radius: 34px 0 0 34px;
     transition: all 0.5s ease-in-out;
 }
 

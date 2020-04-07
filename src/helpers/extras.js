@@ -8,6 +8,7 @@ function loadingBar(completed, total) {
         elem.style.borderRadius = '34px'
         return;
     } else {
+        elem.style.borderRadius = '34px 0 0 34px';
         elem.style.width = Math.floor(width) + "%";
         elemText[0].innerHTML = Math.floor(width) + "%";
         width++;
@@ -34,14 +35,16 @@ function elapsedTime(start, end) {
 }
 
 let intervalId = null;
+let diff = null;
 
-function timer() {
+function timer(lastDiff) {
+    console.log('lastDiff', lastDiff);
     const elem = document.getElementById("elapsed-time");
     let start = Date.now();
     let minutes = 0;
     intervalId = setInterval(function() {
-        let seconds = Date.now() - start; // milliseconds elapsed since start
-        seconds = Math.floor(seconds / 1000); // in seconds
+        diff = (lastDiff) ? lastDiff + Date.now() - start : Date.now() - start; // milliseconds elapsed since start
+        let seconds = Math.floor(diff / 1000); // in seconds
         minutes += Math.floor(seconds / 60);
         if (seconds === 60) {
             start = Date.now();
@@ -51,8 +54,12 @@ function timer() {
     }, 1000);
 }
 
-function stopTimer() {
+function stopTimer(saveTime) {
+    console.log('saveTime', saveTime);
     clearInterval(intervalId);
+    diff = (saveTime) ? diff : null;
+    console.log('diff', diff);
+    return diff; // return last time before stop
 }
 
 module.exports = {
