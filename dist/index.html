@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Image Edge Detection using ACO</title>
+    <link rel="stylesheet" href="main.css">
+<link href="main.css" rel="stylesheet"></head>
+
+<body>
+    <h1>Image edge detection using ACO</h1>
+    <main>
+        <h2>Main controls</h2>
+        <div class="upload-controls">
+            <img src="" id="image-source">
+            <img alt="Image preview" src="./assets/NoImg.png" id="image-preview">
+            <div class="image-upload__container">
+                <input type="file" accept="image/*" id="image-upload" name="image-upload">
+                <label for="image-upload">Upload image</label>
+            </div>
+            <button id="draw-image-button" disabled>Draw image</button>
+            <button id="start-simulation" disabled>Start</button>
+            <span class="pulse"></span>
+            <div class="animation-toggle_container">
+                <label class="switch">
+                    <input type="checkbox" id="animation-toggle" checked>
+                    <span class="slider"></span>
+                </label>
+                <label for="animation-toggle" class="animation-toggle_label">Animation toggle</label>
+            </div>
+        </div>
+        <div class="settings-pannels_container">
+            <details class="sim-settings-panel">
+                <summary>
+                    <h2>Simulation settings</h2>
+                </summary>
+                <div class="ui__wrapper">
+                    <div class="input-element">
+                        <label for="iterations"><i class="info"><span class="tooltiptext">Number of iterations to run
+                                    the simulation for</span></i>Iterations</label>
+                        <input type="number" id="iterations" class="ui-element">
+                    </div>
+                    <div class="input-element">
+                        <label for="antCount"><i class="info"><span class="tooltiptext">Number of ants to be
+                                    used</span></i>Ant count</label>
+                        <input type="number" id="antCount" class="ui-element">
+                    </div>
+                    <div class="input-element">
+                        <label for="numAntMov"><i class="info"></i>Ant steps</label>
+                        <input type="number" id="numAntMov" class="ui-element">
+                    </div>
+                    <div class="input-element">
+                        <label for="antMemLen"><i class="info"></i>Ant Memory Length</label>
+                        <input type="number" id="antMemLen" class="ui-element">
+                    </div>
+                    <div class="input-element">
+                        <label for="tNoiseFilt"><i class="info"></i>Noise sensitivity</label>
+                        <input type="number" id="tNoiseFilt" class="ui-element">
+                    </div>
+                    <details>
+                        <summary>Additional Settings</summary>
+                        <div class="input-element">
+                            <label for="roPEvRate"><i class="info"></i> Pheromone evaporation rate</label>
+                            <input type="number" id="roPEvRate" class="ui-element">
+                        </div>
+                        <div class="input-element">
+                            <label for="alpha"><i class="info"></i>Alpha</label>
+                            <input type="number" id="alpha" class="ui-element">
+                        </div>
+                        <div class="input-element">
+                            <label for="beta"><i class="info"></i>Beta</label>
+                            <input type="number" id="beta" class="ui-element">
+                        </div>
+                        <div class="input-element">
+                            <label for="nConstPD"><i class="info"></i>N constant</label>
+                            <input type="number" id="nConstPD" class="ui-element">
+                        </div>
+                        <div class="input-element">
+                            <label for="pConstPD"><i class="info"></i>P constant</label>
+                            <input type="number" id="pConstPD" class="ui-element">
+                        </div>
+                    </details>
+                    <div class="defaults-button__container">
+                        <button id="defaults-button" disabled>Automatic parameters</button>
+                    </div>
+                </div>
+            </details>
+            <details class="sys-info-panel">
+                <summary>
+                    <h2>Simulation information</h2>
+                </summary>
+                <div class="process-params">
+                    <label for="iter-text">Iteration</label>
+                    <input id="iter-text" type='text' value="0" readonly>
+                    <label for="curr-text">Ant</label>
+                    <input id="curr-text" type='text' value="0" readonly>
+                    <label for="new-text">Step</label>
+                    <input id="new-text" type='text' value="0" readonly>
+                    <br>
+                    <label for="x-text">X coordinates</label>
+                    <input id="x-text" type='text' value="0" readonly>
+                    <label for="x-text">Y coordinates</label>
+                    <input id="y-text" type='text' value="0" readonly>
+                </div>
+                <div class="progress-indicators">
+                    <div id="myProgress">
+                        <div id="myBar"></div>
+                        <span class="bar-percentage">0%</span>
+                    </div>
+                    <div class="elapsed-time-wrapper">
+                        <label for="elapsed-time">Elapsed time</label>
+                        <input type="text" id="elapsed-time" value="0m 0s">
+                    </div>
+                </div>
+            </details>
+        </div>
+        <h2>Image edge detection</h2>
+        <div class="canvas-wrapper">
+            <div class="process-preview_container">
+                <h3>Preview</h3>
+                <div class='input-canvas-wrapper'>
+                    <canvas id="canvasBg" width="500" height="500"
+                        style="position: absolute; left: 0; top: 0; z-index: 0;"></canvas>
+                    <div class="d3-container"></div>
+                    <canvas id="canvasFg" width="500" height="500"
+                        style="position: absolute; left: 0; top: 0; z-index: 1;"></canvas>
+                </div>
+            </div>
+            <div class="results-canvas_container">
+                <h3>Results</h3>
+                <div class="binary-canvas-div"></div>
+            </div>
+        </div>
+    </main>
+<script type="text/javascript" src="main.js"></script></body>
+
+
+</html>
