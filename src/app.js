@@ -9,6 +9,7 @@ import {
     loadingBar
 } from './helpers/extras';
 
+const body = document.querySelector('body');
 const uploader = document.querySelector('#image-upload');
 const image = document.querySelector('#image-source');
 const imagePreview = document.querySelector('#image-preview');
@@ -23,6 +24,7 @@ const legend = document.querySelector('.legend');
 const processParams = document.querySelectorAll('.process-params>input');
 const elapsedTime = document.querySelector('#elapsed-time');
 const performanceDisclaimer = document.querySelector('.performance-disclaimer');
+const pushBackScreen = document.querySelector('.push-back-screen');
 
 let envImage;
 let algorithm;
@@ -134,6 +136,11 @@ events.on('start-simulation', () => {
     setDefaultsButton.setAttribute('disabled', 'disabled');
 });
 
+events.on('simulation-without-animation', ()=>{
+    pushBackScreen.style.display = 'block';
+    body.style.overflow = 'hidden';
+});
+
 // Trigger functionality on simulation stop
 events.on('stop-simulation', () => {
     startSimulationButton.style.display = 'block';
@@ -150,6 +157,8 @@ events.on('simulation-complete', () => {
     document.body.style.cursor = 'auto';
     startSimulationButton.setAttribute('disabled', 'disabled');
     drawImageButton.setAttribute('active', 'active');
+    pushBackScreen.style.display = 'none';
+    body.style.overflow = 'auto';
 });
 
 

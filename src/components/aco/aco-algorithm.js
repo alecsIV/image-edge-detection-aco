@@ -118,7 +118,10 @@ export default class ACO {
         if (animation) {
             timer((this.lastTime) ? this.lastTime : null); // check if timer has been stopped
             this.animationIntervalId = setInterval(this.animateMoves.bind(this), 1);
-        } else setTimeout(() => this.noAnimationMoves(), 200);
+        } else {
+            events.emit('simulation-without-animation');
+            setTimeout(() => this.noAnimationMoves(), 500);
+        }
     }
 
     noAnimationMoves() {
