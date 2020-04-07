@@ -285,6 +285,11 @@ details {
             background-color: $main-accent;
         }
 
+        input:disabled+.slider {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
         input:focus+.slider {
             box-shadow: 0 0 1px #2196F3;
         }
@@ -298,6 +303,15 @@ details {
         .animation-toggle_label {
             margin-left: 5px;
         }
+    }
+
+    .performance-disclaimer {
+        text-align: center;
+        font-size: 11px;
+        width: 100%;
+        padding: 15px;
+        font-weight: bold;
+        display: none;
     }
 }
 

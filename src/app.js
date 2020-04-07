@@ -22,6 +22,7 @@ const simSettingsPanel = document.querySelector('.sim-settings-panel');
 const legend = document.querySelector('.legend');
 const processParams = document.querySelectorAll('.process-params>input');
 const elapsedTime = document.querySelector('#elapsed-time');
+const performanceDisclaimer = document.querySelector('.performance-disclaimer');
 // const settingsContainers = document.querySelectorAll('.settings-pannels_container > details > div');
 
 let envImage;
@@ -41,6 +42,7 @@ const context = canvasBg.getContext('2d');
 //     container.classList.add('disabled');
 // });
 
+animationElem.setAttribute('disabled', 'disabled');
 disableInputs(true);
 
 uploader.addEventListener('change', function() {
@@ -79,6 +81,7 @@ drawImageButton.addEventListener('click', () => {
         startSimulationButton.removeAttribute('disabled');
         drawImageButton.innerHTML = (drawImageButtonActiveText);
         events.emit('drawn-image');
+        animationElem.removeAttribute('disabled');
     }
 });
 
@@ -137,6 +140,18 @@ events.on('reset', () => {
     // disableUpload(false);
 });
 
+events.on('animation-false', () =>{
+    performanceDisclaimer.style.display = 'block';
+});
+
+events.on('animation-true', () =>{
+    performanceDisclaimer.style.display = 'none';
+});
+
+events.on('animation-toggle', () =>{
+    reset();
+});
+
 // Functions //
 function disableInputs(disabled) {
     for (let item of allUI) {
@@ -152,7 +167,8 @@ function reset() {
     algorithm.setDefaultValues();
     algorithm.reset();
     legend.style.display = 'none';
-    setDefaultsButton.setAttribute('disabled', 'disabled')
+    setDefaultsButton.setAttribute('disabled', 'disabled');
+    animationElem.removeAttribute('disabled');
     events.emit('drawn-image');
 }
 
@@ -171,10 +187,10 @@ function resetParams() {
     elapsedTime.value = '0m 0s';
 }
 
-function disableUpload(disabled) {
+function disableButtons(disabled) {
     if (disabled) {
-        uploaderLabel.classList.add('disabled');
-        uploader.setAttribute('disabled', 'disabled');
+        animationElem.setAttribute('disabled', 'disabled');
+        
     } else {
         uploaderLabel.classList.remove('disabled');
         uploader.removeAttribute('disabled');

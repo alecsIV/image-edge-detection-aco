@@ -125,7 +125,7 @@ export default class ACO {
         console.log('numant', numAntMov);
         events.emit('start-simulation');
         if (!this.paused) this.ctx.clearRect(0, 0, this.canvasW, this.canvasH);
-        if (!performanceMode) {
+        if (animation) {
             timer();
             this.animationIntervalId = setInterval(this.animateMoves.bind(this), 1);
         } else setTimeout(() => this.noAnimationMoves(), 200);
