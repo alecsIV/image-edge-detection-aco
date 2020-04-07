@@ -34,6 +34,8 @@ const context = canvasBg.getContext('2d');
 //     container.classList.add('disabled');
 // });
 
+disableInputs(true);
+
 uploader.addEventListener('change', function() {
     context.clearRect(0, 0, canvasWidth, canvasHeight);
     drawImageButton.setAttribute('disabled', 'disabled');
@@ -86,7 +88,7 @@ setDefaultsButton.addEventListener('click', () => {
     setDefaultsButton.setAttribute('disabled', 'disabled')
 });
 
-loadingPulse.addEventListener('click', ()=>{
+loadingPulse.addEventListener('click', () => {
     events.emit('stop-simulation');
     algorithm.stop();
 });
@@ -107,6 +109,7 @@ events.on('stop-simulation', () => {
 
 events.on('drawn-image', () => {
     simSettingsPanel.setAttribute('open', 'open');
+    disableInputs(false);
 });
 
 events.on('reset', () => {
@@ -117,3 +120,11 @@ events.on('reset', () => {
     context.clearRect(0, 0, canvasWidth, canvasHeight);
     events.emit('stop-simulation');
 });
+
+// Functions //
+function disableInputs(disabled) {
+    for (let item of allUI) {
+        if (disabled) item.setAttribute('disabled', 'disabled');
+        else item.removeAttribute('disabled');
+    }
+}
