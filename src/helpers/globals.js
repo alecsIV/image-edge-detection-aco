@@ -14,10 +14,13 @@ export default function initGlobals() {
 
     // get animation toggle status
     global.animationElem = document.getElementById('animation-toggle');
+    global.animationLabel = document.querySelector('.animation-toggle_label');
+    animationLabel.innerHTML = 'Animation on';
     global.animation = animationElem.checked;
 
     animationElem.addEventListener('click', (e) => {
         animation = e.toElement.checked;
+        animationLabel.innerHTML = `Animation ${(animation) ? 'on': 'off'}`
         events.emit(`animation-${animation}`);
         events.emit('animation-toggle');
     });
