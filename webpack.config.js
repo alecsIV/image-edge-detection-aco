@@ -8,7 +8,7 @@ module.exports = {
     entry: ['./src/app.js', './src/app.scss'],
     output: {
         filename: 'main.js',
-        path: path.resolve(__dirname, 'dist'),
+        path: path.resolve(__dirname, 'docs'),
         sourceMapFilename: "[file].map?[contenthash]"
     },
     devServer: {
@@ -16,7 +16,7 @@ module.exports = {
             children: false,
             maxModules: 0
         },
-        contentBase: './dist',
+        contentBase: './docs',
         port: 9901
     },
     devtool: '#eval-source-map',

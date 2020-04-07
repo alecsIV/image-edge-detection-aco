@@ -25,8 +25,10 @@
                     <input type="checkbox" id="animation-toggle" checked>
                     <span class="slider"></span>
                 </label>
-                <label for="animation-toggle" class="animation-toggle_label">Animation toggle</label>
+                <label for="animation-toggle" class="animation-toggle_label"></label>
             </div>
+            <div class='performance-disclaimer'>When animation is turned off, the algorithm utilises the whole
+                javascript thread.<br> Therefore, non-responsiveness might be experienced.</div>
         </div>
         <div class="settings-pannels_container">
             <details class="sim-settings-panel">
@@ -108,7 +110,7 @@
                     </div>
                     <div class="elapsed-time-wrapper">
                         <label for="elapsed-time">Elapsed time</label>
-                        <input type="text" id="elapsed-time" value="0m 0s">
+                        <input type="text" id="elapsed-time" value="0m 0s" readonly>
                     </div>
                 </div>
             </details>
@@ -118,20 +120,35 @@
             <div class="process-preview_container">
                 <h3>Preview</h3>
                 <div class='input-canvas-wrapper'>
-                    <canvas id="canvasBg" width="500" height="500"
-                        style="position: absolute; left: 0; top: 0; z-index: 0;"></canvas>
-                    <div class="d3-container"></div>
-                    <canvas id="canvasFg" width="500" height="500"
-                        style="position: absolute; left: 0; top: 0; z-index: 1;"></canvas>
+                    <div class="legend">
+                        <span class="legend_trail">Ant trail</span>
+                        <span class="legend_high-pheromone">High pheromone levels</span>
+                        <span class="legend_pheromone-iteration">Pheromone level after iteration</span>
+                    </div>
+                    <canvas id="canvasBg" width="500" height="500"></canvas>
+                    <canvas id="canvasFg" width="500" height="500"></canvas>
                 </div>
             </div>
             <div class="results-canvas_container">
                 <h3>Results</h3>
-                <div class="binary-canvas-div"></div>
+                <div class="binary-canvas-div">
+                    <div class="binary-canvas-holder"></div>
+                    <div class="overlays">
+                        <span class="arrow right"></span>
+                        <span class="arrow left"></span>
+                        <span class="item-count"></span>
+                        <span class="param-details"></span>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
+    <div class="push-back-screen">
+        <div class="please-wait">
+            Please wait...
+            <br>
+            <span>The algorithm is executing and will soon be ready</span>
+        </div>
+    </div>    
 <script type="text/javascript" src="main.js"></script></body>
-
-
 </html>
