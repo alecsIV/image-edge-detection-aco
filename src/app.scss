@@ -223,6 +223,11 @@ details {
                 justify-content: center;
                 flex-direction: column;
                 font-size: 0.75rem;
+
+                .disabled {
+                    opacity: 0.3;
+                    cursor: not-allowed;
+                }
             }
         }
     }

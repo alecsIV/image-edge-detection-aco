@@ -11,9 +11,9 @@ export default function initGlobals() {
     global.canvasHeight = 0;
 
     // get animation toggle status
-    global.animation = document.getElementById('animation-toggle').checked;
+    global.performanceMode = document.getElementById('animation-toggle').checked;
     document.getElementById('animation-toggle').addEventListener('click', (e) => {
-        animation = e.toElement.checked;
+        performanceMode = e.toElement.checked;
     });
 
     // Parameter fields

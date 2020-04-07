@@ -9,6 +9,7 @@ import {
 } from './helpers/extras';
 
 const uploader = document.querySelector('#image-upload');
+const uploaderLabel = document.querySelector('#image-upload+label');
 const image = document.querySelector('#image-source');
 const imagePreview = document.querySelector('#image-preview');
 const canvasBg = document.querySelector('#canvasBg');
@@ -25,6 +26,7 @@ const elapsedTime = document.querySelector('#elapsed-time');
 
 let envImage;
 let algorithm;
+let uploadedYet = false;
 
 //set canvasBg dimensions
 canvasWidth = canvasBg.width;
@@ -53,8 +55,13 @@ uploader.addEventListener('change', function() {
             imagePreview.setAttribute('src', this.result);
         })
         reader.readAsDataURL(file)
+        if (uploadedYet) {
+            reset();
+            resetInputs();
+        }
         drawImageButton.removeAttribute('disabled');
         drawImageButton.innerHTML = drawImageButtonDefaultText;
+        uploadedYet = true;
     } else {
         image.setAttribute('src', '');
         imagePreview.setAttribute('src', './assets/NoImg.png');
@@ -108,7 +115,9 @@ events.on('start-simulation', () => {
     drawImageButton.removeAttribute('disabled')
     disableInputs('true');
     setDefaultsButton.setAttribute('disabled', 'disabled');
+    // disableUpload(true);
 });
+
 events.on('stop-simulation', () => {
     startSimulationButton.style.display = 'block';
     startSimulationButton.removeAttribute('disabled');
@@ -125,6 +134,7 @@ events.on('drawn-image', () => {
 
 events.on('reset', () => {
     reset();
+    // disableUpload(false);
 });
 
 // Functions //
@@ -146,10 +156,27 @@ function reset() {
     events.emit('drawn-image');
 }
 
+function resetInputs() {
+    for (let item of allUI) {
+        item.value = 0;
+        item.setAttribute('disabled', 'disabled')
+    }
+}
+
 function resetParams() {
     for (let item of processParams) {
         item.value = 0;
     }
     loadingBar(0, 100);
     elapsedTime.value = '0m 0s';
+}
+
+function disableUpload(disabled) {
+    if (disabled) {
+        uploaderLabel.classList.add('disabled');
+        uploader.setAttribute('disabled', 'disabled');
+    } else {
+        uploaderLabel.classList.remove('disabled');
+        uploader.removeAttribute('disabled');
+    }
 }
