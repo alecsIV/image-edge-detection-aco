@@ -5,7 +5,7 @@ import {
     elapsedTime,
     timer,
     stopTimer
-} from '../../extras/extras';
+} from '../../helpers/extras';
 
 export default class ACO {
     constructor(image) {
@@ -50,8 +50,11 @@ export default class ACO {
         clearInterval(this.animationIntervalId);
         stopTimer();
         this.matrixHelper.resetPheromoneMatrix();
-        if (full === 'full') this.setDefaultValues();
-        else this.init();
+        if (full === 'full') {
+            this.ctx.clearRect(0, 0, this.canvasW, this.canvasH);
+            this.currentFrame = 1;
+            this.animationIntervalId = null;
+        } else this.init();
         // this.ctx.clearRect(0, 0, this.canvasW, this.canvasH);
         // this.updateGlobalParams();
         // this.currentFrame = 1;
@@ -69,11 +72,10 @@ export default class ACO {
     }
 
     setDefaultValues() {
-        const smallImage = Math.round(Math.sqrt(this.image.width * this.image.height));
         this.defaultParams = {
             'iterations': 3,
-            'antCount': (smallImage < 256) ? smallImage * 3 : Math.round(Math.sqrt(this.image.width * this.image.height)),
-            'numAntMov': (smallImage < 256) ? 256 * 9 : Math.round(Math.round(3 * Math.sqrt(this.image.width * this.image.height))),
+            'antCount': Math.round(Math.sqrt(this.image.width * this.image.height)),
+            'numAntMov': Math.round(Math.round(3 * Math.sqrt(this.image.width * this.image.height))),
             // 'antMemLen': Math.round(Math.sqrt(2 * (this.image.width + this.image.height)) / 500 * this.iMax),
             'antMemLen': Math.round(Math.sqrt(2 * (this.image.width + this.image.height))),
             'nConstPD': 2,

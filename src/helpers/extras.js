@@ -8,9 +8,9 @@ function loadingBar(completed, total) {
         elem.style.borderRadius = '34px'
         return;
     } else {
-        width++;
         elem.style.width = Math.floor(width) + "%";
         elemText[0].innerHTML = Math.floor(width) + "%";
+        width++;
     }
 }
 

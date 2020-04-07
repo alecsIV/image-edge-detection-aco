@@ -4,6 +4,9 @@ initGlobals();
 
 import ACO from './components/aco/aco-algorithm';
 import EnvironmentImage from './components/environment-image';
+import {
+    loadingBar
+} from './helpers/extras';
 
 const uploader = document.querySelector('#image-upload');
 const image = document.querySelector('#image-source');
@@ -16,6 +19,8 @@ const loadingPulse = document.querySelector('.pulse');
 const sysInfoPanel = document.querySelector('.sys-info-panel');
 const simSettingsPanel = document.querySelector('.sim-settings-panel');
 const legend = document.querySelector('.legend');
+const processParams = document.querySelectorAll('.process-params>input');
+const elapsedTime = document.querySelector('#elapsed-time');
 // const settingsContainers = document.querySelectorAll('.settings-pannels_container > details > div');
 
 let envImage;
@@ -57,6 +62,7 @@ uploader.addEventListener('change', function() {
 });
 
 drawImageButton.addEventListener('click', () => {
+    drawImageButton.blur();
     if (drawImageButton.innerHTML === drawImageButtonActiveText) {
         events.emit('reset');
     } else if (image) {
@@ -84,13 +90,13 @@ startSimulationButton.addEventListener('click', () => {
 });
 
 setDefaultsButton.addEventListener('click', () => {
-    algorithm.reset('full');
-    setDefaultsButton.setAttribute('disabled', 'disabled')
+    algorithm.setDefaultValues();
+    algorithm.reset();
+    setDefaultsButton.setAttribute('disabled', 'disabled');
 });
 
 loadingPulse.addEventListener('click', () => {
     events.emit('stop-simulation');
-    algorithm.stop();
 });
 
 events.on('start-simulation', () => {
@@ -99,26 +105,26 @@ events.on('start-simulation', () => {
     document.body.style.cursor = 'wait';
     sysInfoPanel.setAttribute('open', 'open');
     legend.style.display = 'block';
+    drawImageButton.removeAttribute('disabled')
+    disableInputs('true');
+    setDefaultsButton.setAttribute('disabled', 'disabled');
 });
 events.on('stop-simulation', () => {
     startSimulationButton.style.display = 'block';
     startSimulationButton.removeAttribute('disabled');
     loadingPulse.style.display = 'none';
     document.body.style.cursor = 'auto';
+    algorithm.stop();
 });
 
 events.on('drawn-image', () => {
+    drawImageButton.setAttribute('disabled', 'disabled')
     simSettingsPanel.setAttribute('open', 'open');
     disableInputs(false);
 });
 
 events.on('reset', () => {
-    drawImageButton.setAttribute('disabled', 'disabled');
-    startSimulationButton.setAttribute('disabled', 'disabled');
-    drawImageButton.innerHTML = drawImageButtonDefaultText;
-    algorithm.reset('full');
-    context.clearRect(0, 0, canvasWidth, canvasHeight);
-    events.emit('stop-simulation');
+    reset();
 });
 
 // Functions //
@@ -127,4 +133,23 @@ function disableInputs(disabled) {
         if (disabled) item.setAttribute('disabled', 'disabled');
         else item.removeAttribute('disabled');
     }
+}
+
+function reset() {
+    events.emit('stop-simulation');
+
+    resetParams();
+    algorithm.setDefaultValues();
+    algorithm.reset();
+    legend.style.display = 'none';
+    setDefaultsButton.setAttribute('disabled', 'disabled')
+    events.emit('drawn-image');
+}
+
+function resetParams() {
+    for (let item of processParams) {
+        item.value = 0;
+    }
+    loadingBar(0, 100);
+    elapsedTime.value = '0m 0s';
 }

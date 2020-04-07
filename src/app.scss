@@ -10,9 +10,9 @@
     // button styling //
     height: 2.625rem;
     padding: 0 8px;
-    color: #7f58dc;
+    color: $main-accent;
     background-color: white;
-    border: 1px solid #7f58dc;
+    border: 1px solid $main-accent;
     border-radius: 2px;
     font-size: 0.6875rem;
     font-weight: bold;
@@ -73,7 +73,7 @@ body {
     font-family: 'Source Sans Pro', 'HelveticaNeue', 'Helvetica', sans-serif;
     max-width: 1045px;
     margin: 0 auto;
-    background-color: #fafafa;
+    background-color: $body-bg;
 
     @media (max-width:1045px) {
         padding: 0 20px;
@@ -166,7 +166,7 @@ details {
 
     // &.disabled{
     //     border-radius: 5px;
-    //     background-color: #fafafa;
+    //     background-color: $body-bg;
     //     box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, .1);
     //     transition: all 0.3s;
     // }
@@ -277,7 +277,7 @@ details {
         }
 
         input:checked+.slider {
-            background-color: #7f58dc;
+            background-color: $main-accent;
         }
 
         input:focus+.slider {
@@ -348,7 +348,7 @@ details {
 // Loading bar //
 #myProgress {
     width: 100%;
-    background-color: #ddd;
+    background-color: $default-colour;
     border-radius: 15px;
     position: relative;
     cursor: auto;
@@ -357,16 +357,16 @@ details {
         position: absolute;
         top: 5px;
         left: 50%;
-        color: #fafafa;
+        color: $body-bg;
         font-weight: bold;
     }
 }
 
 #myBar {
-    width: 1%;
+    width: 0%;
     height: 30px;
     text-align: center;
-    background-color: #7f58dc;
+    background-color: $main-accent;
     border-radius: 34px 0 0 34px;
     transition: all 0.5s ease-in-out;
 }
@@ -376,15 +376,15 @@ details {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background: #7f58dc;
-    box-shadow: 0 0 0 rgba(204, 169, 44, 0.4);
+    background: $main-accent;
+    box-shadow: 0 0 0 rgba(127, 88, 220, 0.4);
     animation: pulse 2s infinite;
     display: none;
     cursor: pointer;
 
     &::before {
         content: "II";
-        color: #fafafa;
+        color: $body-bg;
         text-align: center;
         display: block;
         font-weight: bold;
@@ -394,8 +394,8 @@ details {
 
 @keyframes pulse {
     0% {
-        -moz-box-shadow: 0 0 0 0 rgba(185, 150, 243, 0.4);
-        box-shadow: 0 0 0 0 rgba(185, 150, 243, 0.4);
+        -moz-box-shadow: 0 0 0 0 rgba(127, 88, 220, 0.4);
+        box-shadow: 0 0 0 0 rgba(127, 88, 220, 0.4);
     }
 
     70% {
