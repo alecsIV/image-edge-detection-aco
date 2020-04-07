@@ -1,38 +1,536 @@
+// Imports //
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;700&display=swap');
+@import './helpers/colours.scss';
+
+// Element definition //
+%normal-button {
+    // button positioning //
+    display: block;
+    margin: 0 auto;
+    // button styling //
+    height: 2.625rem;
+    padding: 0 8px;
+    color: $main-accent;
+    background-color: white;
+    border: 1px solid $main-accent;
+    border-radius: 2px;
+    font-size: 0.6875rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-align: center;
+    transition: all 0.2s;
+    min-width: 6.25rem;
+
+    &:hover {
+        background-color: #d7d1f3;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    &:disabled {
+        opacity: 0.3;
+        background-color: white;
+        cursor: not-allowed;
+    }
+
+    &:active,
+    &:focus {
+        background-color: #bba6f3;
+        color: white;
+        cursor: pointer;
+        font-size: 0.875rem;
+        transition: all 0.2s;
+    }
+}
+
+%legend-box {
+    max-width: 150px;
+    background-color: rgba(255, 255, 255, 0.7);
+    padding: 10px;
+    font-size: 11px;
+    border-radius: 5px 0 5px 0;
+    opacity: 1;
+    z-index: 1;
+    transition: all 0.2s ease-in-out;
+
+    &:hover {
+        opacity: 0;
+        transition: all 0.2s ease-in-out;
+    }
+}
+
+%legend-colour-box {
+    content: "";
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    outline: 1px solid #222;
+    margin-right: 5px;
+}
+
+// Main settings //
+body {
+    font-family: 'Source Sans Pro', 'HelveticaNeue', 'Helvetica', sans-serif;
+    max-width: 1045px;
+    margin: 0 auto;
+    background-color: $body-bg;
+
+    @media (max-width:1045px) {
+        padding: 0 20px;
+    }
+}
+
+main {
+    padding-bottom: 20px;
+}
+
+button {
+    @extend %normal-button;
+}
+
+i.info {
+    background-image: url('/assets/info.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 15px;
+    height: 15px;
+    display: block;
+    margin-left: auto;
+    cursor: help;
+
+    /* Tooltip text */
+    .tooltiptext {
+        width: 120px;
+        background-color: rgba(0, 0, 0, 0.7);
+        color: #fff;
+        text-align: center;
+        padding: 5px;
+        border-radius: 6px;
+        opacity: 0;
+
+        /* Position the tooltip text */
+        position: absolute;
+        z-index: 1;
+        top: 0;
+        left: 0;
+        transition: all 0.2s;
+    }
+
+    &:hover {
+        span {
+            opacity: 1;
+            transition: all 0.2s;
+        }
+    }
+
+}
+
+details {
+    flex-basis: 100%;
+    margin: 10px 0;
+
+    summary {
+        cursor: pointer;
+    }
+
+    h2 {
+        display: inline;
+        vertical-align: middle;
+    }
+
+    .input-element {
+        display: inline-block;
+    }
+}
+
+.ui__wrapper,
+.upload-controls,
+.process-params,
+.progress-indicators,
+.binary-canvas-div,
+.input-canvas-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    // border: 1px solid #222;
+    padding: 8px;
+    border-radius: 5px;
+    background-color: #fff;
+    box-shadow: 0px 10px 20px 0px rgba(0, 0, 0, .1);
+    margin: 15px auto;
+
+    &>* {
+        margin: auto;
+    }
+
+    // &.disabled{
+    //     border-radius: 5px;
+    //     background-color: $body-bg;
+    //     box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, .1);
+    //     transition: all 0.3s;
+    // }
+}
+
+// User Inputs //
+.ui__wrapper {
+    .input-element {
+        position: relative;
+        max-width: fit-content;
+        text-align: center;
+        padding: 0.625rem;
+
+        &>label {
+            display: block;
+        }
+
+        .ui-element:disabled {
+            cursor: not-allowed;
+        }
+    }
+
+    .defaults-button__container {
+        width: 100%;
+        padding: 0.9375rem;
+
+        #defaults-button {
+            @extend %normal-button;
+        }
+    }
+}
+
+// Upload controls
+.upload-controls {
+    .image-upload__container {
+        max-width: 200px;
+        width: fit-content;
+
+        // Image upload button
+        #image-upload {
+            width: 0.1px;
+            height: 0.1px;
+            opacity: 0;
+            overflow: hidden;
+            position: absolute;
+            z-index: -1;
+
+            &+label {
+                @extend %normal-button;
+                width: fit-content;
+                // Centering text //
+                align-content: center;
+                display: flex;
+                justify-content: center;
+                flex-direction: column;
+                font-size: 0.75rem;
+
+                .disabled {
+                    opacity: 0.3;
+                    cursor: not-allowed;
+                }
+            }
+        }
+    }
+
+    #image-source {
+        display: none;
+    }
+
+    #image-preview {
+        max-height: 50px;
+        max-width: 50px;
+    }
+
+    .animation-toggle_container {
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            border-radius: 34px;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            border-radius: 50%;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        input:checked+.slider {
+            background-color: $main-accent;
+        }
+
+        input:disabled+.slider {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        input:focus+.slider {
+            box-shadow: 0 0 1px #2196F3;
+        }
+
+        input:checked+.slider:before {
+            -webkit-transform: translateX(26px);
+            -ms-transform: translateX(26px);
+            transform: translateX(26px);
+        }
+
+        .animation-toggle_label {
+            margin-left: 5px;
+        }
+    }
+
+    .performance-disclaimer {
+        text-align: center;
+        font-size: 11px;
+        width: 100%;
+        padding: 15px;
+        font-weight: bold;
+        display: none;
+    }
+}
+
+.elapsed-time-wrapper {
+    margin: 5px auto;
+}
+
+.process-params>input,
+#elapsed-time {
+    border: 0;
+    font-size: 12p;
+    font-weight: bold;
+    font-size: 12px;
+    max-width: 100px;
+}
+
+// Canvas //
 .canvas-wrapper {
     display: flex;
     flex-wrap: wrap;
+    justify-content: space-between;
 }
 
-.input-canvas-wrapper {
+.input-canvas-wrapper,
+.binary-canvas-div {
     position: relative;
+    background-color: transparent;
     width: 500px;
     height: 500px;
-}
-
-#canvasBg,
-.binary-canvas {
     border: 1px solid #000000;
     display: block;
     background-position: center;
     background-size: cover;
+    padding: 0;
 }
 
-#image-source {
-    display: none;
+
+#canvasBg {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: -2;
 }
 
-#image-preview {
-    max-height: 50px;
-    max-width: 50px;
+#canvasFg {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: -1;
 }
 
+// result canvas
+.binary-canvas-div {
+    .binary-canvas {
+        position: absolute;
+    }
+
+    .overlays {
+        width: 500px;
+        height: 500px;
+        position: absolute;
+        z-index: 999;
+        display: none;
+
+        .arrow {
+            border: solid black;
+            border-width: 0 15px 15px 0;
+            display: inline-block;
+            padding: 15px;
+            position: absolute;
+            top: calc(50% - 30px);
+
+            &::after {
+                content: "";
+                display: block;
+                position: absolute;
+                transform: rotate(45deg);
+                -webkit-transform: rotate(45deg);
+                left: -4px;
+                top: -15px;
+                width: 68px;
+                height: 84px;
+                background-color: rgba(0, 0, 0, 0.5);
+            }
+        }
+
+        .right {
+            right: 20px;
+            transform: rotate(-45deg);
+            -webkit-transform: rotate(-45deg);
+        }
+
+        .left {
+            left: 20px;
+            transform: rotate(135deg);
+            -webkit-transform: rotate(135deg);
+        }
+
+        .item-count {
+            @extend %legend-box;
+            position: absolute;
+        }
+    }
+}
+
+
+// Loading bar //
 #myProgress {
     width: 100%;
-    background-color: #ddd;
+    background-color: $default-colour;
+    border-radius: 15px;
+    position: relative;
+    cursor: auto;
+
+    span.bar-percentage {
+        position: absolute;
+        top: 5px;
+        left: 50%;
+        color: $body-bg;
+        font-weight: bold;
+    }
 }
 
 #myBar {
-    width: 1%;
+    width: 0%;
     height: 30px;
-    background-color: #4CAF50;
+    text-align: center;
+    background-color: $main-accent;
+    transition: all 0.5s ease-in-out;
+}
+
+// Pulse button //
+.pulse {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: $main-accent;
+    box-shadow: 0 0 0 rgba(127, 88, 220, 0.4);
+    animation: pulse 2s infinite;
+    display: none;
+    cursor: pointer;
+
+    &::before {
+        content: "II";
+        color: $body-bg;
+        text-align: center;
+        display: block;
+        font-weight: bold;
+        margin-top: 9px;
+    }
+}
+
+@keyframes pulse {
+    0% {
+        -moz-box-shadow: 0 0 0 0 rgba(127, 88, 220, 0.4);
+        box-shadow: 0 0 0 0 rgba(127, 88, 220, 0.4);
+    }
+
+    70% {
+        -moz-box-shadow: 0 0 0 10px rgba(185, 150, 243, 0);
+        box-shadow: 0 0 0 10px rgba(185, 150, 243, 0);
+    }
+
+    100% {
+        -moz-box-shadow: 0 0 0 0 rgba(185, 150, 243, 0);
+        box-shadow: 0 0 0 0 rgba(185, 150, 243, 0);
+    }
+}
+
+// Legend //
+.legend {
+    @extend %legend-box;
+    display: none;
+    margin: 0;
+
+    span {
+        display: block;
+    }
+
+    &_trail::before {
+        @extend %legend-colour-box;
+        background-color: $trail;
+    }
+
+    &_high-pheromone::before {
+        @extend %legend-colour-box;
+        background-color: $high-pheromone;
+    }
+
+    &_pheromone-iteration::before {
+        @extend %legend-colour-box;
+        background-color: $pheromone-iteration;
+    }
+}
+
+.push-back-screen {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    cursor: wait;
+    display: none;
+
+
+    .please-wait {
+        font-weight: bold;
+        text-align: center;
+        display: block;
+        color: $panel-bg;
+        width: fit-content;
+        margin: 0 auto;
+        margin-top: 300px;
+        font-size: xx-large;
+
+        span {
+            font-size: medium;
+        }
+    }
 }

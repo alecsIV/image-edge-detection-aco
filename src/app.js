@@ -4,73 +4,237 @@ initGlobals();
 
 import ACO from './components/aco/aco-algorithm';
 import EnvironmentImage from './components/environment-image';
+import ResultsGallery from './components/results-gallery/results-gallery'
+import {
+    loadingBar
+} from './helpers/extras';
 
+const body = document.querySelector('body');
 const uploader = document.querySelector('#image-upload');
 const image = document.querySelector('#image-source');
 const imagePreview = document.querySelector('#image-preview');
 const canvasBg = document.querySelector('#canvasBg');
-// const canvasFg = document.querySelector('#canvasFg');
 const drawImageButton = document.querySelector('#draw-image-button');
 const startSimulationButton = document.querySelector('#start-simulation');
 const setDefaultsButton = document.querySelector('#defaults-button');
+const loadingPulse = document.querySelector('.pulse');
+const sysInfoPanel = document.querySelector('.sys-info-panel');
+const simSettingsPanel = document.querySelector('.sim-settings-panel');
+const legend = document.querySelector('.legend');
+const processParams = document.querySelectorAll('.process-params>input');
+const elapsedTime = document.querySelector('#elapsed-time');
+const performanceDisclaimer = document.querySelector('.performance-disclaimer');
+const pushBackScreen = document.querySelector('.push-back-screen');
 
 let envImage;
 let algorithm;
+let uploadedYet = false;
 
 //set canvasBg dimensions
 canvasWidth = canvasBg.width;
 canvasHeight = canvasBg.clientHeight;
+
 // Buttons and HTML events
 const drawImageButtonDefaultText = 'Draw Image';
 const drawImageButtonActiveText = 'Reset';
+
 const context = canvasBg.getContext('2d');
+
+// Disable initial state of dynamic elements
+animationElem.setAttribute('disabled', 'disabled');
+disableInputs(true);
+
+// Results gallery
+const resultsGallery = new ResultsGallery();
+
+// Image uploader input behaviour
 uploader.addEventListener('change', function() {
     context.clearRect(0, 0, canvasWidth, canvasHeight);
     drawImageButton.setAttribute('disabled', 'disabled');
     startSimulationButton.setAttribute('disabled', 'disabled');
     const file = this.files[0];
-    if (file) {
+    // Check if a file is uploaded
+    if (this.files && this.files.length > 0) {
         const reader = new FileReader();
         reader.addEventListener('load', function() {
             image.setAttribute('src', this.result);
             imagePreview.setAttribute('src', this.result);
         })
         reader.readAsDataURL(file)
+        if (uploadedYet) {
+            // reset();
+            // resetInputs();
+            events.emit('revert-initial-state');
+        }
         drawImageButton.removeAttribute('disabled');
         drawImageButton.innerHTML = drawImageButtonDefaultText;
+        uploadedYet = true;
+    } else {
+        image.setAttribute('src', '');
+        imagePreview.setAttribute('src', './assets/NoImg.png');
     }
 });
 
 drawImageButton.addEventListener('click', () => {
-    if (image) {
-        // context.globalCompositeOperation = 'source-over';
+    drawImageButton.blur();
+    if (drawImageButton.innerHTML === drawImageButtonActiveText) {
+        events.emit('reset');
+    } else if (image) {
         envImage = new EnvironmentImage(image, canvasBg);
-        // context.globalCompositeOperation = 'destination-over';
-        algorithm = new ACO(envImage);
+        algorithm = new ACO(envImage, resultsGallery);
         algorithm.reset();
         startSimulationButton.removeAttribute('disabled');
         drawImageButton.innerHTML = (drawImageButtonActiveText);
+        events.emit('drawn-image');
+        animationElem.removeAttribute('disabled');
     }
 });
 
 Object.values(allUI).forEach((element) => {
-    // element.addEventListener('change', setDefaultsButton.removeAttribute('disabled'));
     element.onchange = () => {
         setDefaultsButton.removeAttribute('disabled');
         startSimulationButton.removeAttribute('disabled');
-        // context.clearRect(0, 0, canvasWidth, canvasHeight);
         algorithm.reset();
     };
 });
 
 startSimulationButton.addEventListener('click', () => {
     startSimulationButton.setAttribute('disabled', 'disabled');
-    // resetSimulationButton.style.display = 'block';
     algorithm.updateGlobalParams(); // set global parameters based on user input
     algorithm.startSimulation();
 });
 
 setDefaultsButton.addEventListener('click', () => {
+    algorithm.setDefaultValues();
     algorithm.reset();
-    setDefaultsButton.setAttribute('disabled', 'disabled')
+    setDefaultsButton.setAttribute('disabled', 'disabled');
 });
+
+loadingPulse.addEventListener('click', () => {
+    events.emit('stop-simulation');
+});
+
+// Events //
+// Put system into intial state
+events.on('revert-initial-state', () => {
+    events.emit('stop-simulation');
+    disableButtons();
+    resetParams();
+    resetInputs();
+    algorithm.reset();
+});
+
+// Trigger simulation start functionality
+events.on('start-simulation', () => {
+    startSimulationButton.style.display = 'none';
+    loadingPulse.style.display = 'block';
+    document.body.style.cursor = 'wait';
+    sysInfoPanel.setAttribute('open', 'open');
+    legend.style.display = 'block';
+    drawImageButton.removeAttribute('disabled')
+    disableInputs('true');
+    setDefaultsButton.setAttribute('disabled', 'disabled');
+});
+
+events.on('simulation-without-animation', ()=>{
+    pushBackScreen.style.display = 'block';
+    body.style.overflow = 'hidden';
+});
+
+// Trigger functionality on simulation stop
+events.on('stop-simulation', () => {
+    startSimulationButton.style.display = 'block';
+    startSimulationButton.removeAttribute('disabled');
+    loadingPulse.style.display = 'none';
+    document.body.style.cursor = 'auto';
+    algorithm.stop();
+});
+
+// Trigger functionality on simulation complete
+events.on('simulation-complete', () => {
+    loadingPulse.style.display = 'none';
+    startSimulationButton.style.display = 'block';
+    document.body.style.cursor = 'auto';
+    startSimulationButton.setAttribute('disabled', 'disabled');
+    drawImageButton.setAttribute('active', 'active');
+    pushBackScreen.style.display = 'none';
+    body.style.overflow = 'auto';
+});
+
+
+events.on('drawn-image', () => {
+    drawImageButton.setAttribute('disabled', 'disabled')
+    simSettingsPanel.setAttribute('open', 'open');
+    disableInputs(false);
+});
+
+
+events.on('reset', () => {
+    reset();
+});
+
+events.on('animation-false', () => {
+    performanceDisclaimer.style.display = 'block';
+});
+
+events.on('animation-true', () => {
+    performanceDisclaimer.style.display = 'none';
+});
+
+events.on('animation-toggle', () => {
+    reset();
+});
+
+// Gallery events
+
+events.on('prev-image', () => {
+    resultsGallery.prevPage();
+    // console.log('current page', currentPage);
+});
+events.on('next-image', () => {
+    resultsGallery.nextPage();
+    // console.log('current page', currentPage);
+});
+
+
+// Functions //
+function disableInputs(disabled) {
+    for (let item of allUI) {
+        if (disabled) item.setAttribute('disabled', 'disabled');
+        else item.removeAttribute('disabled');
+    }
+}
+
+function reset() {
+    events.emit('stop-simulation');
+    resetParams();
+    algorithm.setDefaultValues();
+    algorithm.reset();
+    legend.style.display = 'none';
+    setDefaultsButton.setAttribute('disabled', 'disabled');
+    animationElem.removeAttribute('disabled');
+    events.emit('drawn-image');
+}
+
+function resetInputs() {
+    for (let item of allUI) {
+        item.value = 0;
+        item.setAttribute('disabled', 'disabled');
+    }
+    setDefaultsButton.setAttribute('disabled', 'disabled');
+}
+
+function resetParams() {
+    for (let item of processParams) {
+        item.value = 0;
+    }
+    loadingBar(0, 100);
+    elapsedTime.value = '0m 0s';
+    legend.style.display = 'none';
+}
+
+function disableButtons() {
+    drawImageButton.setAttribute('disabled', 'disabled')
+    startSimulationButton.setAttribute('disabled', 'disabled');
+    animationElem.setAttribute('disabled', 'disabled');
+}

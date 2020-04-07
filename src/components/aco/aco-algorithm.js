@@ -5,10 +5,10 @@ import {
     elapsedTime,
     timer,
     stopTimer
-} from '../../extras/extras';
+} from '../../helpers/extras';
 
 export default class ACO {
-    constructor(image) {
+    constructor(image, resultsGallery) {
         this.image = image;
         this.canvas = document.querySelector('#canvasFg');
         this.canvasW = this.canvas.getBoundingClientRect().width;
@@ -16,11 +16,12 @@ export default class ACO {
         this.canvasArea = this.canvasW * this.canvasH;
         this.ctx = this.canvas.getContext("2d");
         this.matrixHelper = new MatrixHelper();
+        this.resultsGallery = resultsGallery;
+
         this.currentFrame = 1;
         this.animationCount = 0;
         this.agentCount = 0;
-
-        this.resultDiv = document.querySelector(".binary-canvas-div");
+        this.paused = false;
 
         // generate initial pheromone and heuristic matrices
         this.matrixHelper.generateInitialMatrices();
@@ -28,7 +29,7 @@ export default class ACO {
 
         this.setDefaultValues() // set default values for the parameters
 
-        //for debug
+        // Simulation stats
         this.textIter = document.querySelector('#iter-text');
         this.textCurr = document.querySelector('#curr-text');
         this.textNew = document.querySelector('#new-text');
@@ -36,7 +37,7 @@ export default class ACO {
         this.textY = document.querySelector('#y-text');
     }
 
-    init(){
+    init() {
         this.ctx.clearRect(0, 0, this.canvasW, this.canvasH);
         this.updateGlobalParams();
         this.initializeAgents();
@@ -44,15 +45,21 @@ export default class ACO {
         this.animationIntervalId = null;
     }
 
-    reset() {
+    reset(full) {
         clearInterval(this.animationIntervalId);
-        stopTimer();
+        this.lastTime = stopTimer(false);
         this.matrixHelper.resetPheromoneMatrix();
-        this.init();
-        // this.ctx.clearRect(0, 0, this.canvasW, this.canvasH);
-        // this.updateGlobalParams();
-        // this.initializeAgents();
-        // this.currentFrame = 1;
+        if (full === 'full') {
+            this.ctx.clearRect(0, 0, this.canvasW, this.canvasH);
+            this.currentFrame = 1;
+            this.animationIntervalId = null;
+        } else this.init();
+    }
+
+    stop() {
+        this.paused = true;
+        clearInterval(this.animationIntervalId);
+        this.lastTime = stopTimer(true);
     }
 
     setDefaultValues() {
@@ -106,12 +113,15 @@ export default class ACO {
 
     startSimulation() {
         console.log("%c Simulation start: ", "color: #bada55");
-        console.log('numant', numAntMov);
-        this.ctx.clearRect(0, 0, this.canvasW, this.canvasH);
+        events.emit('start-simulation');
+        if (!this.paused) this.ctx.clearRect(0, 0, this.canvasW, this.canvasH);
         if (animation) {
-            timer();
+            timer((this.lastTime) ? this.lastTime : null); // check if timer has been stopped
             this.animationIntervalId = setInterval(this.animateMoves.bind(this), 1);
-        } else this.noAnimationMoves();
+        } else {
+            events.emit('simulation-without-animation');
+            setTimeout(() => this.noAnimationMoves(), 500);
+        }
     }
 
     noAnimationMoves() {
@@ -136,11 +146,12 @@ export default class ACO {
                     this.updatePheromoneLevel(this.agents, x, y);
                 });
             });
-            loadingBar(this.currentFrame, iterations);
         }
         console.log("%c END ANIMATION", "color: #c92424");
-        this.createBinaryImage();
+        loadingBar(iterations, iterations);
+        this.resultsGallery.createBinaryImage();
         elapsedTime(start, Date.now());
+        events.emit('simulation-complete');
     }
 
     animateMoves() {
@@ -151,7 +162,6 @@ export default class ACO {
             loadingBar(this.agentCount + ((this.agents.length - 1) * (this.currentFrame - 1)), (this.agents.length - 1) * iterations);
             this.animationCount = 0;
             this.agentCount++;
-            // elapsedTime(start, Date.now());
         }
         if (this.agentCount >= this.agents.length) {
             // update pheromone values
@@ -171,14 +181,14 @@ export default class ACO {
                 console.log("%c END ANIMATION", "color: #c92424");
                 stopTimer();
                 // elapsedTime(start, Date.now());
-                this.createBinaryImage();
+                this.resultsGallery.createBinaryImage();
                 clearInterval(this.animationIntervalId);
+                events.emit('simulation-complete');
             } else {
                 console.log("%c Iteration: ", "color: #bada55", this.currentFrame);
                 this.currentFrame++;
                 this.agentCount = 0;
                 this.animationCount = 0;
-                this.createBinaryImage();
             }
         } else {
             const {
@@ -221,7 +231,6 @@ export default class ACO {
             this.textX.value = agent.currentCoordinates.x;
             this.textY.value = agent.currentCoordinates.y;
         }
-        // elapsedTime(start, Date.now());
     }
 
     updatePheromoneLevel(agents, x, y) {
@@ -235,38 +244,4 @@ export default class ACO {
         pheromoneMatrix[x][y] = newPheromoneLevel;
     }
 
-    createBinaryImage() {
-        const width = this.canvasW,
-            height = this.canvasH;
-        let buffer = new Uint8ClampedArray(width * height * 4);
-
-        const binaryCanvas = document.createElement("canvas");
-        binaryCanvas.setAttribute("class", "binary-canvas");
-        binaryCanvas.setAttribute("width", width);
-        binaryCanvas.setAttribute("height", height);
-        const binCtx = binaryCanvas.getContext("2d");
-
-        pheromoneMatrix.forEach((arr, x) => {
-            arr.forEach((value, y) => {
-                if (value > initialPheromoneValue) {
-                    const pos = (x * height + y) * 4;
-                    const valueRGB = 0;
-                    buffer[pos] = valueRGB; // some R value [0, 255]
-                    buffer[pos + 1] = valueRGB; // some G value
-                    buffer[pos + 2] = valueRGB; // some B value
-                    buffer[pos + 3] = 255; // set alpha channel
-                }
-            });
-        });
-
-        // create imageData object
-        const idata = binCtx.createImageData(width, height);
-
-        // set our buffer as source
-        idata.data.set(buffer);
-
-        // update canvas with new data
-        binCtx.putImageData(idata, 0, 0);
-        this.resultDiv.appendChild(binaryCanvas);
-    }
 }

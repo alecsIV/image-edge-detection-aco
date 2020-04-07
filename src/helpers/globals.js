@@ -1,4 +1,9 @@
 export default function initGlobals() {
+    const EventEmitter = require('events');
+    const events = new EventEmitter();
+
+    global.events = events;
+
     //set global variables
     global.imageIntensityArray1d = new Array();
     global.imageIntensityArray = new Array();
@@ -8,12 +13,24 @@ export default function initGlobals() {
     global.canvasHeight = 0;
 
     // get animation toggle status
-    global.animation = document.getElementById('animation-toggle').checked;
-    document.getElementById('animation-toggle').addEventListener('click', (e) => {
+    global.animationElem = document.getElementById('animation-toggle');
+    global.animationLabel = document.querySelector('.animation-toggle_label');
+    animationLabel.innerHTML = 'Animation on';
+    global.animation = animationElem.checked;
+
+    animationElem.addEventListener('click', (e) => {
         animation = e.toElement.checked;
+        animationLabel.innerHTML = `Animation ${(animation) ? 'on': 'off'}`
+        events.emit(`animation-${animation}`);
+        events.emit('animation-toggle');
     });
 
     // Parameter fields
     global.allUI = document.getElementsByClassName('ui-element'); //get all user input fields
     global.autoFields = true; //check if user input values are changed by the user
+
+    // Gallery
+    global.pages = [];
+    global.currentPage = 0;
+    global.previousPage = 0;
 }
