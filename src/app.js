@@ -179,12 +179,11 @@ events.on('animation-toggle', () => {
 // Gallery events
 
 events.on('prev-image', () => {
-    this.prevPage();
+    resultsGallery.prevPage();
     // console.log('current page', currentPage);
 });
 events.on('next-image', () => {
-    console.log('🌆🌆🌆🌆🌆🌆🌆');
-    this.nextPage();
+    resultsGallery.nextPage();
     // console.log('current page', currentPage);
 });
 

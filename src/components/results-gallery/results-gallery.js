@@ -63,7 +63,7 @@ export default class ResultsGallery {
     }
 
     addToGallery(binaryCanvas) {
-        if (this.resultDiv.childElementCount > 1) {
+        if (this.resultDiv.childElementCount > 0) {
             for (let item of this.resultDiv.children) {
                 item.style.opacity = 0;
             }
@@ -72,6 +72,7 @@ export default class ResultsGallery {
         console.log('pagesbf push', pages);
         pages.push(this.resultDiv.lastChild);
         console.log('pagesaft push', pages);
+        currentPage = pages.length - 1;
         this.showControls();
     }
 
@@ -100,17 +101,13 @@ export default class ResultsGallery {
     }
 
     updatePreview() {
-        console.log('current', currentPage);
-        // console.log('pages', pages);
-        // console.log('pages[previousPage]', pages[previousPage]);
-        // console.log('pages[currentPage]', pages[currentPage]);
-        this.showControls();
         pages[previousPage].style.opacity = 0;
         pages[currentPage].style.opacity = 1;
+        this.showControls();
     }
 
     nextPage() {
-        if (currentPage < pages.length - 1) {
+        if (currentPage < pages.length) {
             previousPage = currentPage;
             currentPage++;
         }
