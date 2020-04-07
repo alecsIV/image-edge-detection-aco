@@ -15,6 +15,7 @@ const setDefaultsButton = document.querySelector('#defaults-button');
 const loadingPulse = document.querySelector('.pulse');
 const sysInfoPanel = document.querySelector('.sys-info-panel');
 const simSettingsPanel = document.querySelector('.sim-settings-panel');
+const legend = document.querySelector('.legend');
 // const settingsContainers = document.querySelectorAll('.settings-pannels_container > details > div');
 
 let envImage;
@@ -95,6 +96,7 @@ events.on('start-simulation', () => {
     loadingPulse.style.display = 'block';
     document.body.style.cursor = 'wait';
     sysInfoPanel.setAttribute('open', 'open');
+    legend.style.display = 'block';
 });
 events.on('stop-simulation', () => {
     startSimulationButton.style.display = 'block';

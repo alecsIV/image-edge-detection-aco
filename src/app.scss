@@ -1,5 +1,6 @@
 // Imports //
 @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;700&display=swap');
+@import './helpers/colours.scss';
 
 // Element definition //
 %normal-button {
@@ -19,7 +20,6 @@
     text-align: center;
     transition: all 0.2s;
     min-width: 6.25rem;
-
 
     &:hover {
         background-color: #d7d1f3;
@@ -43,12 +43,29 @@
     }
 }
 
+%legend-colour-box {
+    content: "";
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    outline: 1px solid #222;
+    margin-right: 5px;
+}
+
 // Main settings //
 body {
     font-family: 'Source Sans Pro', 'HelveticaNeue', 'Helvetica', sans-serif;
     max-width: 985px;
     margin: 0 auto;
     background-color: #fafafa;
+
+    @media (max-width:985px) {
+        padding: 0 20px;
+    }
+}
+
+main {
+    padding-bottom: 20px;
 }
 
 button {
@@ -106,17 +123,6 @@ details {
     .input-element {
         display: inline-block;
     }
-}
-
-.canvas-wrapper {
-    display: flex;
-    flex-wrap: wrap;
-}
-
-.input-canvas-wrapper {
-    position: relative;
-    width: 500px;
-    height: 500px;
 }
 
 .ui__wrapper,
@@ -270,13 +276,39 @@ details {
     max-width: 100px;
 }
 
+// Canvas //
+.canvas-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
 
-#canvasBg,
+.input-canvas-wrapper {
+    position: relative;
+    width: 500px;
+    height: 500px;
+}
+
+.input-canvas-wrapper,
 .binary-canvas {
     border: 1px solid #000000;
     display: block;
     background-position: center;
     background-size: cover;
+}
+
+#canvasBg {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: -2;
+}
+
+#canvasFg {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: -1;
 }
 
 #image-source {
@@ -288,6 +320,7 @@ details {
     max-width: 50px;
 }
 
+// Loading bar //
 #myProgress {
     width: 100%;
     background-color: #ddd;
@@ -309,8 +342,10 @@ details {
     text-align: center;
     background-color: #7f58dc;
     border-radius: 34px 0 0 34px;
+    transition: all 0.5s ease-in-out;
 }
 
+// Pulse button //
 .pulse {
     width: 40px;
     height: 40px;
@@ -345,5 +380,42 @@ details {
     100% {
         -moz-box-shadow: 0 0 0 0 rgba(185, 150, 243, 0);
         box-shadow: 0 0 0 0 rgba(185, 150, 243, 0);
+    }
+}
+
+// Legend //
+.legend {
+    max-width: 150px;
+    background-color: rgba(255, 255, 255, 0.7);
+    padding: 10px;
+    font-size: 11px;
+    border-radius: 0 0 5px 0;
+    opacity: 1;
+    z-index: 1;
+    transition: all 0.2s ease-in-out;
+    display: none;
+
+    span {
+        display: block;
+    }
+
+    &_trail::before {
+        @extend %legend-colour-box;
+        background-color: $trail;
+    }
+
+    &_high-pheromone::before {
+        @extend %legend-colour-box;
+        background-color: $high-pheromone;
+    }
+
+    &_pheromone-iteration::before {
+        @extend %legend-colour-box;
+        background-color: $pheromone-iteration;
+    }
+
+    &:hover {
+        opacity: 0;
+        transition: all 0.2s ease-in-out;
     }
 }

@@ -118,11 +118,13 @@
             <div class="process-preview_container">
                 <h3>Preview</h3>
                 <div class='input-canvas-wrapper'>
-                    <canvas id="canvasBg" width="500" height="500"
-                        style="position: absolute; left: 0; top: 0; z-index: 0;"></canvas>
-                    <div class="d3-container"></div>
-                    <canvas id="canvasFg" width="500" height="500"
-                        style="position: absolute; left: 0; top: 0; z-index: 1;"></canvas>
+                    <div class="legend">
+                        <span class="legend_trail">Ant trail</span>
+                        <span class="legend_high-pheromone">High pheromone levels</span>
+                        <span class="legend_pheromone-iteration">Pheromone level after iteration</span>
+                    </div>
+                    <canvas id="canvasBg" width="500" height="500"></canvas>
+                    <canvas id="canvasFg" width="500" height="500"></canvas>
                 </div>
             </div>
             <div class="results-canvas_container">
