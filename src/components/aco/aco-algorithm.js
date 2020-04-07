@@ -8,7 +8,7 @@ import {
 } from '../../helpers/extras';
 
 export default class ACO {
-    constructor(image) {
+    constructor(image, resultsGallery) {
         this.image = image;
         this.canvas = document.querySelector('#canvasFg');
         this.canvasW = this.canvas.getBoundingClientRect().width;
@@ -16,13 +16,12 @@ export default class ACO {
         this.canvasArea = this.canvasW * this.canvasH;
         this.ctx = this.canvas.getContext("2d");
         this.matrixHelper = new MatrixHelper();
+        this.resultsGallery = resultsGallery;
 
         this.currentFrame = 1;
         this.animationCount = 0;
         this.agentCount = 0;
         this.paused = false;
-
-        this.resultDiv = document.querySelector(".binary-canvas-div");
 
         // generate initial pheromone and heuristic matrices
         this.matrixHelper.generateInitialMatrices();
@@ -147,7 +146,7 @@ export default class ACO {
         }
         console.log("%c END ANIMATION", "color: #c92424");
         loadingBar(iterations, iterations);
-        this.createBinaryImage();
+        this.resultsGallery.createBinaryImage();
         elapsedTime(start, Date.now());
         events.emit('simulation-complete');
     }
@@ -179,7 +178,7 @@ export default class ACO {
                 console.log("%c END ANIMATION", "color: #c92424");
                 stopTimer();
                 // elapsedTime(start, Date.now());
-                this.createBinaryImage();
+                this.resultsGallery.createBinaryImage();
                 clearInterval(this.animationIntervalId);
                 events.emit('simulation-complete');
             } else {
@@ -242,45 +241,4 @@ export default class ACO {
         pheromoneMatrix[x][y] = newPheromoneLevel;
     }
 
-    createBinaryImage() {
-        const width = this.canvasW,
-            height = this.canvasH;
-        let buffer = new Uint8ClampedArray(width * height * 4);
-
-        const binaryCanvas = document.createElement("canvas");
-        binaryCanvas.setAttribute("class", "binary-canvas");
-        binaryCanvas.setAttribute("width", width);
-        binaryCanvas.setAttribute("height", height);
-        const binCtx = binaryCanvas.getContext("2d");
-
-        pheromoneMatrix.forEach((arr, x) => {
-            arr.forEach((value, y) => {
-                if (value > initialPheromoneValue) {
-                    const pos = (x * height + y) * 4;
-                    const valueRGB = 0;
-                    buffer[pos] = valueRGB; // some R value [0, 255]
-                    buffer[pos + 1] = valueRGB; // some G value
-                    buffer[pos + 2] = valueRGB; // some B value
-                    buffer[pos + 3] = 255; // set alpha channel
-                }
-            });
-        });
-
-        // create imageData object
-        const idata = binCtx.createImageData(width, height);
-
-        // set our buffer as source
-        idata.data.set(buffer);
-
-        // update canvas with new data
-        binCtx.putImageData(idata, 0, 0);
-
-        // hide previous canvas
-        if (this.resultDiv.lastChild) {
-            this.resultDiv.lastChild.style.zIndex = -1;
-            this.resultDiv.lastChild.style.opacity = 0;
-        }
-
-        this.resultDiv.appendChild(binaryCanvas);
-    }
 }

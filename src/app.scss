@@ -348,9 +348,6 @@ details {
     padding: 0;
 }
 
-.binary-canvas{
-    position: absolute;
-}
 
 #canvasBg {
     position: absolute;
@@ -365,6 +362,57 @@ details {
     top: 0;
     z-index: -1;
 }
+
+// result canvas
+.binary-canvas-div {
+    .binary-canvas {
+        position: absolute;
+    }
+
+    .overlays {
+        width: 500px;
+        height: 500px;
+        position: absolute;
+        z-index: 999;
+        display: none;
+
+        .arrow {
+            border: solid black;
+            border-width: 0 15px 15px 0;
+            display: inline-block;
+            padding: 15px;
+            position: absolute;
+            top: calc(50% - 30px);
+
+            &::before {
+                content: "";
+                display: block;
+                position: absolute;
+                transform: rotate(45deg);
+                -webkit-transform: rotate(45deg);
+                left: -4px;
+                top: -15px;
+                width: 68px;
+                height: 84px;
+                background-color: rgba(0, 0, 0, 0.5);
+            }
+        }
+
+        .right {
+            right: 20px;
+            transform: rotate(-45deg);
+            -webkit-transform: rotate(-45deg);
+        }
+
+        .left {
+            left: 20px;
+            transform: rotate(135deg);
+            -webkit-transform: rotate(135deg);
+        }
+
+    }
+}
+
 
 // Loading bar //
 #myProgress {

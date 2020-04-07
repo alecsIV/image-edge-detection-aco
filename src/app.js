@@ -4,12 +4,12 @@ initGlobals();
 
 import ACO from './components/aco/aco-algorithm';
 import EnvironmentImage from './components/environment-image';
+import ResultsGallery from './components/results-gallery/results-gallery'
 import {
     loadingBar
 } from './helpers/extras';
 
 const uploader = document.querySelector('#image-upload');
-const uploaderLabel = document.querySelector('#image-upload+label');
 const image = document.querySelector('#image-source');
 const imagePreview = document.querySelector('#image-preview');
 const canvasBg = document.querySelector('#canvasBg');
@@ -23,7 +23,6 @@ const legend = document.querySelector('.legend');
 const processParams = document.querySelectorAll('.process-params>input');
 const elapsedTime = document.querySelector('#elapsed-time');
 const performanceDisclaimer = document.querySelector('.performance-disclaimer');
-// const settingsContainers = document.querySelectorAll('.settings-pannels_container > details > div');
 
 let envImage;
 let algorithm;
@@ -42,6 +41,9 @@ const context = canvasBg.getContext('2d');
 // Disable initial state of dynamic elements
 animationElem.setAttribute('disabled', 'disabled');
 disableInputs(true);
+
+// Results gallery
+const resultsGallery = new ResultsGallery();
 
 // Image uploader input behaviour
 uploader.addEventListener('change', function() {
@@ -77,7 +79,7 @@ drawImageButton.addEventListener('click', () => {
         events.emit('reset');
     } else if (image) {
         envImage = new EnvironmentImage(image, canvasBg);
-        algorithm = new ACO(envImage);
+        algorithm = new ACO(envImage, resultsGallery);
         algorithm.reset();
         startSimulationButton.removeAttribute('disabled');
         drawImageButton.innerHTML = (drawImageButtonActiveText);
@@ -142,7 +144,7 @@ events.on('stop-simulation', () => {
 });
 
 // Trigger functionality on simulation complete
-events.on('simulation-complete', () =>{
+events.on('simulation-complete', () => {
     loadingPulse.style.display = 'none';
     startSimulationButton.style.display = 'block';
     document.body.style.cursor = 'auto';
@@ -173,6 +175,19 @@ events.on('animation-true', () => {
 events.on('animation-toggle', () => {
     reset();
 });
+
+// Gallery events
+
+events.on('prev-image', () => {
+    this.prevPage();
+    // console.log('current page', currentPage);
+});
+events.on('next-image', () => {
+    console.log('🌆🌆🌆🌆🌆🌆🌆');
+    this.nextPage();
+    // console.log('current page', currentPage);
+});
+
 
 // Functions //
 function disableInputs(disabled) {

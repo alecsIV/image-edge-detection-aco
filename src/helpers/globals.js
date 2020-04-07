@@ -15,7 +15,7 @@ export default function initGlobals() {
     // get animation toggle status
     global.animationElem = document.getElementById('animation-toggle');
     global.animation = animationElem.checked;
-    
+
     animationElem.addEventListener('click', (e) => {
         animation = e.toElement.checked;
         events.emit(`animation-${animation}`);
@@ -25,4 +25,9 @@ export default function initGlobals() {
     // Parameter fields
     global.allUI = document.getElementsByClassName('ui-element'); //get all user input fields
     global.autoFields = true; //check if user input values are changed by the user
+
+    // Gallery
+    global.pages = [];
+    global.currentPage = 0;
+    global.previousPage = 0;
 }
