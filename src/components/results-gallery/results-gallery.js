@@ -31,10 +31,10 @@ export default class ResultsGallery {
         binaryCanvas.setAttribute("height", height);
         const binCtx = binaryCanvas.getContext("2d");
 
-        pheromoneMatrix.forEach((arr, x) => {
-            arr.forEach((value, y) => {
+        pheromoneMatrix.forEach((arr, y) => {
+            arr.forEach((value, x) => {
                 if (value > initialPheromoneValue) {
-                    const pos = (x * height + y) * 4;
+                    const pos = (y * height + x) * 4;
                     const valueRGB = 0;
                     buffer[pos] = valueRGB; // some R value [0, 255]
                     buffer[pos + 1] = valueRGB; // some G value
