@@ -13,10 +13,10 @@ export default class EnvironmentImage {
 
         let a = 0;
 
-        for (let i = 0; i < canvasWidth; i++) {
-            array2d[i] = [];
-            for (let j = 0; j < canvasHeight; j++) {
-                array2d[i][j] = array[a];
+        for (let y = 0; y < canvasHeight; y++) {
+            array2d[y] = [];
+            for (let x = 0; x < canvasWidth; x++) {
+                array2d[y][x] = array[a];
                 a++
             }
         }
