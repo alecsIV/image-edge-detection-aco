@@ -117,7 +117,7 @@ loadingPulse.addEventListener('click', () => {
 events.on('revert-initial-state', () => {
     events.emit('stop-simulation');
     disableButtons();
-    resetParams();
+    resetInfoStats();
     resetInputs();
     algorithm.reset();
 });
@@ -128,7 +128,7 @@ events.on('start-simulation', () => {
     setDefaultsButton.setAttribute('disabled', 'disabled');
     startSimulationButton.style.display = 'none';
     loadingPulse.style.display = 'block';
-    
+
     sysInfoPanel.setAttribute('open', 'open');
     document.body.style.cursor = 'wait';
     legend.style.display = 'block';
@@ -165,8 +165,8 @@ events.on('simulation-complete', () => {
     pushBackScreen.style.display = 'none';
     body.style.overflow = 'auto';
 
-    // unlock input fields
-    resetInputs('unlock');
+    // enable user inputs
+    disableInputs(false);
 });
 
 
@@ -179,7 +179,7 @@ events.on('drawn-image', () => {
 
 
 events.on('reset', () => {
-    reset();
+    reset('full');
 });
 
 events.on('animation-false', () => {
@@ -211,18 +211,20 @@ function disableInputs(disabled) {
     }
 }
 
-function reset() {
+function reset(full = null) {
     events.emit('stop-simulation');
-    resetParams();
-    algorithm.setDefaultValues();
-    algorithm.reset();
-    legend.style.display = 'none';
-    setDefaultsButton.setAttribute('disabled', 'disabled');
+    resetInfoStats();
+    if (full) {
+        algorithm.setDefaultValues();
+        algorithm.reset();
+        legend.style.display = 'none';
+        setDefaultsButton.setAttribute('disabled', 'disabled');
+    }
     animationElem.removeAttribute('disabled');
     events.emit('drawn-image');
 }
 
-function resetInputs(unlock = null) {
+function resetInputs() {
     for (let item of allUI) {
         item.value = 0;
         item.setAttribute('disabled', 'disabled');
@@ -230,7 +232,7 @@ function resetInputs(unlock = null) {
     setDefaultsButton.setAttribute('disabled', 'disabled');
 }
 
-function resetParams() {
+function resetInfoStats() {
     for (let item of processParams) {
         item.value = 0;
     }
@@ -246,5 +248,5 @@ function disableButtons() {
 }
 
 function unlockFields() {
-    
+
 }

@@ -22,7 +22,7 @@
     min-width: 6.25rem;
 
     &:hover {
-        background-color: #d7d1f3;
+        background-color: $hover-accent;
         cursor: pointer;
         transition: all 0.2s;
     }
@@ -35,7 +35,7 @@
 
     &:active,
     &:focus {
-        background-color: #bba6f3;
+        background-color: $focus-accent;
         color: white;
         cursor: pointer;
         font-size: 0.875rem;
@@ -64,7 +64,7 @@
     display: inline-block;
     width: 5px;
     height: 5px;
-    outline: 1px solid #222;
+    outline: 1px solid $dark-accent;
     margin-right: 5px;
 }
 
@@ -103,7 +103,7 @@ i.info {
     .tooltiptext {
         width: 120px;
         background-color: rgba(0, 0, 0, 0.7);
-        color: #fff;
+        color: $panel-bg;
         text-align: center;
         padding: 5px;
         border-radius: 6px;
@@ -153,10 +153,10 @@ details {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    // border: 1px solid #222;
+    // border: 1px solid $dark-accent;
     padding: 8px;
     border-radius: 5px;
-    background-color: #fff;
+    background-color: $panel-bg;
     box-shadow: 0px 10px 20px 0px rgba(0, 0, 0, .1);
     margin: 15px auto;
 

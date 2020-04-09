@@ -1,7 +1,8 @@
 // Main //
 $main-accent: #7f58dc;
 $hover-accent: #d7d1f3;
-$focus-accent: #bba6f3;
+$focus-accent: $main-accent;
+$dark-accent: #222;
 $body-bg: #fafafa;
 $panel-bg: #fff;
 $default-colour: #ddd;

@@ -78,7 +78,7 @@ export default class ACO {
         }
 
         Object.keys(this.defaultParams).forEach(key => {
-            window[key] = Number(this.defaultParams[key]); // save the currently used vars globally
+            window[key] = Number(this.defaultParams[key]); // save the currently used vars globally 
             window.allUI[key].value = window[key];
         });
     }
@@ -139,8 +139,8 @@ export default class ACO {
             });
 
             // update pheromone values
-            pheromoneMatrix.forEach((val, y) => {
-                val.forEach((arr, x) => {
+            pheromoneMatrix.forEach((val, x) => {
+                val.forEach((arr, y) => {
                     this.updatePheromoneLevel(this.agents, x, y);
                 });
             });
@@ -166,7 +166,7 @@ export default class ACO {
             pheromoneMatrix.forEach((val, y) => {
                 val.forEach((arr, x) => {
                     this.updatePheromoneLevel(this.agents, x, y);
-                    this.ctx.fillStyle = `rgba(0, 255, 0, ${pheromoneMatrix[y][x]})`;
+                    this.ctx.fillStyle = `rgba(0, 255, 0, ${pheromoneMatrix[x][y]})`;
                     this.ctx.fillRect(
                         y,
                         x,
@@ -196,7 +196,7 @@ export default class ACO {
             agent.moveTo(newCoordinates, newAnt);
             if (agent.currentCoordinates == undefined) console.log("faulty", agent);
             if (this.animationCount % 10 === 0) {
-                if (pheromoneMatrix[agent.currentCoordinates.y][agent.currentCoordinates.x] <= initialPheromoneValue) {
+                if (pheromoneMatrix[agent.currentCoordinates.x][agent.currentCoordinates.y] <= initialPheromoneValue) {
                     this.ctx.fillStyle = `rgba(66, 33, 123, 255)`;
                 } else {
                     this.ctx.fillStyle = `rgba(237, 0, 1, 255)`;
@@ -234,12 +234,12 @@ export default class ACO {
     updatePheromoneLevel(agents, x, y) {
         let sumPheromone = 0;
         agents.forEach(agent => {
-            if (agent.previousCoordinates[y] && agent.previousCoordinates[x]) {
-                sumPheromone += pheromoneMatrix[y][x] >= tNoiseFilt ? pheromoneMatrix[y][x] : 0;
+            if (agent.previousCoordinates[x] && agent.previousCoordinates[y]) {
+                sumPheromone += pheromoneMatrix[x][y] >= tNoiseFilt ? pheromoneMatrix[x][y] : 0;
             }
         });
-        const newPheromoneLevel = (1 - roPEvRate) * pheromoneMatrix[y][x] + sumPheromone;
-        pheromoneMatrix[y][x] = newPheromoneLevel;
+        const newPheromoneLevel = (1 - roPEvRate) * pheromoneMatrix[x][y] + sumPheromone;
+        pheromoneMatrix[x][y] = newPheromoneLevel;
     }
 
 }
