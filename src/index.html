@@ -15,9 +15,9 @@
             <img alt="Image preview" src="./assets/NoImg.png" id="image-preview">
             <div class="image-upload__container">
                 <input type="file" accept="image/*" id="image-upload" name="image-upload">
-                <label for="image-upload">Upload image</label>
+                <label for="image-upload">Choose image</label>
             </div>
-            <button id="draw-image-button" disabled>Draw image</button>
+            <button id="draw-image-button" disabled>Upload</button>
             <button id="start-simulation" disabled>Start</button>
             <span class="pulse"></span>
             <div class="animation-toggle_container">
@@ -147,8 +147,13 @@
         <div class="please-wait">
             Please wait...
             <br>
-            <span>The algorithm is executing and will soon be ready</span>
+            <span>The algorithm is executing and will be ready soon</span>
+            <br>
+            <span>You are seeing this because when animation is turned off, the algorithm utilises the whole
+                    javascript thread. Therefore, no visualisations can be shown.
+            </span>
         </div>
-    </div>    
+    </div>
 </body>
+
 </html>

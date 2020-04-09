@@ -1,10 +1,11 @@
+// The following function returns all the global variables needed throughtout the script
 export default function initGlobals() {
     const EventEmitter = require('events');
     const events = new EventEmitter();
 
-    global.events = events;
+    global.events = events; // used to call js events to better manage the stages of the program
 
-    //set global variables
+    //set global variables related to the matrices
     global.imageIntensityArray1d = new Array();
     global.imageIntensityArray = new Array();
     global.pheromoneMatrix = new Array();
@@ -25,11 +26,12 @@ export default function initGlobals() {
         events.emit('animation-toggle');
     });
 
-    // Parameter fields
+    // Parameter fields values
     global.allUI = document.getElementsByClassName('ui-element'); //get all user input fields
     global.autoFields = true; //check if user input values are changed by the user
+    global.currentParams = {};
 
-    // Gallery
+    // Results Gallery params
     global.pages = [];
     global.currentPage = 0;
     global.previousPage = 0;

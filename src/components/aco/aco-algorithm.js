@@ -62,12 +62,12 @@ export default class ACO {
         this.lastTime = stopTimer(true);
     }
 
+    //set default algorithm param values
     setDefaultValues() {
         this.defaultParams = {
             'iterations': 3,
             'antCount': Math.round(Math.sqrt(this.image.width * this.image.height)),
             'numAntMov': Math.round(Math.round(3 * Math.sqrt(this.image.width * this.image.height))),
-            // 'antMemLen': Math.round(Math.sqrt(2 * (this.image.width + this.image.height)) / 500 * this.iMax),
             'antMemLen': Math.round(Math.sqrt(2 * (this.image.width + this.image.height))),
             'nConstPD': 2,
             'pConstPD': 10,
@@ -78,16 +78,14 @@ export default class ACO {
         }
 
         Object.keys(this.defaultParams).forEach(key => {
-            window[key] = Number(this.defaultParams[key]);
+            window[key] = Number(this.defaultParams[key]); // save the currently used vars globally
             window.allUI[key].value = window[key];
         });
     }
-
     updateGlobalParams() {
         Object.keys(this.defaultParams).forEach(key => {
             window[key] = Number(window.allUI[key].value);
         });
-        console.log('Updated iterations:', iterations);
     }
 
     initializeAgents() {
