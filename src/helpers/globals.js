@@ -34,5 +34,6 @@ export default function initGlobals() {
     // Results Gallery params
     global.pages = [];
     global.currentPage = 0;
-    global.previousPage = 0;
+    global.previousPage = -1;
+    global.savedParams = [];
 }

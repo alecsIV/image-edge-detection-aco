@@ -16,11 +16,6 @@ export default class AntAgent {
         };
     }
 
-    // depositPheromone(coordinates, prevCoordin params) {
-
-    //     pheromoneMatrix[coordinates.x][coordinates.y] = params.nConstPD + ()
-    // }
-
     depositPheromone(coordinates) {
         const medians = [];
         coordinates.forEach(pixel => {
@@ -44,10 +39,7 @@ export default class AntAgent {
             medians.push(this.calcMedian(neighbourIntensities));
         });
         const medDiff = medians[0] - medians[1];
-        // coordinates.forEach((pixel) => {
         pheromoneMatrix[coordinates[0].x][coordinates[0].y] += (medians[0] >= tNoiseFilt) ? nConstPD + (pConstPD * medDiff) / 255 : 0;
-        
-        // });
     }
 
     calcMedian(arr) {
@@ -83,7 +75,6 @@ export default class AntAgent {
                         ) {
                             visited = true;
                             k=antMemLen+1; // exit the loop to prevent agent looping
-                            // k = ((antMemLen > pCLen) ? pCLen : antMemLen);
                         }
                     }
                     if (!visited) {
@@ -97,15 +88,6 @@ export default class AntAgent {
                     } else {
                         phProducts.push("visited");
                     }
-                    // if (this.previousCoordinates.length > 0 && this.previousCoordinates[this.previousCoordinates.length - 1].x === x + i && this.previousCoordinates[this.previousCoordinates.length - 1].y === y + j) {
-                    //     phProducts.push('visited');
-                    // } else {
-                    //     const productValue = Math.pow(pheromoneMatrix[x + i][y + j], alpha) * Math.pow(heuristicMatrix[x + i][y + j], beta);
-                    //     phProducts.push(productValue);
-
-                    //     //find the sum of all products from the neighbourhood
-                    //     sumProducts += productValue;
-                    // }
                     neighbourNodeCoordinates.push({
                         x: x + i,
                         y: y + j
@@ -118,7 +100,6 @@ export default class AntAgent {
         phProducts.forEach((product, i) => {
             //check if not the previous pixel
             let notPrevious = product !== "visited";
-            // if (!notPrevious) console.log('index', i);
             const result =
                 sumProducts !== 0 && notPrevious ? Math.abs(product / sumProducts) : 0;
 
@@ -130,20 +111,15 @@ export default class AntAgent {
 
         if (currentMaxProbability === 0) {
             maxProbabilityIndex = 99;
-            // const randomValue = Math.floor(Math.random() * (neighbourNodeCoordinates.length - 1));
-            // maxProbabilityIndex = (phProducts[randomValue] !== 'visited') ? randomValue : ((randomValue > 0) ? randomValue - 1 : randomValue + 1);
         }
 
-        //save current coordinates as previous
-        // console.log('maxProbabilityIndex', maxProbabilityIndex);
-        // console.log('neighbourNodeCoordinates[maxProbabilityIndex]', neighbourNodeCoordinates[maxProbabilityIndex]);
-        // console.log('neighbourNodeCoordinates', neighbourNodeCoordinates);
         if (maxProbabilityIndex === 99) {
             this.previousCoordinates = [];
             const newPositions = this.getRandomPosition();
             return {newCoordinates: newPositions, newAnt: true};
         } else return {newCoordinates: neighbourNodeCoordinates[maxProbabilityIndex], newAnt:false};
     }
+
     moveTo(coordinates, newAnt) {
         if (!newAnt) {
             this.depositPheromone([this.currentCoordinates, coordinates]);

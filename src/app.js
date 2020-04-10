@@ -4,7 +4,6 @@ initGlobals();
 
 import ACO from './components/aco/aco-algorithm';
 import EnvironmentImage from './components/environment-image/environment-image';
-import ResultsGallery from './components/results-gallery/results-gallery'
 import {
     loadingBar
 } from './helpers/extras';
@@ -35,8 +34,6 @@ let uploadedYet = false;
 const drawImageButtonDefaultText = 'Upload';
 const drawImageButtonActiveText = 'Reset';
 const context = canvasBg.getContext('2d');
-// Results gallery
-const resultsGallery = new ResultsGallery();
 
 
 //get canvasBg dimensions
@@ -75,7 +72,7 @@ drawImageButton.addEventListener('click', () => {
         events.emit('reset');
     } else if (image) {
         envImage = new EnvironmentImage(image, canvasBg);
-        algorithm = new ACO(envImage, resultsGallery);
+        algorithm = new ACO(envImage);
         algorithm.reset();
         startSimulationButton.removeAttribute('disabled');
         drawImageButton.innerHTML = (drawImageButtonActiveText);
@@ -193,15 +190,6 @@ events.on('animation-true', () => {
 events.on('animation-toggle', () => {
     reset();
 });
-
-// Gallery events
-events.on('prev-image', () => {
-    resultsGallery.prevPage();
-});
-events.on('next-image', () => {
-    resultsGallery.nextPage();
-});
-
 
 // Functions //
 function disableInputs(disabled) {
