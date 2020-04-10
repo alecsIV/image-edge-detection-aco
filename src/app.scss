@@ -452,17 +452,6 @@ details {
                 opacity: 1;
             }
 
-            &:after {
-                content: 'x';
-                position: absolute;
-                bottom: 10px;
-                color: white;
-                right: 8px;
-                font-weight: bold;
-                width: 10px;
-                height: 10px;
-            }
-
             &-button {
                 position: absolute;
                 top: 0;
@@ -479,11 +468,18 @@ details {
                 }
             }
 
+            .close-button {
+                min-width: 20px;
+                height: 20px;
+                background-color: transparent;
+                border: none;
+                color: white;
+            }
+
             &-element {
                 display: block;
                 margin-right: 40px;
             }
-
         }
     }
 }

@@ -7,7 +7,6 @@ export default class ResultsGallery {
 
         // Set gallery controls
         this.initGalleryControls();
-        this.initStateVars();
     }
 
     initGalleryControls() {
@@ -18,13 +17,16 @@ export default class ResultsGallery {
         this.paramDetailsButton = document.querySelector(".param-details-button");
         this.paramDetails = document.querySelector(".param-details");
 
+        //create close button
+        this.paramDetailsCloseButton = document.createElement('button');
+        this.paramDetailsCloseButton.setAttribute('class', 'close-button');
+        this.paramDetailsCloseButton.innerHTML = 'x';
+
+
         this.leftArrow.addEventListener('click', () => this.prevPage());
         this.rightArrow.addEventListener('click', () => this.nextPage());
-        this.paramDetailsButton.addEventListener('click', () => this.viewParams());
-    }
-
-    initStateVars() {
-        this.isParamsPanelOpen = false;
+        this.paramDetailsButton.addEventListener('click', () => this.toggleParamsPanel('open'));
+        this.paramDetailsCloseButton.addEventListener('click', () => this.toggleParamsPanel('close'));
     }
 
     createBinaryImage() {
@@ -158,9 +160,10 @@ export default class ResultsGallery {
             span.innerHTML = `${element.name}: ${element.value}`;
             this.paramDetails.appendChild(span);
         });
+        this.paramDetails.appendChild(this.paramDetailsCloseButton);
     }
-    viewParams() {
-        if (!this.isParamsPanelOpen) {
+    toggleParamsPanel(action) {
+        if (action === 'open') {
             // Show/hide views
             this.paramDetailsButton.style.display = 'none';
             this.paramDetails.style.display = 'block';
