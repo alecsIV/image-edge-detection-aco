@@ -1,5 +1,5 @@
-import MatrixHelper from "../../helpers/matrix-helper";
 import AntAgent from "./agent";
+import MatrixHelper from '../../helpers/matrix-helper';
 import {
     loadingBar,
     elapsedTime,
@@ -15,9 +15,12 @@ export default class ACO {
         this.canvasH = this.canvas.getBoundingClientRect().height;
         this.canvasArea = this.canvasW * this.canvasH;
         this.ctx = this.canvas.getContext("2d");
-        this.matrixHelper = new MatrixHelper();
+
+        //Get external classes
+        this.matrixHelper = new MatrixHelper;
         this.resultsGallery = resultsGallery;
 
+        //animation control variables
         this.currentFrame = 1;
         this.animationCount = 0;
         this.agentCount = 0;
@@ -47,7 +50,7 @@ export default class ACO {
 
     reset(full) {
         clearInterval(this.animationIntervalId);
-        this.lastTime = stopTimer(false);
+        stopTimer();
         this.matrixHelper.resetPheromoneMatrix();
         if (full === 'full') {
             this.ctx.clearRect(0, 0, this.canvasW, this.canvasH);
@@ -59,15 +62,15 @@ export default class ACO {
     stop() {
         this.paused = true;
         clearInterval(this.animationIntervalId);
-        this.lastTime = stopTimer(true);
+        stopTimer('pause');
     }
 
+    //set default algorithm param values
     setDefaultValues() {
         this.defaultParams = {
             'iterations': 3,
             'antCount': Math.round(Math.sqrt(this.image.width * this.image.height)),
             'numAntMov': Math.round(Math.round(3 * Math.sqrt(this.image.width * this.image.height))),
-            // 'antMemLen': Math.round(Math.sqrt(2 * (this.image.width + this.image.height)) / 500 * this.iMax),
             'antMemLen': Math.round(Math.sqrt(2 * (this.image.width + this.image.height))),
             'nConstPD': 2,
             'pConstPD': 10,
@@ -78,16 +81,14 @@ export default class ACO {
         }
 
         Object.keys(this.defaultParams).forEach(key => {
-            window[key] = Number(this.defaultParams[key]);
+            window[key] = Number(this.defaultParams[key]); // save the currently used vars globally 
             window.allUI[key].value = window[key];
         });
     }
-
     updateGlobalParams() {
         Object.keys(this.defaultParams).forEach(key => {
             window[key] = Number(window.allUI[key].value);
         });
-        console.log('Updated iterations:', iterations);
     }
 
     initializeAgents() {
@@ -116,7 +117,7 @@ export default class ACO {
         events.emit('start-simulation');
         if (!this.paused) this.ctx.clearRect(0, 0, this.canvasW, this.canvasH);
         if (animation) {
-            timer((this.lastTime) ? this.lastTime : null); // check if timer has been stopped
+            timer(); // check if timer has been stopped
             this.animationIntervalId = setInterval(this.animateMoves.bind(this), 1);
         } else {
             events.emit('simulation-without-animation');
@@ -165,8 +166,8 @@ export default class ACO {
         }
         if (this.agentCount >= this.agents.length) {
             // update pheromone values
-            pheromoneMatrix.forEach((val, x) => {
-                val.forEach((arr, y) => {
+            pheromoneMatrix.forEach((val, y) => {
+                val.forEach((arr, x) => {
                     this.updatePheromoneLevel(this.agents, x, y);
                     this.ctx.fillStyle = `rgba(0, 255, 0, ${pheromoneMatrix[x][y]})`;
                     this.ctx.fillRect(
