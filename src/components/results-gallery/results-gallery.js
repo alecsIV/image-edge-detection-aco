@@ -115,7 +115,6 @@ export default class ResultsGallery {
     }
 
     updatePreview() {
-        debugger;
         if (previousPage > -1) pages[previousPage].style.opacity = 0;
         pages[currentPage].style.opacity = 1;
         this.showControls();
@@ -124,7 +123,6 @@ export default class ResultsGallery {
 
     nextPage() {
         // got o next page
-        debugger;
         if (currentPage < pages.length) {
             previousPage = currentPage;
             currentPage++;
