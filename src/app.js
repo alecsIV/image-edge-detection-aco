@@ -35,6 +35,7 @@ const pushBackScreen = document.querySelector('.push-back-screen');
 let envImage;
 let algorithm;
 let uploadedYet = false;
+let inputsChanged = false;
 // Buttons and HTML events
 const drawImageButtonDefaultText = 'Upload';
 const drawImageButtonActiveText = 'Reset';
@@ -89,9 +90,10 @@ drawImageButton.addEventListener('click', () => {
 // track user input changes and  
 Object.values(allUI).forEach((element) => {
     element.onchange = () => {
-        setDefaultsButton.removeAttribute('disabled');
         startSimulationButton.removeAttribute('disabled');
         algorithm.reset();
+        inputsChanged = true;
+        toggleDefaulsButton();
     };
 });
 
@@ -106,7 +108,8 @@ startSimulationButton.addEventListener('click', () => {
 setDefaultsButton.addEventListener('click', () => {
     algorithm.setDefaultValues();
     algorithm.reset();
-    setDefaultsButton.setAttribute('disabled', 'disabled');
+    inputsChanged = false;
+    toggleDefaulsButton();
 });
 
 loadingPulse.addEventListener('click', () => {
@@ -170,6 +173,7 @@ events.on('simulation-complete', () => {
 
     // enable user inputs
     disableInputs(false);
+    toggleDefaulsButton();
 });
 
 
@@ -201,11 +205,12 @@ function reset(full = null) {
     events.emit('stop-simulation');
     resetInfoStats();
     if (full) {
+        resetInputs();
         algorithm.setDefaultValues();
-        algorithm.reset();
         legend.style.display = 'none';
-        setDefaultsButton.setAttribute('disabled', 'disabled');
+        toggleDefaulsButton();
     }
+    algorithm.reset();
     animationElem.removeAttribute('disabled');
     events.emit('drawn-image');
 }
@@ -215,7 +220,13 @@ function resetInputs() {
         item.value = 0;
         item.setAttribute('disabled', 'disabled');
     }
-    setDefaultsButton.setAttribute('disabled', 'disabled');
+    inputsChanged = false
+    toggleDefaulsButton();
+}
+
+function toggleDefaulsButton() {
+    if(inputsChanged) setDefaultsButton.removeAttribute('disabled');
+    else setDefaultsButton.setAttribute('disabled', 'disabled');
 }
 
 function resetInfoStats() {
