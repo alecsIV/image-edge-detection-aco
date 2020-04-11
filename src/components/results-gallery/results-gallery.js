@@ -6,18 +6,27 @@ export default class ResultsGallery {
         this.resultDiv = document.querySelector(".binary-canvas-holder"); // select target div
 
         // Set gallery controls
-        this.initialiseGalleryControls();
+        this.initGalleryControls();
     }
 
-    initialiseGalleryControls() {
+    initGalleryControls() {
         this.resultDivOverlays = document.querySelector(".overlays");
         this.leftArrow = document.querySelector(".arrow.left");
         this.rightArrow = document.querySelector(".arrow.right");
         this.itemCount = document.querySelector(".item-count");
+        this.paramDetailsButton = document.querySelector(".param-details-button");
         this.paramDetails = document.querySelector(".param-details");
 
-        this.leftArrow.addEventListener('click', () => events.emit('prev-image'));
-        this.rightArrow.addEventListener('click', () => events.emit('next-image'));
+        //create close button
+        this.paramDetailsCloseButton = document.createElement('button');
+        this.paramDetailsCloseButton.setAttribute('class', 'close-button');
+        this.paramDetailsCloseButton.innerHTML = 'x';
+
+
+        this.leftArrow.addEventListener('click', () => this.prevPage());
+        this.rightArrow.addEventListener('click', () => this.nextPage());
+        this.paramDetailsButton.addEventListener('click', () => this.toggleParamsPanel('open'));
+        this.paramDetailsCloseButton.addEventListener('click', () => this.toggleParamsPanel('close'));
     }
 
     createBinaryImage() {
@@ -68,21 +77,21 @@ export default class ResultsGallery {
                 item.style.opacity = 0;
             }
         }
+        //add image canvas to array
         this.resultDiv.appendChild(binaryCanvas);
-        console.log('pagesbf push', pages);
+
+        // store canvas positioning in gallery
         pages.push(this.resultDiv.lastChild);
-        console.log('pagesaft push', pages);
         currentPage = pages.length - 1;
-        this.showControls();
+
+        this.saveParams(); // save current simulation parameters
+        this.updatePreview(); // update the view of the gallery element
     }
 
     showControls() {
         const childCount = this.resultDiv.childElementCount;
-
-        if (childCount > 1) {
-            this.resultDivOverlays.style.display = 'block';
-            this.itemCount.innerHTML = `${currentPage + 1} / ${childCount}`
-        }
+        this.resultDivOverlays.style.display = 'block';
+        this.itemCount.innerHTML = `${currentPage + 1} / ${childCount}`
 
         switch (currentPage) {
             case 0:
@@ -98,15 +107,24 @@ export default class ResultsGallery {
                 this.rightArrow.style.display = 'block';
                 break;
         }
+
+        if (childCount === 1) {
+            this.rightArrow.style.display = 'none';
+            this.leftArrow.style.display = 'none';
+        }
     }
 
     updatePreview() {
-        pages[previousPage].style.opacity = 0;
+        debugger;
+        if (previousPage > -1) pages[previousPage].style.opacity = 0;
         pages[currentPage].style.opacity = 1;
         this.showControls();
+        this.loadParams();
     }
 
     nextPage() {
+        // got o next page
+        debugger;
         if (currentPage < pages.length) {
             previousPage = currentPage;
             currentPage++;
@@ -115,10 +133,49 @@ export default class ResultsGallery {
     }
 
     prevPage() {
+        // go to previous page
         if (currentPage > 0) {
             previousPage = currentPage;
             currentPage--;
         }
         this.updatePreview();
+    }
+
+    saveParams() {
+        const paramsToSave = [];
+        // save current image parameters 
+        Object.values(allUI).forEach((element) => {
+            const elementObj = {};
+            elementObj.value = element.value;
+            elementObj.id = element.id;
+            elementObj.name = element.name;
+            paramsToSave.push(elementObj);
+        });
+        savedParams.push(paramsToSave);
+    }
+
+    loadParams() {
+        this.paramDetails.innerHTML = ''; // clear previous params
+
+        //loop through saved simulation parameters for the image in view and add them to the html element
+        savedParams[currentPage].forEach(element => {
+            const span = document.createElement('span');
+            span.setAttribute('class', 'param-details-element');
+            span.setAttribute('id', `${element.id}-saved`);
+            span.innerHTML = `${element.name}: ${element.value}`;
+            this.paramDetails.appendChild(span);
+        });
+        this.paramDetails.appendChild(this.paramDetailsCloseButton);
+    }
+    toggleParamsPanel(action) {
+        if (action === 'open') {
+            // Show/hide views
+            this.paramDetailsButton.style.display = 'none';
+            this.paramDetails.style.display = 'block';
+        } else {
+            // Show/hide views
+            this.paramDetailsButton.style.display = 'block';
+            this.paramDetails.style.display = 'none';
+        }
     }
 }
