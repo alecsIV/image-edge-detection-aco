@@ -115,6 +115,7 @@ export default class ResultsGallery {
     }
 
     updatePreview() {
+        debugger;
         if (previousPage > -1) pages[previousPage].style.opacity = 0;
         pages[currentPage].style.opacity = 1;
         this.showControls();
@@ -122,6 +123,8 @@ export default class ResultsGallery {
     }
 
     nextPage() {
+        // got o next page
+        debugger;
         if (currentPage < pages.length) {
             previousPage = currentPage;
             currentPage++;
@@ -130,6 +133,7 @@ export default class ResultsGallery {
     }
 
     prevPage() {
+        // go to previous page
         if (currentPage > 0) {
             previousPage = currentPage;
             currentPage--;
@@ -139,6 +143,7 @@ export default class ResultsGallery {
 
     saveParams() {
         const paramsToSave = [];
+        // save current image parameters 
         Object.values(allUI).forEach((element) => {
             const elementObj = {};
             elementObj.value = element.value;

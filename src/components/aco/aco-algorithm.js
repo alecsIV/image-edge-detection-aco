@@ -1,6 +1,5 @@
-import MatrixHelper from "../../helpers/matrix-helper";
 import AntAgent from "./agent";
-import ResultsGallery from '../results-gallery/results-gallery';
+import MatrixHelper from '../../helpers/matrix-helper';
 import {
     loadingBar,
     elapsedTime,
@@ -9,16 +8,19 @@ import {
 } from '../../helpers/extras';
 
 export default class ACO {
-    constructor(image) {
+    constructor(image, resultsGallery) {
         this.image = image;
         this.canvas = document.querySelector('#canvasFg');
         this.canvasW = this.canvas.getBoundingClientRect().width;
         this.canvasH = this.canvas.getBoundingClientRect().height;
         this.canvasArea = this.canvasW * this.canvasH;
         this.ctx = this.canvas.getContext("2d");
-        this.matrixHelper = new MatrixHelper();
-        this.resultsGallery = new ResultsGallery;
 
+        //Get external classes
+        this.matrixHelper = new MatrixHelper;
+        this.resultsGallery = resultsGallery;
+
+        //animation control variables
         this.currentFrame = 1;
         this.animationCount = 0;
         this.agentCount = 0;

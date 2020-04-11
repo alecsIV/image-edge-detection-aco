@@ -7,6 +7,11 @@ import EnvironmentImage from './components/environment-image/environment-image';
 import {
     loadingBar
 } from './helpers/extras';
+import ResultsGallery from './components/results-gallery/results-gallery';
+
+//initialise classes
+const resultsGallery = new ResultsGallery();
+
 
 // get html elements
 const body = document.querySelector('body');
@@ -72,7 +77,7 @@ drawImageButton.addEventListener('click', () => {
         events.emit('reset');
     } else if (image) {
         envImage = new EnvironmentImage(image, canvasBg);
-        algorithm = new ACO(envImage);
+        algorithm = new ACO(envImage, resultsGallery);
         algorithm.reset();
         startSimulationButton.removeAttribute('disabled');
         drawImageButton.innerHTML = (drawImageButtonActiveText);
