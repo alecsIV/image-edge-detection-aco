@@ -50,7 +50,7 @@ export default class ACO {
 
     reset(full) {
         clearInterval(this.animationIntervalId);
-        this.lastTime = stopTimer(false);
+        stopTimer();
         this.matrixHelper.resetPheromoneMatrix();
         if (full === 'full') {
             this.ctx.clearRect(0, 0, this.canvasW, this.canvasH);
@@ -62,7 +62,7 @@ export default class ACO {
     stop() {
         this.paused = true;
         clearInterval(this.animationIntervalId);
-        this.lastTime = stopTimer(true);
+        stopTimer('pause');
     }
 
     //set default algorithm param values
@@ -117,7 +117,7 @@ export default class ACO {
         events.emit('start-simulation');
         if (!this.paused) this.ctx.clearRect(0, 0, this.canvasW, this.canvasH);
         if (animation) {
-            timer((this.lastTime) ? this.lastTime : null); // check if timer has been stopped
+            timer(); // check if timer has been stopped
             this.animationIntervalId = setInterval(this.animateMoves.bind(this), 1);
         } else {
             events.emit('simulation-without-animation');
