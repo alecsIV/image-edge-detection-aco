@@ -106,6 +106,7 @@ startSimulationButton.addEventListener('click', () => {
 
 // reset user inputs to default
 setDefaultsButton.addEventListener('click', () => {
+    startSimulationButton.removeAttribute('disabled');
     algorithm.setDefaultValues();
     algorithm.reset();
     inputsChanged = false;
@@ -225,7 +226,7 @@ function resetInputs() {
 }
 
 function toggleDefaulsButton() {
-    if(inputsChanged) setDefaultsButton.removeAttribute('disabled');
+    if (inputsChanged) setDefaultsButton.removeAttribute('disabled');
     else setDefaultsButton.setAttribute('disabled', 'disabled');
 }
 
