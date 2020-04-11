@@ -141,6 +141,7 @@ events.on('start-simulation', () => {
 events.on('simulation-without-animation', () => {
     pushBackScreen.style.display = 'block';
     body.style.overflow = 'hidden';
+    legend.style.display = 'none';
 });
 
 // State of the program at simulation pause
