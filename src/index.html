@@ -15,9 +15,9 @@
             <img alt="Image preview" src="./assets/NoImg.png" id="image-preview">
             <div class="image-upload__container">
                 <input type="file" accept="image/*" id="image-upload" name="image-upload">
-                <label for="image-upload">Upload image</label>
+                <label for="image-upload">Choose image</label>
             </div>
-            <button id="draw-image-button" disabled>Draw image</button>
+            <button id="draw-image-button" disabled>Upload</button>
             <button id="start-simulation" disabled>Start</button>
             <span class="pulse"></span>
             <div class="animation-toggle_container">
@@ -39,46 +39,46 @@
                     <div class="input-element">
                         <label for="iterations"><i class="info"><span class="tooltiptext">Number of iterations to run
                                     the simulation for</span></i>Iterations</label>
-                        <input type="number" id="iterations" class="ui-element">
+                        <input type="number" id="iterations" class="ui-element" name="Iterations">
                     </div>
                     <div class="input-element">
                         <label for="antCount"><i class="info"><span class="tooltiptext">Number of ants to be
                                     used</span></i>Ant count</label>
-                        <input type="number" id="antCount" class="ui-element">
+                        <input type="number" id="antCount" class="ui-element" name="Ant count">
                     </div>
                     <div class="input-element">
                         <label for="numAntMov"><i class="info"></i>Ant steps</label>
-                        <input type="number" id="numAntMov" class="ui-element">
+                        <input type="number" id="numAntMov" class="ui-element" name="Ant steps">
                     </div>
                     <div class="input-element">
                         <label for="antMemLen"><i class="info"></i>Ant Memory Length</label>
-                        <input type="number" id="antMemLen" class="ui-element">
+                        <input type="number" id="antMemLen" class="ui-element" name="Ant Memory Length">
                     </div>
                     <div class="input-element">
                         <label for="tNoiseFilt"><i class="info"></i>Noise sensitivity</label>
-                        <input type="number" id="tNoiseFilt" class="ui-element">
+                        <input type="number" id="tNoiseFilt" class="ui-element" name="Noise sensitivity">
                     </div>
                     <details>
                         <summary>Additional Settings</summary>
                         <div class="input-element">
                             <label for="roPEvRate"><i class="info"></i> Pheromone evaporation rate</label>
-                            <input type="number" id="roPEvRate" class="ui-element">
+                            <input type="number" id="roPEvRate" class="ui-element" name="Pheromone evaporation rate">
                         </div>
                         <div class="input-element">
                             <label for="alpha"><i class="info"></i>Alpha</label>
-                            <input type="number" id="alpha" class="ui-element">
+                            <input type="number" id="alpha" class="ui-element" name="Alpha">
                         </div>
                         <div class="input-element">
                             <label for="beta"><i class="info"></i>Beta</label>
-                            <input type="number" id="beta" class="ui-element">
+                            <input type="number" id="beta" class="ui-element" name="Beta">
                         </div>
                         <div class="input-element">
                             <label for="nConstPD"><i class="info"></i>N constant</label>
-                            <input type="number" id="nConstPD" class="ui-element">
+                            <input type="number" id="nConstPD" class="ui-element" name="N constant">
                         </div>
                         <div class="input-element">
                             <label for="pConstPD"><i class="info"></i>P constant</label>
-                            <input type="number" id="pConstPD" class="ui-element">
+                            <input type="number" id="pConstPD" class="ui-element" name="P constant">
                         </div>
                     </details>
                     <div class="defaults-button__container">
@@ -122,8 +122,8 @@
                 <div class='input-canvas-wrapper'>
                     <div class="legend">
                         <span class="legend_trail">Ant trail</span>
-                        <span class="legend_high-pheromone">High pheromone levels</span>
-                        <span class="legend_pheromone-iteration">Pheromone level after iteration</span>
+                        <span class="legend_high-pheromone">High pheromone levels in current iteration</span>
+                        <span class="legend_pheromone-iteration">High pheromone levels previous iteration</span>
                     </div>
                     <canvas id="canvasBg" width="500" height="500"></canvas>
                     <canvas id="canvasFg" width="500" height="500"></canvas>
@@ -137,7 +137,8 @@
                         <span class="arrow right"></span>
                         <span class="arrow left"></span>
                         <span class="item-count"></span>
-                        <span class="param-details"></span>
+                        <button class="param-details-button">Show parameters</button>
+                        <div class="param-details"></div>
                     </div>
                 </div>
             </div>
@@ -147,8 +148,13 @@
         <div class="please-wait">
             Please wait...
             <br>
-            <span>The algorithm is executing and will soon be ready</span>
+            <span>The algorithm is executing and will be ready soon</span>
+            <br>
+            <span>You are seeing this because when animation is turned off, the algorithm utilises the whole
+                    javascript thread. Therefore, no visualisations can be shown.
+            </span>
         </div>
-    </div>    
+    </div>
 </body>
+
 </html>

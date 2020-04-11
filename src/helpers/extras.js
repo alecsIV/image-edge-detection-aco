@@ -35,31 +35,35 @@ function elapsedTime(start, end) {
 }
 
 let intervalId = null;
+let totalTime = 0;
 let diff = null;
 
-function timer(lastDiff) {
-    console.log('lastDiff', lastDiff);
+function timer() {
     const elem = document.getElementById("elapsed-time");
     let start = Date.now();
-    let minutes = 0;
+    let minutes = Math.floor(totalTime / 60000);
+    let secondsSoFar = totalTime % 60000;
+    console.log('timeSofar', secondsSoFar);
     intervalId = setInterval(function() {
-        diff = (lastDiff) ? lastDiff + Date.now() - start : Date.now() - start; // milliseconds elapsed since start
+        diff = secondsSoFar + Date.now() - start; // milliseconds elapsed since start
         let seconds = Math.floor(diff / 1000); // in seconds
-        minutes += Math.floor(seconds / 60);
-        if (seconds === 60) {
+        minutes += Math.floor(seconds / 60); // in minutes
+        if (seconds >= 60) {
             start = Date.now();
             seconds = 0;
+            secondsSoFar = 0;
         }
+        totalTime = diff + (minutes * 60000);
         elem.value = `${minutes}m ${seconds}s`;
     }, 1000);
 }
 
-function stopTimer(saveTime) {
-    console.log('saveTime', saveTime);
+function stopTimer(pause) {
+    if (pause !== 'pause') totalTime = 0;
     clearInterval(intervalId);
-    diff = (saveTime) ? diff : null;
-    console.log('diff', diff);
-    return diff; // return last time before stop
+    // diff = (saveTime) ? diff : null; // check if time needs to be saved
+    // console.log('diff', diff);
+    // return diff; // return last time before stop
 }
 
 module.exports = {

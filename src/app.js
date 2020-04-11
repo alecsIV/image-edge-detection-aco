@@ -4,11 +4,16 @@ initGlobals();
 
 import ACO from './components/aco/aco-algorithm';
 import EnvironmentImage from './components/environment-image/environment-image';
-import ResultsGallery from './components/results-gallery/results-gallery'
 import {
     loadingBar
 } from './helpers/extras';
+import ResultsGallery from './components/results-gallery/results-gallery';
 
+//initialise classes
+const resultsGallery = new ResultsGallery();
+
+
+// get html elements
 const body = document.querySelector('body');
 const uploader = document.querySelector('#image-upload');
 const image = document.querySelector('#image-source');
@@ -26,32 +31,28 @@ const elapsedTime = document.querySelector('#elapsed-time');
 const performanceDisclaimer = document.querySelector('.performance-disclaimer');
 const pushBackScreen = document.querySelector('.push-back-screen');
 
+// set variables
 let envImage;
 let algorithm;
 let uploadedYet = false;
+let inputsChanged = false;
+// Buttons and HTML events
+const drawImageButtonDefaultText = 'Upload';
+const drawImageButtonActiveText = 'Reset';
+const context = canvasBg.getContext('2d');
 
-//set canvasBg dimensions
+
+//get canvasBg dimensions
 canvasWidth = canvasBg.width;
 canvasHeight = canvasBg.clientHeight;
-
-// Buttons and HTML events
-const drawImageButtonDefaultText = 'Draw Image';
-const drawImageButtonActiveText = 'Reset';
-
-const context = canvasBg.getContext('2d');
 
 // Disable initial state of dynamic elements
 animationElem.setAttribute('disabled', 'disabled');
 disableInputs(true);
 
-// Results gallery
-const resultsGallery = new ResultsGallery();
 
 // Image uploader input behaviour
 uploader.addEventListener('change', function() {
-    context.clearRect(0, 0, canvasWidth, canvasHeight);
-    drawImageButton.setAttribute('disabled', 'disabled');
-    startSimulationButton.setAttribute('disabled', 'disabled');
     const file = this.files[0];
     // Check if a file is uploaded
     if (this.files && this.files.length > 0) {
@@ -62,19 +63,15 @@ uploader.addEventListener('change', function() {
         })
         reader.readAsDataURL(file)
         if (uploadedYet) {
-            // reset();
-            // resetInputs();
             events.emit('revert-initial-state');
         }
         drawImageButton.removeAttribute('disabled');
         drawImageButton.innerHTML = drawImageButtonDefaultText;
         uploadedYet = true;
-    } else {
-        image.setAttribute('src', '');
-        imagePreview.setAttribute('src', './assets/NoImg.png');
     }
 });
 
+// upload/reset button behaviour
 drawImageButton.addEventListener('click', () => {
     drawImageButton.blur();
     if (drawImageButton.innerHTML === drawImageButtonActiveText) {
@@ -85,117 +82,116 @@ drawImageButton.addEventListener('click', () => {
         algorithm.reset();
         startSimulationButton.removeAttribute('disabled');
         drawImageButton.innerHTML = (drawImageButtonActiveText);
-        events.emit('drawn-image');
         animationElem.removeAttribute('disabled');
+        events.emit('drawn-image');
     }
 });
 
+// track user input changes and  
 Object.values(allUI).forEach((element) => {
     element.onchange = () => {
-        setDefaultsButton.removeAttribute('disabled');
         startSimulationButton.removeAttribute('disabled');
         algorithm.reset();
+        inputsChanged = true;
+        toggleDefaulsButton();
     };
 });
 
+// start simulation button behaviour
 startSimulationButton.addEventListener('click', () => {
     startSimulationButton.setAttribute('disabled', 'disabled');
     algorithm.updateGlobalParams(); // set global parameters based on user input
     algorithm.startSimulation();
 });
 
+// reset user inputs to default
 setDefaultsButton.addEventListener('click', () => {
     algorithm.setDefaultValues();
     algorithm.reset();
-    setDefaultsButton.setAttribute('disabled', 'disabled');
+    inputsChanged = false;
+    toggleDefaulsButton();
 });
 
 loadingPulse.addEventListener('click', () => {
+    // pause simulation
     events.emit('stop-simulation');
 });
 
-// Events //
+// Events to trigger changes according to the program state //
 // Put system into intial state
 events.on('revert-initial-state', () => {
     events.emit('stop-simulation');
     disableButtons();
-    resetParams();
+    resetInfoStats();
     resetInputs();
     algorithm.reset();
 });
 
-// Trigger simulation start functionality
+// State of the program at simulation start
 events.on('start-simulation', () => {
+    drawImageButton.removeAttribute('disabled')
+    setDefaultsButton.setAttribute('disabled', 'disabled');
     startSimulationButton.style.display = 'none';
     loadingPulse.style.display = 'block';
-    document.body.style.cursor = 'wait';
+
     sysInfoPanel.setAttribute('open', 'open');
+    document.body.style.cursor = 'wait';
     legend.style.display = 'block';
-    drawImageButton.removeAttribute('disabled')
     disableInputs('true');
-    setDefaultsButton.setAttribute('disabled', 'disabled');
 });
 
-events.on('simulation-without-animation', ()=>{
+// Show loading screen when animation is disabled
+events.on('simulation-without-animation', () => {
     pushBackScreen.style.display = 'block';
     body.style.overflow = 'hidden';
+    legend.style.display = 'none';
 });
 
-// Trigger functionality on simulation stop
+// State of the program at simulation pause
 events.on('stop-simulation', () => {
     startSimulationButton.style.display = 'block';
     startSimulationButton.removeAttribute('disabled');
     loadingPulse.style.display = 'none';
     document.body.style.cursor = 'auto';
+
     algorithm.stop();
 });
 
-// Trigger functionality on simulation complete
+// State of the program at simulation complete
 events.on('simulation-complete', () => {
+    console.log('Simulation Complete');
+    // initial state of buttons
     loadingPulse.style.display = 'none';
     startSimulationButton.style.display = 'block';
-    document.body.style.cursor = 'auto';
     startSimulationButton.setAttribute('disabled', 'disabled');
     drawImageButton.setAttribute('active', 'active');
+
+    // return to main screen from loading
+    document.body.style.cursor = 'auto';
     pushBackScreen.style.display = 'none';
     body.style.overflow = 'auto';
+
+    // enable user inputs
+    disableInputs(false);
+    toggleDefaulsButton();
 });
 
 
 events.on('drawn-image', () => {
     drawImageButton.setAttribute('disabled', 'disabled')
     simSettingsPanel.setAttribute('open', 'open');
+
     disableInputs(false);
 });
 
-
 events.on('reset', () => {
+    reset('full');
+});
+
+events.on('animation-toggled', (animate) => {
+    performanceDisclaimer.style.display = (!animate) ? 'block' : 'none'; // show hide animation disclamer
     reset();
 });
-
-events.on('animation-false', () => {
-    performanceDisclaimer.style.display = 'block';
-});
-
-events.on('animation-true', () => {
-    performanceDisclaimer.style.display = 'none';
-});
-
-events.on('animation-toggle', () => {
-    reset();
-});
-
-// Gallery events
-
-events.on('prev-image', () => {
-    resultsGallery.prevPage();
-    // console.log('current page', currentPage);
-});
-events.on('next-image', () => {
-    resultsGallery.nextPage();
-    // console.log('current page', currentPage);
-});
-
 
 // Functions //
 function disableInputs(disabled) {
@@ -205,13 +201,16 @@ function disableInputs(disabled) {
     }
 }
 
-function reset() {
+function reset(full = null) {
     events.emit('stop-simulation');
-    resetParams();
-    algorithm.setDefaultValues();
+    resetInfoStats();
+    if (full) {
+        resetInputs();
+        algorithm.setDefaultValues();
+        legend.style.display = 'none';
+        toggleDefaulsButton();
+    }
     algorithm.reset();
-    legend.style.display = 'none';
-    setDefaultsButton.setAttribute('disabled', 'disabled');
     animationElem.removeAttribute('disabled');
     events.emit('drawn-image');
 }
@@ -221,10 +220,16 @@ function resetInputs() {
         item.value = 0;
         item.setAttribute('disabled', 'disabled');
     }
-    setDefaultsButton.setAttribute('disabled', 'disabled');
+    inputsChanged = false
+    toggleDefaulsButton();
 }
 
-function resetParams() {
+function toggleDefaulsButton() {
+    if(inputsChanged) setDefaultsButton.removeAttribute('disabled');
+    else setDefaultsButton.setAttribute('disabled', 'disabled');
+}
+
+function resetInfoStats() {
     for (let item of processParams) {
         item.value = 0;
     }
