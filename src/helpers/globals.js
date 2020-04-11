@@ -20,10 +20,9 @@ export default function initGlobals() {
     global.animation = animationElem.checked;
 
     animationElem.addEventListener('click', (e) => {
-        animation = e.toElement.checked;
+        animation = e.target.checked;
         animationLabel.innerHTML = `Animation ${(animation) ? 'on': 'off'}`
-        events.emit(`animation-${animation}`);
-        events.emit('animation-toggle');
+        events.emit('animation-toggled', animation);
     });
 
     // Parameter fields values

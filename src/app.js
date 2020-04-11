@@ -179,20 +179,12 @@ events.on('drawn-image', () => {
     disableInputs(false);
 });
 
-
 events.on('reset', () => {
     reset('full');
 });
 
-events.on('animation-false', () => {
-    performanceDisclaimer.style.display = 'block';
-});
-
-events.on('animation-true', () => {
-    performanceDisclaimer.style.display = 'none';
-});
-
-events.on('animation-toggle', () => {
+events.on('animation-toggled', (animate) => {
+    performanceDisclaimer.style.display = (!animate) ? 'block' : 'none'; // show hide animation disclamer
     reset();
 });
 
@@ -238,8 +230,4 @@ function disableButtons() {
     drawImageButton.setAttribute('disabled', 'disabled')
     startSimulationButton.setAttribute('disabled', 'disabled');
     animationElem.setAttribute('disabled', 'disabled');
-}
-
-function unlockFields() {
-
 }

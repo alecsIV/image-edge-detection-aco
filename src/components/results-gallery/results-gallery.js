@@ -123,7 +123,7 @@ export default class ResultsGallery {
 
     nextPage() {
         // got o next page
-        if (currentPage < pages.length) {
+        if (currentPage < pages.length - 1) {
             previousPage = currentPage;
             currentPage++;
         }
