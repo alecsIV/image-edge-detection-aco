@@ -67,6 +67,37 @@
     }
 }
 
+%overlay-button {
+    position: absolute;
+    color: white;
+    border: none;
+    background-color: rgba(45, 45, 45, 0.7);
+    border-radius: 0 0 5px 0;
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+    text-decoration: none;
+    padding: 8px;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 12px;
+    transition: all 0.2s ease;
+
+    &:hover {
+        background-color: $dark-accent;
+        transition: all 0.2s ease;
+    }
+
+    &:active,
+    &:focus {
+        background-color: $dark-accent;
+        color: white;
+        cursor: pointer;
+        font-size: 0.875rem;
+        -webkit-transition: all 0.2s;
+        transition: all 0.2s;
+    }
+}
+
 %legend-colour-box {
     content: "";
     display: inline-block;
@@ -453,19 +484,16 @@ details {
             }
 
             &-button {
-                position: absolute;
+                @extend %overlay-button;
+                // position: absolute;
                 top: 0;
                 left: 0;
-                color: white;
-                border: none;
-                background-color: $overlays-bg;
-                border-radius: 0 0 5px 0;
-                -webkit-backdrop-filter: blur(5px);
-                backdrop-filter: blur(5px);
-
-                &:hover {
-                    background-color: $dark-accent;
-                }
+                // color: white;
+                // border: none;
+                // background-color: $overlays-bg;
+                // border-radius: 0 0 5px 0;
+                // -webkit-backdrop-filter: blur(5px);
+                // backdrop-filter: blur(5px);
             }
 
             .close-button {
@@ -480,6 +508,12 @@ details {
                 display: block;
                 margin-right: 40px;
             }
+        }
+
+        .download-button {
+            @extend %overlay-button;
+            bottom: 0;
+            left: 0;
         }
     }
 }
