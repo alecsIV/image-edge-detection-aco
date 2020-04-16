@@ -30,6 +30,7 @@ const processParams = document.querySelectorAll('.process-params>input');
 const elapsedTime = document.querySelector('#elapsed-time');
 const performanceDisclaimer = document.querySelector('.performance-disclaimer');
 const pushBackScreen = document.querySelector('.push-back-screen');
+const downloadButton = document.querySelector('.download-button');
 
 // set variables
 let envImage;
@@ -113,9 +114,18 @@ setDefaultsButton.addEventListener('click', () => {
     toggleDefaulsButton();
 });
 
+// trigger pause button functionlaity
 loadingPulse.addEventListener('click', () => {
     // pause simulation
     events.emit('stop-simulation');
+});
+
+// download button functionality
+downloadButton.addEventListener('click', () => {
+    const currentCanvas = pages[currentPage]
+    const dataURL = pages[currentPage].toDataURL('image/png');
+    downloadButton.download = 'outline.png';
+    downloadButton.href = dataURL;
 });
 
 // Events to trigger changes according to the program state //
