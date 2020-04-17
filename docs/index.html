@@ -3,6 +3,8 @@
 
 <head>
     <title>Image Edge Detection using ACO</title>
+    <link rel="icon"
+        href="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/160/apple/237/ant_1f41c.png">
     <link rel="stylesheet" href="main.css">
 <link href="main.css" rel="stylesheet"></head>
 
@@ -27,8 +29,11 @@
                 </label>
                 <label for="animation-toggle" class="animation-toggle_label"></label>
             </div>
-            <div class='performance-disclaimer'>When animation is turned off, the algorithm utilises the whole
-                javascript thread.<br> Therefore, non-responsiveness might be experienced.</div>
+            <div class='performance-disclaimer'>When visualisations are turned off, the algorithm utilises the whole
+                javascript thread.
+                <br>
+                Therefore, when it is running, you will be presented with a loading screen and your
+                interactivity with the app will be limited during the execution time.</div>
         </div>
         <div class="settings-pannels_container">
             <details class="sim-settings-panel">
@@ -139,6 +144,7 @@
                         <span class="item-count"></span>
                         <button class="param-details-button">Show parameters</button>
                         <div class="param-details"></div>
+                        <a href="#" class="download-button">Download</a>
                     </div>
                 </div>
             </div>
@@ -150,8 +156,8 @@
             <br>
             <span>The algorithm is executing and will be ready soon</span>
             <br>
-            <span>You are seeing this because when animation is turned off, the algorithm utilises the whole
-                    javascript thread. Therefore, no visualisations can be shown.
+            <span>You are seeing this because visualisations are turned off. The algorithm is currently using the whole
+                javascript thread, therefore, the interactivity to this app is limited.
             </span>
         </div>
     </div>
