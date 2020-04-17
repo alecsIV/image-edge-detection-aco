@@ -123,7 +123,7 @@ loadingPulse.addEventListener('click', () => {
 // download button functionality
 downloadButton.addEventListener('click', () => {
     const currentCanvas = pages[currentPage]
-    const dataURL = pages[currentPage].toDataURL('image/png');
+    const dataURL = currentCanvas.toDataURL('image/png');
     downloadButton.download = 'outline.png';
     downloadButton.href = dataURL;
 });

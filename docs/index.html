@@ -6,7 +6,8 @@
     <link rel="icon"
         href="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/160/apple/237/ant_1f41c.png">
     <link rel="stylesheet" href="main.css">
-<link href="main.css" rel="stylesheet"></head>
+    <link href="main.css" rel="stylesheet">
+</head>
 
 <body>
     <h1>Image edge detection using ACO</h1>
@@ -29,11 +30,12 @@
                 </label>
                 <label for="animation-toggle" class="animation-toggle_label"></label>
             </div>
-            <div class='performance-disclaimer'>When visualisations are turned off, the algorithm utilises the whole
-                javascript thread.
+            <div class='performance-disclaimer'>When visualisations are turned off, you are entering <span
+                    class="high-performance-mode-label">High performance mode</span> <br>
+                In this mode, the algorithm utilises the whole javascript thread.
                 <br>
-                Therefore, when it is running, you will be presented with a loading screen and your
-                interactivity with the app will be limited during the execution time.</div>
+                Therefore, when the algorithm is running you will be presented with a loading screen and your
+                interactivity with the app will be limited during this time.</div>
         </div>
         <div class="settings-pannels_container">
             <details class="sim-settings-panel">
@@ -156,11 +158,14 @@
             <br>
             <span>The algorithm is executing and will be ready soon</span>
             <br>
-            <span>You are seeing this because visualisations are turned off. The algorithm is currently using the whole
-                javascript thread, therefore, the interactivity to this app is limited.
+            <span>
+                You are seeing this because you are in <span class="high-performance-mode-label">High performance
+                    mode. The algorithm is currently using the whole
+                    javascript thread, therefore, the interactivity to this app is limited.</span>
             </span>
         </div>
     </div>
-<script type="text/javascript" src="main.js"></script></body>
+    <script type="text/javascript" src="main.js"></script>
+</body>
 
 </html>
