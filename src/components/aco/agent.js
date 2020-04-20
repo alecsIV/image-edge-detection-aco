@@ -104,9 +104,11 @@ export default class AntAgent {
             const result =
                 sumProducts !== 0 && notPrevious ? Math.abs(product / sumProducts) : 0;
 
-            if (result > currentMaxProbability && notPrevious) {
-                currentMaxProbability = result;
-                maxProbabilityIndex = i;
+            if (result >= tNoiseFilt) {
+                if (result > currentMaxProbability && notPrevious) {
+                    currentMaxProbability = result;
+                    maxProbabilityIndex = i;
+                }
             }
         });
 
