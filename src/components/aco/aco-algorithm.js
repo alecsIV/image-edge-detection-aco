@@ -238,7 +238,7 @@ export default class ACO {
         let sumPheromone = 0;
         agents.forEach(agent => {
             if (agent.previousCoordinates[x] && agent.previousCoordinates[y]) {
-                sumPheromone += pheromoneMatrix[x][y] >= tNoiseFilt ? pheromoneMatrix[x][y] : 0;
+                sumPheromone += (pheromoneMatrix[x][y] >= tNoiseFilt) ? pheromoneMatrix[x][y] : 0;
             }
         });
         const newPheromoneLevel = (1 - roPEvRate) * pheromoneMatrix[x][y] + sumPheromone;

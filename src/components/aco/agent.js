@@ -39,7 +39,8 @@ export default class AntAgent {
             medians.push(this.calcMedian(neighbourIntensities));
         });
         const medDiff = medians[0] - medians[1];
-        pheromoneMatrix[coordinates[0].x][coordinates[0].y] += (medians[0] >= tNoiseFilt) ? nConstPD + (pConstPD * medDiff) / 255 : 0;
+        pheromoneMatrix[coordinates[0].x][coordinates[0].y] += (heuristicMatrix[coordinates[0].x][coordinates[0].y] >= tNoiseFilt) ? nConstPD + (pConstPD * medDiff) / 255 : 0;
+        // pheromoneMatrix[coordinates[0].x][coordinates[0].y] =(heuristicMatrix[coordinates[0].x][coordinates[0].y] >= tNoiseFilt)? heuristicMatrix[coordinates[0].x][coordinates[0].y] : 0;
     }
 
     calcMedian(arr) {
@@ -74,7 +75,7 @@ export default class AntAgent {
                             this.previousCoordinates[pCLen - k].y === y + j
                         ) {
                             visited = true;
-                            k=antMemLen+1; // exit the loop to prevent agent looping
+                            k = antMemLen + 1; // exit the loop to prevent agent looping
                         }
                     }
                     if (!visited) {
@@ -116,8 +117,14 @@ export default class AntAgent {
         if (maxProbabilityIndex === 99) {
             this.previousCoordinates = [];
             const newPositions = this.getRandomPosition();
-            return {newCoordinates: newPositions, newAnt: true};
-        } else return {newCoordinates: neighbourNodeCoordinates[maxProbabilityIndex], newAnt:false};
+            return {
+                newCoordinates: newPositions,
+                newAnt: true
+            };
+        } else return {
+            newCoordinates: neighbourNodeCoordinates[maxProbabilityIndex],
+            newAnt: false
+        };
     }
 
     moveTo(coordinates, newAnt) {
