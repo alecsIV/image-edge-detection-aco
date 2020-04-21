@@ -1,5 +1,6 @@
 // The following function returns all the global variables needed throughtout the script
 export default function initGlobals() {
+    // Set up Events
     const EventEmitter = require('events');
     const events = new EventEmitter();
 
@@ -13,16 +14,16 @@ export default function initGlobals() {
     global.canvasWidth = 0;
     global.canvasHeight = 0;
 
-    // get animation toggle status
-    global.animationElem = document.getElementById('animation-toggle');
-    global.animationLabel = document.querySelector('.animation-toggle_label');
-    animationLabel.innerHTML = 'Visualisation on';
-    global.animation = animationElem.checked;
+    // get visualisation toggle status
+    global.toggleVisElem = document.getElementById('visualisation-toggle');
+    global.toggleVisLabel = document.querySelector('.visualisation-toggle_label');
+    toggleVisLabel.innerHTML = 'Visualisation on';
+    global.visualisation = toggleVisElem.checked;
 
-    animationElem.addEventListener('click', (e) => {
-        animation = e.target.checked;
-        animationLabel.innerHTML = `Visualisation ${(animation) ? 'on': 'off'}`
-        events.emit('animation-toggled', animation);
+    toggleVisElem.addEventListener('click', (e) => {
+        visualisation = e.target.checked;
+        toggleVisLabel.innerHTML = `Visualisation ${(visualisation) ? 'on': 'off'}` // change toggle label
+        events.emit('visualisation-toggled', visualisation);
     });
 
     // Parameter fields values

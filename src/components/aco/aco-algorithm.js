@@ -20,7 +20,7 @@ export default class ACO {
         this.matrixHelper = new MatrixHelper;
         this.resultsGallery = resultsGallery;
 
-        //animation control variables
+        //visualisation control variables
         this.currentFrame = 1;
         this.animationCount = 0;
         this.agentCount = 0;
@@ -116,11 +116,11 @@ export default class ACO {
         console.log("%c Simulation start: ", "color: #bada55");
         events.emit('start-simulation');
         if (!this.paused) this.ctx.clearRect(0, 0, this.canvasW, this.canvasH);
-        if (animation) {
+        if (visualisation) {
             timer(); // check if timer has been stopped
             this.animationIntervalId = setInterval(this.animateMoves.bind(this), 1);
         } else {
-            events.emit('simulation-without-animation');
+            events.emit('simulation-without-visualisation');
             setTimeout(() => this.noAnimationMoves(), 500);
         }
     }

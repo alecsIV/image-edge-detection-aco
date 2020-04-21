@@ -1,6 +1,7 @@
+// Imports
 import initGlobals from './helpers/globals';
 
-initGlobals();
+initGlobals(); // initialise all global variables
 
 import ACO from './components/aco/aco-algorithm';
 import EnvironmentImage from './components/environment-image/environment-image';
@@ -48,7 +49,7 @@ canvasWidth = canvasBg.width;
 canvasHeight = canvasBg.clientHeight;
 
 // Disable initial state of dynamic elements
-animationElem.setAttribute('disabled', 'disabled');
+toggleVisElem.setAttribute('disabled', 'disabled');
 disableInputs(true);
 
 
@@ -83,7 +84,7 @@ drawImageButton.addEventListener('click', () => {
         algorithm.reset();
         startSimulationButton.removeAttribute('disabled');
         drawImageButton.innerHTML = (drawImageButtonActiveText);
-        animationElem.removeAttribute('disabled');
+        toggleVisElem.removeAttribute('disabled');
         events.emit('drawn-image');
     }
 });
@@ -151,8 +152,8 @@ events.on('start-simulation', () => {
     disableInputs('true');
 });
 
-// Show loading screen when animation is disabled
-events.on('simulation-without-animation', () => {
+// Show loading screen when visualisation is disabled
+events.on('simulation-without-visualisation', () => {
     pushBackScreen.style.display = 'block';
     body.style.overflow = 'hidden';
     legend.style.display = 'none';
@@ -199,8 +200,8 @@ events.on('reset', () => {
     reset('full');
 });
 
-events.on('animation-toggled', (animate) => {
-    performanceDisclaimer.style.display = (!animate) ? 'block' : 'none'; // show hide animation disclamer
+events.on('visualisation-toggled', (animate) => {
+    performanceDisclaimer.style.display = (!animate) ? 'block' : 'none'; // show hide visualisation disclamer
     reset();
 });
 
@@ -222,7 +223,7 @@ function reset(full = null) {
         toggleDefaulsButton();
     }
     algorithm.reset();
-    animationElem.removeAttribute('disabled');
+    toggleVisElem.removeAttribute('disabled');
     events.emit('drawn-image');
 }
 
@@ -252,5 +253,5 @@ function resetInfoStats() {
 function disableButtons() {
     drawImageButton.setAttribute('disabled', 'disabled')
     startSimulationButton.setAttribute('disabled', 'disabled');
-    animationElem.setAttribute('disabled', 'disabled');
+    toggleVisElem.setAttribute('disabled', 'disabled');
 }
