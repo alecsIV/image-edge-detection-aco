@@ -1,19 +1,32 @@
+/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                            Main JavaScript file                            */
+/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+
+/* -------------------------------------------------------------------------- */
+/*                                   Imports                                  */
+/* -------------------------------------------------------------------------- */
+
 import initGlobals from './helpers/globals';
 
-initGlobals();
+initGlobals(); // initialise all global variables
 
-import ACO from './components/aco/aco-algorithm';
-import EnvironmentImage from './components/environment-image/environment-image';
+import ACO from './components/aco/aco-algorithm'; // aco algorithm file
+import EnvironmentImage from './components/environment-image/environment-image'; // image environment file
 import {
     loadingBar
 } from './helpers/extras';
-import ResultsGallery from './components/results-gallery/results-gallery';
+import ResultsGallery from './components/results-gallery/results-gallery'; // results gallery
+/* -------------------------------------------------------------------------- */
 
-//initialise classes
-const resultsGallery = new ResultsGallery();
+const resultsGallery = new ResultsGallery(); // initialise results gallery class
 
 
-// get html elements
+/* -------------------------------------------------------------------------- */
+/*                                HTML elements                               */
+/* -------------------------------------------------------------------------- */
+
 const body = document.querySelector('body');
 const uploader = document.querySelector('#image-upload');
 const image = document.querySelector('#image-source');
@@ -31,28 +44,44 @@ const elapsedTime = document.querySelector('#elapsed-time');
 const performanceDisclaimer = document.querySelector('.performance-disclaimer');
 const pushBackScreen = document.querySelector('.push-back-screen');
 const downloadButton = document.querySelector('.download-button');
+/* -------------------------------------------------------------------------- */
 
-// set variables
+/* -------------------------------------------------------------------------- */
+/*                                  Variables                                 */
+/* -------------------------------------------------------------------------- */
+
 let envImage;
 let algorithm;
 let uploadedYet = false;
 let inputsChanged = false;
-// Buttons and HTML events
+
+/* ------------------------------- Button text ------------------------------ */
+
 const drawImageButtonDefaultText = 'Upload';
 const drawImageButtonActiveText = 'Reset';
-const context = canvasBg.getContext('2d');
 
+/* -------------------------------------------------------------------------- */
 
-//get canvasBg dimensions
+/* -------------------------------------------------------------------------- */
+/*                              Initial settings                              */
+/* -------------------------------------------------------------------------- */
+
+// Canvas dimensions
 canvasWidth = canvasBg.width;
 canvasHeight = canvasBg.clientHeight;
 
 // Disable initial state of dynamic elements
-animationElem.setAttribute('disabled', 'disabled');
+toggleVisElem.setAttribute('disabled', 'disabled');
 disableInputs(true);
 
+/* -------------------------------------------------------------------------- */
 
-// Image uploader input behaviour
+/* -------------------------------------------------------------------------- */
+/*                               Main buttons behaviour                       */
+/* -------------------------------------------------------------------------- */
+
+/* --------------------- Image uploader input behaviour --------------------- */
+
 uploader.addEventListener('change', function() {
     const file = this.files[0];
     // Check if a file is uploaded
@@ -72,23 +101,25 @@ uploader.addEventListener('change', function() {
     }
 });
 
-// upload/reset button behaviour
+/* ---------------------- Upload/reset button behaviour --------------------- */
+
 drawImageButton.addEventListener('click', () => {
-    drawImageButton.blur();
+    drawImageButton.blur(); // remove focus
     if (drawImageButton.innerHTML === drawImageButtonActiveText) {
         events.emit('reset');
     } else if (image) {
-        envImage = new EnvironmentImage(image, canvasBg);
-        algorithm = new ACO(envImage, resultsGallery);
-        algorithm.reset();
+        envImage = new EnvironmentImage(image, canvasBg); // initialise the image environment passing the uploaded image
+        algorithm = new ACO(envImage, resultsGallery); // initialise the algorithm (initialise its params only)
+        algorithm.reset(); // reset the algorithm to defaults
         startSimulationButton.removeAttribute('disabled');
         drawImageButton.innerHTML = (drawImageButtonActiveText);
-        animationElem.removeAttribute('disabled');
-        events.emit('drawn-image');
+        toggleVisElem.removeAttribute('disabled');
+        events.emit('drawn-image'); // send an event that the image is drawn on the canvas
     }
 });
 
-// track user input changes and  
+/* ---------------------- track user input changes ---------------------- */
+
 Object.values(allUI).forEach((element) => {
     element.onchange = () => {
         startSimulationButton.removeAttribute('disabled');
@@ -98,14 +129,16 @@ Object.values(allUI).forEach((element) => {
     };
 });
 
-// start simulation button behaviour
+/* -------------------- start simulation button behaviour ------------------- */
+
 startSimulationButton.addEventListener('click', () => {
     startSimulationButton.setAttribute('disabled', 'disabled');
     algorithm.updateGlobalParams(); // set global parameters based on user input
     algorithm.startSimulation();
 });
 
-// reset user inputs to default
+/* ---------------------- reset user inputs to default ---------------------- */
+
 setDefaultsButton.addEventListener('click', () => {
     startSimulationButton.removeAttribute('disabled');
     algorithm.setDefaultValues();
@@ -114,22 +147,30 @@ setDefaultsButton.addEventListener('click', () => {
     toggleDefaulsButton();
 });
 
-// trigger pause button functionlaity
+/* ------------------- control pause button functionlaity ------------------- */
+
 loadingPulse.addEventListener('click', () => {
     // pause simulation
     events.emit('stop-simulation');
 });
 
-// download button functionality
+/* ---------------------- download button functionality --------------------- */
+
 downloadButton.addEventListener('click', () => {
     const currentCanvas = pages[currentPage]
-    const dataURL = pages[currentPage].toDataURL('image/png');
+    const dataURL = currentCanvas.toDataURL('image/png');
     downloadButton.download = 'outline.png';
     downloadButton.href = dataURL;
 });
 
-// Events to trigger changes according to the program state //
-// Put system into intial state
+/* -------------------------------------------------------------------------- */
+/*                           Program states controls                          */
+/* -------------------------------------------------------------------------- */
+
+// Event listeners to trigger changes according to the program state //
+
+/* ---------------------- Put system into intial state ---------------------- */
+
 events.on('revert-initial-state', () => {
     events.emit('stop-simulation');
     disableButtons();
@@ -138,10 +179,14 @@ events.on('revert-initial-state', () => {
     algorithm.reset();
 });
 
-// State of the program at simulation start
+/* ---------------- State of the program at simulation start ---------------- */
+
 events.on('start-simulation', () => {
+    //limit interactivity during simulation execution
     drawImageButton.removeAttribute('disabled')
     setDefaultsButton.setAttribute('disabled', 'disabled');
+
+    // show pulsing button
     startSimulationButton.style.display = 'none';
     loadingPulse.style.display = 'block';
 
@@ -151,14 +196,16 @@ events.on('start-simulation', () => {
     disableInputs('true');
 });
 
-// Show loading screen when animation is disabled
-events.on('simulation-without-animation', () => {
+/* ----------- Show loading screen when visualisation is disabled ----------- */
+
+events.on('simulation-without-visualisation', () => {
     pushBackScreen.style.display = 'block';
     body.style.overflow = 'hidden';
     legend.style.display = 'none';
 });
 
-// State of the program at simulation pause
+/* ---------------- State of the program at simulation pause ---------------- */
+
 events.on('stop-simulation', () => {
     startSimulationButton.style.display = 'block';
     startSimulationButton.removeAttribute('disabled');
@@ -168,9 +215,9 @@ events.on('stop-simulation', () => {
     algorithm.stop();
 });
 
-// State of the program at simulation complete
+/* --------------- State of the program at simulation complete -------------- */
+
 events.on('simulation-complete', () => {
-    console.log('Simulation Complete');
     // initial state of buttons
     loadingPulse.style.display = 'none';
     startSimulationButton.style.display = 'block';
@@ -187,6 +234,7 @@ events.on('simulation-complete', () => {
     toggleDefaulsButton();
 });
 
+/* ---------------------- Program state on image upload --------------------- */
 
 events.on('drawn-image', () => {
     drawImageButton.setAttribute('disabled', 'disabled')
@@ -195,16 +243,24 @@ events.on('drawn-image', () => {
     disableInputs(false);
 });
 
-events.on('reset', () => {
-    reset('full');
-});
+/* -------------- Program state on visualisation toggle change -------------- */
 
-events.on('animation-toggled', (animate) => {
-    performanceDisclaimer.style.display = (!animate) ? 'block' : 'none'; // show hide animation disclamer
+events.on('visualisation-toggled', (animate) => {
+    performanceDisclaimer.style.display = (!animate) ? 'block' : 'none'; // show hide visualisation disclamer
     reset();
 });
 
-// Functions //
+/* --------------------------- Reset program state -------------------------- */
+
+events.on('reset', () => {
+    reset('full');
+});
+/* -------------------------------------------------------------------------- */
+
+/* -------------------------------------------------------------------------- */
+/*                                  Functions                                 */
+/* -------------------------------------------------------------------------- */
+
 function disableInputs(disabled) {
     for (let item of allUI) {
         if (disabled) item.setAttribute('disabled', 'disabled');
@@ -213,6 +269,7 @@ function disableInputs(disabled) {
 }
 
 function reset(full = null) {
+    // reset program state (revert to initial state)
     events.emit('stop-simulation');
     resetInfoStats();
     if (full) {
@@ -222,11 +279,12 @@ function reset(full = null) {
         toggleDefaulsButton();
     }
     algorithm.reset();
-    animationElem.removeAttribute('disabled');
+    toggleVisElem.removeAttribute('disabled');
     events.emit('drawn-image');
 }
 
 function resetInputs() {
+    // reset input values
     for (let item of allUI) {
         item.value = 0;
         item.setAttribute('disabled', 'disabled');
@@ -236,11 +294,13 @@ function resetInputs() {
 }
 
 function toggleDefaulsButton() {
+    // change user input parameters to their default values
     if (inputsChanged) setDefaultsButton.removeAttribute('disabled');
     else setDefaultsButton.setAttribute('disabled', 'disabled');
 }
 
 function resetInfoStats() {
+    // reset simulation information values
     for (let item of processParams) {
         item.value = 0;
     }
@@ -250,7 +310,8 @@ function resetInfoStats() {
 }
 
 function disableButtons() {
+    // disable main controls buttons
     drawImageButton.setAttribute('disabled', 'disabled')
     startSimulationButton.setAttribute('disabled', 'disabled');
-    animationElem.setAttribute('disabled', 'disabled');
+    toggleVisElem.setAttribute('disabled', 'disabled');
 }

@@ -1,113 +1,22 @@
-// Imports //
+/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                              Main styling file                             */
+/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+
+/* -------------------------------------------------------------------------- */
+/*                                   Imports                                  */
+/* -------------------------------------------------------------------------- */
+
 @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;700&display=swap');
-@import './helpers/colours.scss';
+@import './helpers/scss/variables.scss'; // defines used variables
+@import'./helpers/scss/placeholders.scss'; // contains reusable element code blocks
+@import'./helpers/scss/animations.scss'; // keyframe animations
 
-// Element definition //
-%normal-button {
-    // button positioning //
-    display: block;
-    margin: 0 auto;
-    // button styling //
-    height: 2.625rem;
-    padding: 0 8px;
-    color: $main-accent;
-    background-color: white;
-    border: 1px solid $main-accent;
-    border-radius: 2px;
-    font-size: 0.6875rem;
-    font-weight: bold;
-    text-transform: uppercase;
-    text-align: center;
-    -webkit-transition: all 0.2s;
-    transition: all 0.2s;
-    min-width: 6.25rem;
+/* -------------------------------------------------------------------------- */
+/*                                Root elements                               */
+/* -------------------------------------------------------------------------- */
 
-    &:hover {
-        background-color: $hover-accent;
-        cursor: pointer;
-        -webkit-transition: all 0.2s;
-        transition: all 0.2s;
-    }
-
-    &:disabled {
-        opacity: 0.3;
-        background-color: white;
-        cursor: not-allowed;
-    }
-
-    &:active,
-    &:focus {
-        background-color: $focus-accent;
-        color: white;
-        cursor: pointer;
-        font-size: 0.875rem;
-        -webkit-transition: all 0.2s;
-        transition: all 0.2s;
-    }
-}
-
-%overlay-box {
-    max-width: 150px;
-    background-color: $overlays-bg;
-    padding: 10px;
-    font-size: 11px;
-    border-radius: 5px 0 5px 0;
-    opacity: 1;
-    z-index: 1;
-    -webkit-transition: all 0.2s ease-in-out;
-    transition: all 0.2s ease-in-out;
-    color: white;
-    -webkit-backdrop-filter: blur(5px);
-    backdrop-filter: blur(5px);
-
-    &:hover {
-        opacity: 0;
-        -webkit-transition: all 0.2s ease-in-out;
-        transition: all 0.2s ease-in-out;
-    }
-}
-
-%overlay-button {
-    position: absolute;
-    color: white;
-    border: none;
-    background-color: rgba(45, 45, 45, 0.7);
-    border-radius: 0 0 5px 0;
-    -webkit-backdrop-filter: blur(5px);
-    backdrop-filter: blur(5px);
-    text-decoration: none;
-    padding: 8px;
-    text-transform: uppercase;
-    font-weight: bold;
-    font-size: 12px;
-    transition: all 0.2s ease;
-
-    &:hover {
-        background-color: $dark-accent;
-        transition: all 0.2s ease;
-    }
-
-    &:active,
-    &:focus {
-        background-color: $dark-accent;
-        color: white;
-        cursor: pointer;
-        font-size: 0.875rem;
-        -webkit-transition: all 0.2s;
-        transition: all 0.2s;
-    }
-}
-
-%legend-colour-box {
-    content: "";
-    display: inline-block;
-    width: 5px;
-    height: 5px;
-    outline: 1px solid $panel-bg;
-    margin-right: 5px;
-}
-
-// Main settings //
 body {
     font-family: 'Source Sans Pro', 'HelveticaNeue', 'Helvetica', sans-serif;
     max-width: 1045px;
@@ -125,46 +34,6 @@ main {
 
 button {
     @extend %normal-button;
-}
-
-i.info {
-    background-image: url('/assets/info.png');
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    width: 15px;
-    height: 15px;
-    display: block;
-    margin-left: auto;
-    cursor: help;
-
-    /* Tooltip text */
-    .tooltiptext {
-        width: 120px;
-        background-color: rgba(0, 0, 0, 0.7);
-        color: $panel-bg;
-        text-align: center;
-        padding: 5px;
-        border-radius: 6px;
-        opacity: 0;
-
-        /* Position the tooltip text */
-        position: absolute;
-        z-index: 1;
-        top: 0;
-        left: 0;
-        -webkit-transition: all 0.2s;
-        transition: all 0.2s;
-    }
-
-    &:hover {
-        span {
-            opacity: 1;
-            -webkit-transition: all 0.2s;
-            transition: all 0.2s;
-        }
-    }
-
 }
 
 details {
@@ -185,6 +54,10 @@ details {
     }
 }
 
+/* -------------------------------------------------------------------------- */
+/*                           Sections common styles                           */
+/* -------------------------------------------------------------------------- */
+
 .ui__wrapper,
 .upload-controls,
 .process-params,
@@ -197,7 +70,7 @@ details {
     -webkit-box-pack: justify;
     justify-content: space-between;
     // border: 1px solid $dark-accent;
-    padding: 8px;
+    padding: $main-spacing;
     border-radius: 5px;
     background-color: $panel-bg;
     box-shadow: 0px 10px 20px 0px rgba(0, 0, 0, .1);
@@ -206,16 +79,12 @@ details {
     &>* {
         margin: auto;
     }
-
-    // &.disabled{
-    //     border-radius: 5px;
-    //     background-color: $body-bg;
-    //     box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, .1);
-    //     transition: all 0.3s;
-    // }
 }
 
-// User Inputs //
+/* -------------------------------------------------------------------------- */
+/*                                 User Inputs                                */
+/* -------------------------------------------------------------------------- */
+
 .ui__wrapper {
     .input-element {
         position: relative;
@@ -244,7 +113,12 @@ details {
     }
 }
 
-// Upload controls
+/* -------------------------------------------------------------------------- */
+/*                            Main controls section                           */
+/* -------------------------------------------------------------------------- */
+
+/* -------------------------- Image upload controls ------------------------- */
+
 .upload-controls {
     .image-upload__container {
         max-width: 200px;
@@ -294,7 +168,32 @@ details {
         max-width: 50px;
     }
 
-    .animation-toggle_container {
+    /* ------------------------------ Pulse start/pause button ------------------------------ */
+
+    .pulse {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: $main-accent;
+        box-shadow: 0 0 0 rgba(127, 88, 220, 0.4);
+        -webkit-animation: pulse 2s infinite;
+        animation: pulse 2s infinite;
+        display: none;
+        cursor: pointer;
+
+        &::before {
+            content: "II";
+            color: $body-bg;
+            text-align: center;
+            display: block;
+            font-weight: bold;
+            margin-top: 9px;
+        }
+    }
+
+    /* -------------------------- Visualisation toggle -------------------------- */
+
+    .visualisation-toggle_container {
         .switch {
             position: relative;
             display: inline-block;
@@ -352,7 +251,7 @@ details {
             transform: translateX(26px);
         }
 
-        .animation-toggle_label {
+        .visualisation-toggle_label {
             margin-left: 5px;
         }
     }
@@ -367,6 +266,10 @@ details {
     }
 }
 
+/* -------------------------------------------------------------------------- */
+/*                       Simulation information section                       */
+/* -------------------------------------------------------------------------- */
+
 .elapsed-time-wrapper {
     margin: 5px auto;
 }
@@ -380,147 +283,9 @@ details {
     max-width: 100px;
 }
 
-// Canvas //
-.canvas-wrapper {
-    display: -webkit-box;
-    display: flex;
-    flex-wrap: wrap;
-    -webkit-box-pack: justify;
-    justify-content: space-between;
-}
+/* ------------------------------- Loading bar ------------------------------ */
 
-.input-canvas-wrapper,
-.binary-canvas-div {
-    position: relative;
-    background-color: transparent;
-    width: 500px;
-    height: 500px;
-    border: 1px solid #000000;
-    display: block;
-    background-position: center;
-    background-size: cover;
-    padding: 0;
-}
-
-
-#canvasBg {
-    position: absolute;
-    left: 0;
-    top: 0;
-    z-index: -2;
-}
-
-#canvasFg {
-    position: absolute;
-    left: 0;
-    top: 0;
-    z-index: -1;
-}
-
-// result canvas
-.binary-canvas-div {
-    .binary-canvas {
-        position: absolute;
-    }
-
-    // Overlay controls
-    .overlays {
-        width: 500px;
-        height: 500px;
-        position: absolute;
-        z-index: 10;
-        display: none;
-
-        .arrow {
-            border: solid black;
-            border-width: 0 15px 15px 0;
-            display: inline-block;
-            padding: 15px;
-            position: absolute;
-            top: calc(50% - 30px);
-
-            &::after {
-                content: "";
-                display: block;
-                position: absolute;
-                -webkit-transform: rotate(45deg);
-                transform: rotate(45deg);
-                left: -4px;
-                top: -15px;
-                width: 68px;
-                height: 84px;
-                background-color: rgba(0, 0, 0, 0.5);
-            }
-        }
-
-        .right {
-            right: 20px;
-            -webkit-transform: rotate(-45deg);
-            transform: rotate(-45deg);
-        }
-
-        .left {
-            left: 20px;
-            -webkit-transform: rotate(135deg);
-            transform: rotate(135deg);
-        }
-
-        .item-count {
-            @extend %overlay-box;
-            position: absolute;
-            right: 0;
-            bottom: 0;
-        }
-
-        .param-details {
-            @extend %overlay-box;
-            position: absolute;
-            left: 0;
-            top: 0;
-            display: none;
-
-            &:hover {
-                opacity: 1;
-            }
-
-            &-button {
-                @extend %overlay-button;
-                // position: absolute;
-                top: 0;
-                left: 0;
-                // color: white;
-                // border: none;
-                // background-color: $overlays-bg;
-                // border-radius: 0 0 5px 0;
-                // -webkit-backdrop-filter: blur(5px);
-                // backdrop-filter: blur(5px);
-            }
-
-            .close-button {
-                min-width: 20px;
-                height: 20px;
-                background-color: transparent;
-                border: none;
-                color: white;
-            }
-
-            &-element {
-                display: block;
-                margin-right: 40px;
-            }
-        }
-
-        .download-button {
-            @extend %overlay-button;
-            bottom: 0;
-            left: 0;
-        }
-    }
-}
-
-
-// Loading bar //
-#myProgress {
+#bar-container {
     width: 100%;
     background-color: $default-colour;
     border-radius: 15px;
@@ -536,7 +301,7 @@ details {
     }
 }
 
-#myBar {
+#bar {
     width: 0%;
     height: 30px;
     text-align: center;
@@ -545,57 +310,49 @@ details {
     transition: all 0.5s ease-in-out;
 }
 
-// Pulse button //
-.pulse {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: $main-accent;
-    box-shadow: 0 0 0 rgba(127, 88, 220, 0.4);
-    -webkit-animation: pulse 2s infinite;
-    animation: pulse 2s infinite;
-    display: none;
-    cursor: pointer;
+/* -------------------------------------------------------------------------- */
+/*                              Canvases section                              */
+/* -------------------------------------------------------------------------- */
 
-    &::before {
-        content: "II";
-        color: $body-bg;
-        text-align: center;
-        display: block;
-        font-weight: bold;
-        margin-top: 9px;
-    }
+.canvas-wrapper {
+    display: -webkit-box;
+    display: flex;
+    flex-wrap: wrap;
+    -webkit-box-pack: justify;
+    justify-content: space-between;
 }
 
-@-webkit-keyframes pulse {
-    0% {
-        box-shadow: 0 0 0 0 rgba(127, 88, 220, 0.4);
-    }
-
-    70% {
-        box-shadow: 0 0 0 10px rgba(185, 150, 243, 0);
-    }
-
-    100% {
-        box-shadow: 0 0 0 0 rgba(185, 150, 243, 0);
-    }
+.input-canvas-wrapper,
+.binary-canvas-div {
+    position: relative;
+    background-color: transparent;
+    width: $canvas-size;
+    height: $canvas-size;
+    border: 1px solid #000000;
+    display: block;
+    background-position: center;
+    background-size: cover;
+    padding: 0;
 }
 
-@keyframes pulse {
-    0% {
-        box-shadow: 0 0 0 0 rgba(127, 88, 220, 0.4);
-    }
+/* -------------------------- Visualisation canvas -------------------------- */
 
-    70% {
-        box-shadow: 0 0 0 10px rgba(185, 150, 243, 0);
-    }
-
-    100% {
-        box-shadow: 0 0 0 0 rgba(185, 150, 243, 0);
-    }
+#canvasBg {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: -2;
 }
 
-// Legend //
+#canvasFg {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: -1;
+}
+
+/* --------------------------------- Legend --------------------------------- */
+
 .legend {
     @extend %overlay-box;
     display: none;
@@ -621,7 +378,132 @@ details {
     }
 }
 
-//loading screen
+/* ------------------------------ Result canvas ----------------------------- */
+
+.binary-canvas-div {
+    .binary-canvas {
+        position: absolute;
+        transition: all 0.5s ease;
+    }
+
+    // Overlay controls
+    .overlays {
+        width: $canvas-size;
+        height: $canvas-size;
+        position: absolute;
+        z-index: 10;
+        display: none;
+        opacity: 0.5;
+        transition: all 0.3s ease;
+
+        &:hover,
+        :focus,
+        :active {
+            opacity: 1;
+            transition: all 0.3s ease;
+        }
+
+
+        .arrow {
+            // arrow box
+            display: flex;
+            position: absolute;
+            justify-content: center;
+            top: calc(50% - 35px);
+            width: 68px;
+            height: 84px;
+            background-color: $overlays-bg;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+
+            &:hover {
+                background-color: $overlays-hover;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+
+            &::after {
+                content: "";
+                display: block;
+                border: solid #222;
+                border-width: 0 $arrow-size $arrow-size 0;
+                margin: auto;
+                padding: $arrow-size;
+            }
+        }
+
+        .right {
+            right: 0;
+            border-radius: 10px 0 0 10px;
+
+            &::after {
+                -webkit-transform: rotate(-45deg);
+                transform: rotate(-45deg);
+                margin-right: calc(50% - #{$arrow-size});
+            }
+        }
+
+        .left {
+            left: 0;
+            border-radius: 0 10px 10px 0;
+
+            &::after {
+                -webkit-transform: rotate(135deg);
+                transform: rotate(135deg);
+                margin-left: calc(50% - #{$arrow-size});
+            }
+        }
+
+        .item-count {
+            @extend %overlay-box;
+            position: absolute;
+            right: 0;
+            bottom: 0;
+        }
+
+        .param-details {
+            @extend %overlay-box;
+            position: absolute;
+            left: 0;
+            top: 0;
+            display: none;
+
+            &:hover {
+                opacity: 1;
+            }
+
+            &-button {
+                @extend %overlay-button;
+                top: 0;
+                left: 0;
+            }
+
+            .close-button {
+                min-width: 20px;
+                height: 20px;
+                background-color: transparent;
+                border: none;
+                color: $dark-accent;
+            }
+
+            &-element {
+                display: block;
+                margin-right: 40px;
+            }
+        }
+
+        .download-button {
+            @extend %overlay-button;
+            bottom: 0;
+            left: 0;
+        }
+    }
+}
+
+/* -------------------------------------------------------------------------- */
+/*                               Loading screen                               */
+/* -------------------------------------------------------------------------- */
+
 .push-back-screen {
     width: 100%;
     height: 100%;
@@ -634,7 +516,7 @@ details {
     display: none;
     z-index: 999;
 
-
+    // Text styling
     .please-wait {
         font-weight: bold;
         text-align: center;
