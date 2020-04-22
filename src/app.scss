@@ -285,7 +285,7 @@ details {
 
 /* ------------------------------- Loading bar ------------------------------ */
 
-#myProgress {
+#bar-container {
     width: 100%;
     background-color: $default-colour;
     border-radius: 15px;
@@ -301,7 +301,7 @@ details {
     }
 }
 
-#myBar {
+#bar {
     width: 0%;
     height: 30px;
     text-align: center;

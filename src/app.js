@@ -1,10 +1,19 @@
-// Imports
+/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                            Main JavaScript file                            */
+/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+
+/* -------------------------------------------------------------------------- */
+/*                                   Imports                                  */
+/* -------------------------------------------------------------------------- */
+
 import initGlobals from './helpers/globals';
 
 initGlobals(); // initialise all global variables
 
-import ACO from './components/aco/aco-algorithm';
-import EnvironmentImage from './components/environment-image/environment-image';
+import ACO from './components/aco/aco-algorithm'; // aco algorithm file
+import EnvironmentImage from './components/environment-image/environment-image'; // image environment file
 import {
     loadingBar
 } from './helpers/extras';
@@ -171,7 +180,6 @@ events.on('stop-simulation', () => {
 
 // State of the program at simulation complete
 events.on('simulation-complete', () => {
-    console.log('Simulation Complete');
     // initial state of buttons
     loadingPulse.style.display = 'none';
     startSimulationButton.style.display = 'block';

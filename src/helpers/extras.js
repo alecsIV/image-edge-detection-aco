@@ -1,5 +1,5 @@
 function loadingBar(completed, total) {
-    const elem = document.getElementById("myBar");
+    const elem = document.getElementById("bar");
     const elemText = document.getElementsByClassName("bar-percentage");
     let width = (completed / total) * 100;
     if (width >= 100) {
