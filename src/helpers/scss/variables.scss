@@ -1,0 +1,26 @@
+/* -------------------------------------------------------------------------- */
+/*                                   Colours                                  */
+/* -------------------------------------------------------------------------- */
+
+/* ---------------------------------- Main Colours ---------------------------------- */
+
+$main-accent: #7f58dc;
+$hover-accent: #d7d1f3;
+$focus-accent: $main-accent;
+$dark-accent: #222;
+$body-bg: #fafafa;
+$panel-bg: #fff;
+$default-colour: #ddd;
+$overlays-bg: rgba(45, 45, 45, 0.7);
+
+/* --------------------------------- Legend Colours --------------------------------- */
+
+$trail: rgb(66, 33, 123);
+$high-pheromone: rgb(237, 0, 1);
+$pheromone-iteration: rgb(0, 255, 0);
+
+/* -------------------------------------------------------------------------- */
+/*                                Measurements                                */
+/* -------------------------------------------------------------------------- */
+$main-spacing: 8px; // main unit for spacing in elements
+$canvas-size: 500px; // both height and width of canvas
