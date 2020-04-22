@@ -121,13 +121,17 @@ export default class ACO {
         /* counts trough all the agents calculates each's position,
         draws them on the canvas and adds them to the array of agents*/
         for (let i = 0; i < antCount; i++) {
+            // calculate x and y coordinates to fit ants in a grid-like structure
             const x = Math.floor(i * density / this.canvasW);
             const y = (i * density) - (x * this.canvasW);
+
+            //initialise agen objec with coordinated coordinates
             this.agents[i] = new AntAgent(this.canvas, {
                 x: x,
                 y: y
             });
-            this.ctx.fillRect(this.agents[i].currentCoordinates.y, this.agents[i].currentCoordinates.x, 2, 1);
+
+            this.ctx.fillRect(this.agents[i].currentCoordinates.y, this.agents[i].currentCoordinates.x, 2, 1); // show agents on the canvas
         }
 
         console.log("%c Agents", "color: #24c95a", this.agents); // show list of agents in console log

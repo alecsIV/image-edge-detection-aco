@@ -19,6 +19,7 @@ export default function initGlobals() {
     global.imageIntensityArray = new Array();
     global.pheromoneMatrix = new Array();
     global.heuristicMatrix = new Array();
+    global.initialPheromoneValue = 0.0001;
 
 /* ----------------------------- Canvas globals ----------------------------- */
     // initialise canvases global variables
