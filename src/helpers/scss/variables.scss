@@ -8,10 +8,21 @@ $main-accent: #7f58dc;
 $hover-accent: #d7d1f3;
 $focus-accent: $main-accent;
 $dark-accent: #222;
+$light-accent: #fff;
 $body-bg: #fafafa;
 $panel-bg: #fff;
 $default-colour: #ddd;
-$overlays-bg: rgba(45, 45, 45, 0.7);
+
+/* -------------------------------- Overlays -------------------------------- */
+
+$overlays-bg: rgba(220, 220, 220, 0.3);
+$overlays-hover: rgba(110, 110, 110, 0.3);
+$overlays-text: $dark-accent;
+
+/* --------------------------------- Arrows --------------------------------- */
+$arrow-background:$overlays-bg;
+$arrow-colour:$dark-accent;
+$arrow-size: 15px;
 
 /* --------------------------------- Legend Colours --------------------------------- */
 

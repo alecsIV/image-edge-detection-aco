@@ -393,39 +393,53 @@ details {
         position: absolute;
         z-index: 10;
         display: none;
+        opacity:0;
+        transition: opacity 0.3s ease;
+
+
+        &:hover, :focus, :active{
+            opacity: 1;
+            transition: opacity 0.3s ease;
+        }
 
         .arrow {
-            border: solid black;
-            border-width: 0 15px 15px 0;
-            display: inline-block;
-            padding: 15px;
+            display: flex;
             position: absolute;
-            top: calc(50% - 30px);
+            justify-content: center;
+            top: calc(50% - 35px);
+            width: 68px;
+            height: 84px;
+            background-color: rgba(220, 220, 220, 0.3);
+            backdrop-filter: blur(5px);
 
             &::after {
                 content: "";
                 display: block;
-                position: absolute;
-                -webkit-transform: rotate(45deg);
-                transform: rotate(45deg);
-                left: -4px;
-                top: -15px;
-                width: 68px;
-                height: 84px;
-                background-color: rgba(0, 0, 0, 0.5);
+                border: solid #222;
+                border-width: 0 $arrow-size $arrow-size 0;
+                margin: auto;
+                padding: $arrow-size;
             }
         }
 
         .right {
-            right: 20px;
-            -webkit-transform: rotate(-45deg);
-            transform: rotate(-45deg);
+            right: 0;
+            border-radius: 10px 0 0 10px;
+            &::after {
+                -webkit-transform: rotate(-45deg);
+                transform: rotate(-45deg);
+                margin-right: calc(50% - #{$arrow-size});
+            }
         }
 
         .left {
-            left: 20px;
-            -webkit-transform: rotate(135deg);
-            transform: rotate(135deg);
+            left: 0;
+            border-radius: 0 10px 10px 0;
+            &::after {
+                -webkit-transform: rotate(135deg);
+                transform: rotate(135deg);
+                margin-left: calc(50% - #{$arrow-size});
+            }
         }
 
         .item-count {
@@ -457,7 +471,7 @@ details {
                 height: 20px;
                 background-color: transparent;
                 border: none;
-                color: white;
+                color: $dark-accent;
             }
 
             &-element {

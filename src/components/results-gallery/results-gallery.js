@@ -105,18 +105,18 @@ export default class ResultsGallery {
         switch (currentPage) {
             case 0:
                 // first image
-                this.rightArrow.style.display = 'block';
+                this.rightArrow.style.display = 'flex';
                 this.leftArrow.style.display = 'none';
                 break;
             case pages.length - 1:
                 // last image
-                this.leftArrow.style.display = 'block';
+                this.leftArrow.style.display = 'flex';
                 this.rightArrow.style.display = 'none';
                 break;
             default:
                 // all images in between
-                this.leftArrow.style.display = 'block';
-                this.rightArrow.style.display = 'block';
+                this.leftArrow.style.display = 'flex';
+                this.rightArrow.style.display = 'flex';
                 break;
         }
 
