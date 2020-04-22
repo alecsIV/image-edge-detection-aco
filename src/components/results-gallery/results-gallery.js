@@ -1,3 +1,7 @@
+/* -------------------------------------------------------------------------- */
+/*                               Results gallery                              */
+/* -------------------------------------------------------------------------- */
+
 export default class ResultsGallery {
     constructor() {
         const canvas = document.querySelector('#canvasFg');
@@ -10,6 +14,7 @@ export default class ResultsGallery {
     }
 
     initGalleryControls() {
+        // Overlay controls
         this.resultDivOverlays = document.querySelector(".overlays");
         this.leftArrow = document.querySelector(".arrow.left");
         this.rightArrow = document.querySelector(".arrow.right");
@@ -22,7 +27,7 @@ export default class ResultsGallery {
         this.paramDetailsCloseButton.setAttribute('class', 'close-button');
         this.paramDetailsCloseButton.innerHTML = 'x';
 
-
+        // button event listeners
         this.leftArrow.addEventListener('click', () => this.prevPage());
         this.rightArrow.addEventListener('click', () => this.nextPage());
         this.paramDetailsButton.addEventListener('click', () => this.toggleParamsPanel('open'));
@@ -30,9 +35,11 @@ export default class ResultsGallery {
     }
 
     createBinaryImage() {
+        // Create a binary image from pheromone matrix information
+
         const width = this.canvasW,
             height = this.canvasH;
-        let buffer = new Uint8ClampedArray(width * height * 4);
+        let buffer = new Uint8ClampedArray(width * height * 4); // used to hold canvas pixel informaition 
 
         const binaryCanvas = document.createElement("canvas");
         binaryCanvas.setAttribute("class", "binary-canvas");
@@ -42,14 +49,14 @@ export default class ResultsGallery {
 
         pheromoneMatrix.forEach((arr, y) => {
             arr.forEach((value, x) => {
-                if (value > initialPheromoneValue) {
-                    const pos = (y * height + x) * 4;
-                    const valueRGB = 0;
-                    buffer[pos] = valueRGB; // some R value [0, 255]
-                    buffer[pos + 1] = valueRGB; // some G value
-                    buffer[pos + 2] = valueRGB; // some B value
-                    buffer[pos + 3] = 255; // set alpha channel
-                }
+                // check if the pheromone intensity value is higher than the initial pheromone value to define drawing (black) or background colour (white)
+                const valueRGB = (value > initialPheromoneValue) ? 0 : 255;
+                const pos = (y * height + x) * 4; // positioning (multiplied by 4 as there are 4 values for each pixel - RGBA)
+                buffer[pos] = valueRGB; //  R value 
+                buffer[pos + 1] = valueRGB; //  G value
+                buffer[pos + 2] = valueRGB; //  B value
+                buffer[pos + 3] = 255; // set alpha channel
+                // }
             });
         });
 
@@ -64,23 +71,22 @@ export default class ResultsGallery {
 
         // hide previous canvas
         if (this.resultDiv.lastChild) {
-            // this.resultDiv.lastChild.style.zIndex = -1;
             this.resultDiv.lastChild.style.opacity = 0;
         }
 
-        this.addToGallery(binaryCanvas);
+        this.addToGallery(binaryCanvas); // add the binary image to the gallery
     }
 
     addToGallery(binaryCanvas) {
         if (this.resultDiv.childElementCount > 0) {
             for (let item of this.resultDiv.children) {
-                item.style.opacity = 0;
+                item.style.opacity = 0; // hide all previous gallery images
             }
         }
-        //add image canvas to array
+        //add binary image canvas to the HTML
         this.resultDiv.appendChild(binaryCanvas);
 
-        // store canvas positioning in gallery
+        // store canvas and its position positioning in the global arrays
         pages.push(this.resultDiv.lastChild);
         currentPage = pages.length - 1;
 
@@ -89,20 +95,25 @@ export default class ResultsGallery {
     }
 
     showControls() {
+        // show overlay controls
         const childCount = this.resultDiv.childElementCount;
         this.resultDivOverlays.style.display = 'block';
-        this.itemCount.innerHTML = `${currentPage + 1} / ${childCount}`
+        this.itemCount.innerHTML = `${currentPage + 1} / ${childCount}`; // page numbers
 
+        // arrows behaviour
         switch (currentPage) {
             case 0:
+                // first image
                 this.rightArrow.style.display = 'block';
                 this.leftArrow.style.display = 'none';
                 break;
             case pages.length - 1:
+                // last image
                 this.leftArrow.style.display = 'block';
                 this.rightArrow.style.display = 'none';
                 break;
             default:
+                // all images in between
                 this.leftArrow.style.display = 'block';
                 this.rightArrow.style.display = 'block';
                 break;
@@ -115,14 +126,16 @@ export default class ResultsGallery {
     }
 
     updatePreview() {
+        // update the image preview
         if (previousPage > -1) pages[previousPage].style.opacity = 0;
         pages[currentPage].style.opacity = 1;
+
         this.showControls();
-        this.loadParams();
+        this.loadParams(); // load saved params for image
     }
 
     nextPage() {
-        // got o next page
+        // go to next page
         if (currentPage < pages.length - 1) {
             previousPage = currentPage;
             currentPage++;
@@ -140,8 +153,8 @@ export default class ResultsGallery {
     }
 
     saveParams() {
-        const paramsToSave = [];
         // save current image parameters 
+        const paramsToSave = [];
         Object.values(allUI).forEach((element) => {
             const elementObj = {};
             elementObj.value = element.value;
@@ -153,6 +166,7 @@ export default class ResultsGallery {
     }
 
     loadParams() {
+        // load image parameters
         this.paramDetails.innerHTML = ''; // clear previous params
 
         //loop through saved simulation parameters for the image in view and add them to the html element
@@ -165,13 +179,15 @@ export default class ResultsGallery {
         });
         this.paramDetails.appendChild(this.paramDetailsCloseButton);
     }
+
     toggleParamsPanel(action) {
+        // open the parameters overlay panel
         if (action === 'open') {
-            // Show/hide views
+            // Show parameters
             this.paramDetailsButton.style.display = 'none';
             this.paramDetails.style.display = 'block';
         } else {
-            // Show/hide views
+            // Hide parameters
             this.paramDetailsButton.style.display = 'block';
             this.paramDetails.style.display = 'none';
         }
