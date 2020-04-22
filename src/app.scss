@@ -383,6 +383,7 @@ details {
 .binary-canvas-div {
     .binary-canvas {
         position: absolute;
+        transition: all 0.5s ease;
     }
 
     // Overlay controls

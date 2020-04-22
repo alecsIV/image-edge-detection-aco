@@ -184,8 +184,8 @@ export default class ACO {
         console.log("%c Iteration: ", "color: #bada55", this.currentFrame); // show the current iteration in the browser console
         console.log("%c END OF ALGORITHM", "color: #c92424"); // indicate the end of the algorithm in the console
         loadingBar(iterations, iterations); // update the laoding bar status
-        this.resultsGallery.createBinaryImage(); // trigger the creation of a result image
         elapsedTime(start, Date.now()); // calculate the elapsed time
+        this.resultsGallery.createBinaryImage(); // trigger the creation of a result image
         events.emit('simulation-complete'); // emit an event to mark the end of the simulation of the algorithm
     }
 

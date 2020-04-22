@@ -17,7 +17,7 @@ import EnvironmentImage from './components/environment-image/environment-image';
 import {
     loadingBar
 } from './helpers/extras';
-import ResultsGallery from './components/results-gallery/results-gallery';
+import ResultsGallery from './components/results-gallery/results-gallery'; // results gallery
 /* -------------------------------------------------------------------------- */
 
 const resultsGallery = new ResultsGallery(); // initialise results gallery class
@@ -158,7 +158,7 @@ loadingPulse.addEventListener('click', () => {
 
 downloadButton.addEventListener('click', () => {
     const currentCanvas = pages[currentPage]
-    const dataURL = pages[currentPage].toDataURL('image/png');
+    const dataURL = currentCanvas.toDataURL('image/png');
     downloadButton.download = 'outline.png';
     downloadButton.href = dataURL;
 });

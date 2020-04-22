@@ -81,6 +81,7 @@ export default class ResultsGallery {
         if (this.resultDiv.childElementCount > 0) {
             for (let item of this.resultDiv.children) {
                 item.style.opacity = 0; // hide all previous gallery images
+                item.style.height = 0;
             }
         }
         //add binary image canvas to the HTML
@@ -127,8 +128,12 @@ export default class ResultsGallery {
 
     updatePreview() {
         // update the image preview
-        if (previousPage > -1) pages[previousPage].style.opacity = 0;
+        if (previousPage > -1) {
+            pages[previousPage].style.opacity = 0;
+            pages[previousPage].style.height = 0;
+        }
         pages[currentPage].style.opacity = 1;
+        pages[currentPage].style.height = '100%';
 
         this.showControls();
         this.loadParams(); // load saved params for image
@@ -155,14 +160,15 @@ export default class ResultsGallery {
     saveParams() {
         // save current image parameters 
         const paramsToSave = [];
-        Object.values(allUI).forEach((element) => {
+
+        Object.values(allUI).forEach((element, i) => {
             const elementObj = {};
             elementObj.value = element.value;
             elementObj.id = element.id;
             elementObj.name = element.name;
             paramsToSave.push(elementObj);
         });
-        savedParams.push(paramsToSave);
+        savedParams.push(paramsToSave); // push to global array
     }
 
     loadParams() {
