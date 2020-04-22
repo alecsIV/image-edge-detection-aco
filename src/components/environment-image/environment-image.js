@@ -1,11 +1,15 @@
+/* -------------------------------------------------------------------------- */
+/*                       Image Environment data gatherer class                */
+/* -------------------------------------------------------------------------- */
+
 export default class EnvironmentImage {
     constructor(image, canvas) {
-        this.pixelArray = this.getPixelArray(image, canvas);
-        this.width = image.width;
+        this.pixelArray = this.getPixelArray(image, canvas); // set image environment
+        this.width = image.width; 
         this.height = image.height;
-        this.pixelAmount = Math.abs(this.width * this.height);
-        imageIntensityArray1d = this.getIntensityArray();
-        imageIntensityArray = this.convertTo2dMatrix(imageIntensityArray1d);
+        this.pixelAmount = Math.abs(this.width * this.height); // get the pixel count in the given image
+        imageIntensityArray1d = this.getIntensityArray(); // get intensity data
+        imageIntensityArray = this.convertTo2dMatrix(imageIntensityArray1d); // transform intensity data from array into a matrix
     }
 
     convertTo2dMatrix(array) {
@@ -24,6 +28,7 @@ export default class EnvironmentImage {
     }
 
     getIntensityArray() {
+        // Get intensity data for every pixel by combining the 3 colour and 1 alpha channel values together
         const intensityArray = [];
         for (let i = 0; i <= this.pixelArray.length - 1; i++) {
             if (i <= this.pixelArray.length - 2) {
@@ -36,6 +41,7 @@ export default class EnvironmentImage {
     }
 
     getPixelArray(image, canvas) {
+        //get image pixel data 
         const ctx = canvas.getContext('2d');
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         drawImageProp(ctx, image, 0, 0, canvas.width, canvas.height);
@@ -44,6 +50,7 @@ export default class EnvironmentImage {
         return imgData.data;
 
         function fadeImage() {
+            // fade image in the background 
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.save();
             ctx.globalAlpha = 0.5;
@@ -52,7 +59,7 @@ export default class EnvironmentImage {
         }
 
         function drawImageProp(ctx, img, x, y, w, h, offsetX, offsetY) {
-
+            // Resize image to fit in the canvas
             if (arguments.length === 2) {
                 x = y = 0;
                 w = ctx.canvas.width;
@@ -99,7 +106,5 @@ export default class EnvironmentImage {
             // fill image in dest. rectangle
             ctx.drawImage(img, cx, cy, cw, ch, x, y, w, h);
         }
-
     }
-
 }
