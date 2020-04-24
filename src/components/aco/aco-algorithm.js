@@ -117,7 +117,8 @@ export default class ACO {
         const density = Math.round(this.canvasArea / antCount); // calculates density at which ants should be positioned
         this.agents = []; // initialise agents array
 
-        console.log("%c pheromoneMatrix", "color: #24c95a", pheromoneMatrix); //show pheromone matrix in console log
+        // FOR DEBUGGING : Pheromone matrix
+        // console.log("%c pheromoneMatrix", "color: #24c95a", pheromoneMatrix); //show pheromone matrix in console log
 
         /* counts trough all the agents calculates each's position,
         draws them on the canvas and adds them to the array of agents*/
@@ -135,7 +136,8 @@ export default class ACO {
             this.ctx.fillRect(this.agents[i].currentCoordinates.y, this.agents[i].currentCoordinates.x, 2, 1); // show agents on the canvas
         }
 
-        console.log("%c Agents", "color: #24c95a", this.agents); // show list of agents in console log
+        // FOR DEBUGGING : Array of agents
+        // console.log("%c Agents", "color: #24c95a", this.agents); // show list of agents in console log
     }
 
     startSimulation() {
