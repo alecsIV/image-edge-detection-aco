@@ -17,7 +17,8 @@ export default class MatrixHelper {
                 heuristicMatrix[x][y] = this.heuristicInformationForPixel(x, y);
             }
         }
-        console.log('%c heuristicMatrix', 'color: #24c95a', heuristicMatrix); // print the matrix in the console
+        // FOR DEBUGGING : Heuristuc matrix
+        // console.log('%c heuristicMatrix', 'color: #24c95a', heuristicMatrix); // print the matrix in the console
     }
 
     resetPheromoneMatrix() {

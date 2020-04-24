@@ -18,7 +18,7 @@ import {
 export default class ACO {
     constructor(image, resultsGallery) {
 
-/* ------------------------ Get environment settings ------------------------ */
+        /* ------------------------ Get environment settings ------------------------ */
 
         this.image = image; // get uploaded image information
         this.canvas = document.querySelector('#canvasFg'); // get the drawing layer of the canvas to preserve the background
@@ -27,31 +27,31 @@ export default class ACO {
         this.canvasArea = this.canvasW * this.canvasH; // get canvas area
         this.ctx = this.canvas.getContext("2d"); // get the canvas context
 
-/* -------------------------- Get external classes -------------------------- */
+        /* -------------------------- Get external classes -------------------------- */
 
         this.matrixHelper = new MatrixHelper; // initialise the matrix helper 
         this.resultsGallery = resultsGallery; // get the already initialised results gallery class from app.js
 
-/* --------------------- Visualisation control variables -------------------- */
+        /* --------------------- Visualisation control variables -------------------- */
 
         this.currentFrame = 1; // set the current frame of the animation loop
         this.animationCount = 0; // set the animation step of an ant
         this.agentCount = 0; // set the currently drawn agent
         this.paused = false; // true if the algorithm is paused
 
-/* ------------ Generate initial pheromone and heuristic matrices ----------- */
+        /* ------------ Generate initial pheromone and heuristic matrices ----------- */
 
         this.matrixHelper.generateInitialMatrices(); // generate the initial matrices
 
-/* ----------------- Set default user input values for image ---------------- */
+        /* ----------------- Set default user input values for image ---------------- */
 
         this.setDefaultValues() // set default values for the parameters
 
-/* ---------------------------- Simulation stats ---------------------------- */
+        /* ---------------------------- Simulation stats ---------------------------- */
 
         this.textIter = document.querySelector('#iter-text'); // current iteration
         this.textCurr = document.querySelector('#ant-text'); // current ant
-        this.textNew = document.querySelector('#step-text');  // current step
+        this.textNew = document.querySelector('#step-text'); // current step
         this.textX = document.querySelector('#x-text'); // current x coordinate
         this.textY = document.querySelector('#y-text'); // current y coordinate
     }
@@ -103,6 +103,7 @@ export default class ACO {
         Object.keys(this.defaultParams).forEach(key => {
             window[key] = Number(this.defaultParams[key]); // save the currently used vars globally 
             window.allUI[key].value = window[key];
+            window.allUI[key].placeholder = window[key];
         });
     }
     updateGlobalParams() {
@@ -116,7 +117,8 @@ export default class ACO {
         const density = Math.round(this.canvasArea / antCount); // calculates density at which ants should be positioned
         this.agents = []; // initialise agents array
 
-        console.log("%c pheromoneMatrix", "color: #24c95a", pheromoneMatrix); //show pheromone matrix in console log
+        // FOR DEBUGGING : Pheromone matrix
+        // console.log("%c pheromoneMatrix", "color: #24c95a", pheromoneMatrix); //show pheromone matrix in console log
 
         /* counts trough all the agents calculates each's position,
         draws them on the canvas and adds them to the array of agents*/
@@ -134,7 +136,8 @@ export default class ACO {
             this.ctx.fillRect(this.agents[i].currentCoordinates.y, this.agents[i].currentCoordinates.x, 2, 1); // show agents on the canvas
         }
 
-        console.log("%c Agents", "color: #24c95a", this.agents); // show list of agents in console log
+        // FOR DEBUGGING : Array of agents
+        // console.log("%c Agents", "color: #24c95a", this.agents); // show list of agents in console log
     }
 
     startSimulation() {
@@ -216,7 +219,7 @@ export default class ACO {
                         1,
                         1
                     );
-                });// high pheromone values in green 
+                }); // high pheromone values in green 
             });
             if (this.currentFrame >= iterations) {
                 // case if this was the last iteration
