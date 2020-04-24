@@ -119,7 +119,7 @@ drawImageButton.addEventListener('click', () => {
 });
 
 /* ---------------------- track user input changes ---------------------- */
-const userInputEventHandler = () =>{
+const userInputEventHandler = () => {
     // actions for when a user inputs new data
     startSimulationButton.removeAttribute('disabled');
     algorithm.reset();
@@ -129,6 +129,11 @@ const userInputEventHandler = () =>{
 
 Object.values(allUI).forEach((element) => {
     // event listeners for change on value alteration
+    element.addEventListener('blur', (e) => {
+        if (e.target.value === '') e.target.value = e.target.placeholder;
+        algorithm.reset();
+        toggleDefaulsButton();
+    });
     element.addEventListener('input', userInputEventHandler);
     element.addEventListener('propertychange', userInputEventHandler); // for Firefox/Edge and IE9
 });
