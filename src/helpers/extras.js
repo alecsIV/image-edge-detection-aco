@@ -88,11 +88,20 @@ function stopTimer(pause) {
     if (pause !== 'pause') totalTime = 0; // if not pause, resets the saved time
     clearInterval(intervalId); // resets the count loop 
 }
+
+const estTime = document.getElementById("est-time");
+function estimatedTime(done, left){
+    const minutes = Math.floor(Math.floor((totalTime/done * left)/1000)/60);
+    const seconds = Math.floor(((totalTime/done * left)/1000) - Math.floor(Math.floor((totalTime/done * left)/1000)/60) * 60);
+    if (minutes !== NaN && seconds!== NaN) estTime.innerHTML = `(${minutes}m ${seconds}s)`;
+//    console.log(`${Math.floor(Math.floor((totalTime/done * left)/1000)/60)} minutes ${Math.floor(((totalTime/done * left)/1000) - Math.floor(Math.floor((totalTime/done * left)/1000)/60) * 60)} seconds`)
+}
 /* -------------------------------------------------------------------------- */
 
 module.exports = {
     loadingBar,
     elapsedTime,
     timer,
-    stopTimer
+    stopTimer,
+    estimatedTime
 }

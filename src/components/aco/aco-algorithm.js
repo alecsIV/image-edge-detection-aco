@@ -10,7 +10,8 @@ import {
     loadingBar,
     elapsedTime,
     timer,
-    stopTimer
+    stopTimer, 
+    estimatedTime
 } from '../../helpers/extras';
 
 /* -------------------------------------------------------------------------- */
@@ -172,7 +173,6 @@ export default class ACO {
                         newAnt
                     } = agent.calculateNextStep();
                     agent.moveTo(newCoordinates, newAnt);
-                    if (agent.currentCoordinates == undefined) console.log("faulty", agent);
                     if (newAnt) i = numAntMov;
                 }
             });
@@ -202,6 +202,7 @@ export default class ACO {
         if (this.animationCount >= numAntMov) {
             // case if ant moves have finished
             loadingBar(this.agentCount + ((this.agents.length - 1) * (this.currentFrame - 1)), (this.agents.length - 1) * iterations); // update the loading bar
+            estimatedTime(this.agentCount + ((this.agents.length - 1) * (this.currentFrame - 1)), (this.agents.length - 1) * iterations);
             this.animationCount = 0; // reset the animation frame
             this.agentCount++; // go to next agent
         }
