@@ -70,6 +70,7 @@ export default class ACO {
         clearInterval(this.animationIntervalId); // stop the animation loop
         stopTimer(); // stop elapsed time timer
         this.matrixHelper.resetPheromoneMatrix(); // reset pheromone matrix
+        this.paused = false;
         if (full === 'full') {
             // reset fully - used when image is changed
             this.ctx.clearRect(0, 0, this.canvasW, this.canvasH);
@@ -119,6 +120,8 @@ export default class ACO {
 
         // FOR DEBUGGING : Pheromone matrix
         // console.log("%c pheromoneMatrix", "color: #24c95a", pheromoneMatrix); //show pheromone matrix in console log
+
+        this.ctx.fillStyle = `rgba(66, 33, 123, 255)`; // set style for ant agent colour
 
         /* counts trough all the agents calculates each's position,
         draws them on the canvas and adds them to the array of agents*/
