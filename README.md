@@ -5,6 +5,15 @@ It has an accessible interface and is easy to use.
 
 The online version is hosted by GitHub Pages and can be found [here](https://alecsiv.github.io/image-edge-detection-aco/).
 
+## General information
+The main source code of the system lives under the `src` folder. However, the compiled scripts by webpack are under the `docs` folder. To inspect the written source code, please review the files under `src`.
+
+The main files are:
+
+- `app.js`
+- `app.scss`
+- `index.html`
+
 ## Set up
 The project uses the standard node package manager - [NPM](https://www.npmjs.com/). Therefore NPM must be set up on the working machine to run the local server (please see [NPM Get Started](https://www.npmjs.com/get-npm)). 
 
