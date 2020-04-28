@@ -6,6 +6,7 @@ It has an accessible interface and is easy to use.
 The online version is hosted by GitHub Pages and can be found [here](https://alecsiv.github.io/image-edge-detection-aco/).
 
 ## General information
+
 The main source code of the system lives under the `src` folder. However, the compiled scripts by webpack are under the `docs` folder. To inspect the written source code, please review the files under `src`.
 
 The main files are:
@@ -14,25 +15,37 @@ The main files are:
 - `app.scss`
 - `index.html`
 
-## Set up
-The project uses the standard node package manager - [NPM](https://www.npmjs.com/). Therefore NPM must be set up on the working machine to run the local server (please see [NPM Get Started](https://www.npmjs.com/get-npm)). 
+## Rendering project in browser locally
 
-Assuming NPM is installed, navigate to the project folder in the comand line interface.
+There are two ways of rendering this project in the web browser:
 
-After opening the project folder in the CLI, install the project dependencies: 
+1. Open up compiled HTML file
+2. Run using NPM
+
+To open up the compiled HTMl file, simply navigate to the `docs` folder of the project and open `index.html` with the preffered browser.
+
+To run the project using NPM, please follow the instructions below:
+
+### NPM set up
+
+The project uses the standard node package manager - [NPM](https://www.npmjs.com/). Therefore NPM must be set up on the working machine to run the local server (please see [NPM Get Started](https://www.npmjs.com/get-npm)).
+
+Assuming NPM is installed, navigate to the root folder of the project in the comand line interface and run:
 
 ```bash
 npm install
 ```
 
-## Local Server
-To run the local server, execute the start command:
+### Running Local Server
+
+To run the local server, navigate to the project's root folder and execute the start command:
 
 ```bash
 npm run start
 ```
 
 ## License
+
 [MIT](https://choosealicense.com/licenses/mit/)
 
 ---
